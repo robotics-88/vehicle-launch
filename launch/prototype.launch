@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find mavros)/launch/apm.launch"/>
+    <!-- TODO add zed and veg after verify above works. -->
+</launch>
