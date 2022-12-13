@@ -21,5 +21,6 @@
   <depend>mavros_msgs</depend>
   <depend>roscpp</depend>
   <depend>roslib</depend>
+  <depend>std_msgs</depend>
 
 </package>
