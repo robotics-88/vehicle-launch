@@ -1,4 +1,7 @@
 <launch>
     <include file="$(find mavros)/launch/apm.launch"/>
-    <!-- TODO add zed and veg after verify above works. -->
+
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call /mavros/set_stream_rate 0 10 1"/>
+    
+    <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch"/>
 </launch>
