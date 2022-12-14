@@ -1,7 +1,7 @@
 <launch>
     <include file="$(find mavros)/launch/apm.launch"/>
 
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call /mavros/set_stream_rate 0 10 1"/>
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
     
     <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch"/>
 
@@ -9,5 +9,5 @@
         <arg name="do_multispectral_viz" value="false"/>
         <arg name="do_rgb_viz" value="false"/>
     </include>
-    
+
 </launch>
