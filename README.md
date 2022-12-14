@@ -1,6 +1,6 @@
 # prototype vehicle
 
-## On Drone
+## RPi Drone
 
 First ssh into the drone:
 
@@ -16,17 +16,24 @@ In a second terminal on the drone, run:
 
 **Without this, no position topics are published. In the future, will be added to a roslaunch file.**
 
-## On PC
+### On PC
 
 Launch all offboard perception with (remove last arg once Sequoia camera integrated):
 
 `roslaunch vehicle_launch prototype_offboard.launch do_multispectral_viz:=false`
 
+## Nano Drone
 
-# airsim vehicle
+First ssh into the drone (atm, only ethernet works):
 
-Start Unreal, then ArduPilot, then press Play in Unreal. (TODO: Add detailed instructions. For now, ref the google doc on airsim.)
+`ssh ubuntu@192.168.0.17`
 
-Next, start MAVROS:
+Launch all nodes with:
 
-`roslaunch vehicle_launch airsim_mavros.launch`
+`roslaunch vehicle_launch prototype.launch`
+
+### On PC
+
+Launch vizualization with:
+
+`roslaunch viz_host_machine.launch`
