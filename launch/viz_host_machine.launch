@@ -1,0 +1,4 @@
+<launch>
+    <node type="rviz" name="multispec_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz" />
+    <node type="rviz" name="zed_rviz" pkg="rviz" args="-d $(find vegetation)/config/zedrgb.rviz" />
+</launch>
