@@ -1,4 +1,5 @@
 # prototype vehicle
+Note in either vehicle case, ROS master must be the PC. Thus before any of the below, launch `roscore` on the PC.
 
 ## RPi Drone
 
@@ -9,12 +10,6 @@ First ssh into the drone:
 Launch MAVROS on the drone. Note that the ROS Master has already been set to the host PC. This command works when Pixhawk connected to Pi by USB:
 
 `roslaunch mavros apm.launch`
-
-In a second terminal on the drone, run:
-
-`rosservice call /mavros/set_stream_rate 0 10 1`
-
-**Without this, no position topics are published. In the future, will be added to a roslaunch file.**
 
 ### On PC
 
@@ -37,3 +32,13 @@ Launch all nodes with:
 Launch vizualization with:
 
 `roslaunch viz_host_machine.launch`
+
+# recording
+
+To record only the inputs (i.e., for a bag to be used in development), run:
+
+`roslaunch vehicle_launch rosbag_record_inputs.launch record_prefix:=<your dir>`
+
+To record all required variables, input or output (i.e., for a bag from flight testing for later analysis), run:
+
+`roslaunch vehicle_launch rosbag_record_all_io.launch record_prefix:=<your dir>`

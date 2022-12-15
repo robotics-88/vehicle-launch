@@ -48,6 +48,8 @@
         <param name="octomap_topic" value="$(arg octomap_topic)"/>
     </node>
 
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
+
     <group if="$(arg do_multispectral_viz)">
         <node type="rviz" name="multispec_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz" />
     </group>
