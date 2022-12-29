@@ -1,0 +1,28 @@
+
+
+image_width: 320
+image_height: 256
+camera_name: attollo_cam
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [ 1035.35966,     0.     ,   653.49527,
+             0.     ,  1035.64358,   369.82718,
+             0.     ,     0.     ,     1.     ]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.337964, 0.123943, -0.000500, -0.000057, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [ 0.99981329,  0.00214123,  0.0192041 ,
+         -0.00218342,  0.99999525,  0.00217637,
+         -0.01919934, -0.00221789,  0.99981322]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [ 999.10542,    0.     ,  640.06171,    0.     ,
+            0.     ,  999.10542,  365.41253,    0.     ,
+            0.     ,    0.     ,    1.     ,    0.     ]
