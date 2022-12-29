@@ -1,5 +1,5 @@
 <launch>
-    <arg name="record_prefix" default="/home/erin/src/rosbags/inputs_only" />
+    <arg name="record_prefix" default="/home/erin/src/bags/inputs_only" />
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix)
