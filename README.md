@@ -11,6 +11,10 @@ Launch MAVROS on the drone. Note that the ROS Master has already been set to the
 
 `roslaunch mavros apm.launch`
 
+If MAPIR NIR camera is plugged into Pi, start MAPIR image publishing with:
+
+`roslaunch vehicle_launch mapir_nir.launch`
+
 ### On PC
 
 Launch all offboard perception with (remove last arg once Sequoia camera integrated):

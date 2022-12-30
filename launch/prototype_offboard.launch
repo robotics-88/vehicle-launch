@@ -17,7 +17,7 @@
     </include>
         
     <arg name="green_image_topic" default="green_image"/>
-    <arg name="nir_image_topic" default="nir_image"/>
+    <arg name="nir_image_topic" default="/mapir_cam/image_raw"/>
     <arg name="red_image_topic" default="red_image"/>
     <arg name="rededge_image_topic" default="rededge_image"/>
 
