@@ -46,3 +46,17 @@ To record only the inputs (i.e., for a bag to be used in development), run:
 To record all required variables, input or output (i.e., for a bag from flight testing for later analysis), run:
 
 `roslaunch vehicle_launch rosbag_record_all_io.launch record_prefix:=<your dir>`
+
+# camera calibration
+
+Requires a checkerboard. Generates the camera info yaml for undistorting images and 3D projection.
+
+Example uses MAPIR camera. First, launch the camera ROS driver:
+
+`roslaunch vehicle_launch mapir_nir.launch`
+
+Then, run the camera calibrator:
+
+`rosrun camera_calibration cameracalibrator.py --size 7x7 --square 0.05715 image:=/mapir_cam/image_raw camera:=/mapir_cam`
+
+A more detailed tutorial for the calibrator can be found [here](http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration).
