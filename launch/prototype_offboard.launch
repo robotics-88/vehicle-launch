@@ -37,7 +37,7 @@
     <arg name="use_octomap" default="false"/>
     <arg name="octomap_topic" default="/zed2i/octomap_binary"/>
 
-    <node pkg="vegetation" type="vegetation" respawn="false" name="vegetation" output="screen">
+    <node pkg="vegetation" type="vegetation_node" respawn="false" name="vegetation" output="screen">
         <param name="green_image_topic" value="$(arg green_image_topic)"/>
         <param name="nir_image_topic" value="$(arg nir_image_topic)"/>
         <param name="red_image_topic" value="$(arg red_image_topic)"/>
