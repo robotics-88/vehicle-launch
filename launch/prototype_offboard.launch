@@ -16,7 +16,7 @@
         <arg name="cam_pos_z"             value="$(arg cam_pos_z)" />
     </include>
 
-    <include file="$(find vehicle_launch)/launch/mapir_nir.launch"/>
+    <include file="$(find vehicle_launch)/launch/mapir_rgn.launch"/>
     <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
         
     <arg name="green_image_topic" default="green_image"/>
