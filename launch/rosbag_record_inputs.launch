@@ -3,8 +3,9 @@
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix)
-            /mapir_cam/image_raw
-            /mapir_cam/camera_info
+            /mapir_rgn/image_raw
+            /mapir_rgn/image_rect
+            /mapir_rgn/camera_info
             /mavros/global_position/global
             /tf
             /tf_static
