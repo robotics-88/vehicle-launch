@@ -10,4 +10,14 @@
         <arg name="run_rgb_viz" value="false"/>
     </include>
 
+    <include file="$(find explore_uav)/launch/explore.launch"/>
+    <include file="$(find monarch)/launch/monarch.launch"/>
+
+    <arg name="depth_image" default="zed2i/zed_node/depth/depth_registered"/>
+    <arg name="depth_info" default="zed2i/zed_node/depth/camera_info"/>
+    <node pkg="depth_image_to_mavlink" type="depth_image_to_mavlink_node" respawn="false" name="depth_image_to_mavlink" output="screen">
+        <param name="depth_image" value="$(arg depth_image)"/>
+        <param name="depth_info" value="$(arg depth_info)"/>
+    </node>
+
 </launch>
