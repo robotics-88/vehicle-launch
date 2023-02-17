@@ -1,12 +1,16 @@
 <launch>
-    <arg name="record_prefix" default="/home/erin/src/bags/inputs_only" />
+    <arg name="record_prefix" default="/home/nanodrone/dev/bags/inputs_only" />
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix)
             /mapir_rgn/image_raw
             /mapir_rgn/image_rect
             /mapir_rgn/camera_info
+            /mavpersation/emergency
+            /mapversation/target_polygon
+            /mapversation/target_setpoint
             /mavros/global_position/global
+            /mavros/local_position/local
             /tf
             /tf_static
             /zed2i/map
@@ -14,8 +18,6 @@
             /zed2i/zed_node/depth/depth_registered
             /zed2i/zed_node/left/camera_info
             /zed2i/zed_node/left/image_rect_color
-            /zed2i/zed_node/right/camera_info
-            /zed2i/zed_node/right/image_rect_color
             "
     />
 
