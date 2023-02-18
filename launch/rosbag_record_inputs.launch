@@ -2,7 +2,7 @@
     <arg name="record_prefix" default="/home/nanodrone/dev/bags/inputs_only" />
     
     <node name="rosbag_record" pkg="rosbag" type="record"
-        args="record -o $(arg record_prefix)
+        args="record -j -o $(arg record_prefix)
             /mapir_rgn/image_raw
             /mapir_rgn/image_rect
             /mapir_rgn/camera_info
@@ -11,6 +11,7 @@
             /mapversation/target_setpoint
             /mavros/global_position/global
             /mavros/local_position/local
+            /mavros/obstacle/send
             /tf
             /tf_static
             /zed2i/map
