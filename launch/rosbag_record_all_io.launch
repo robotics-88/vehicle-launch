@@ -2,7 +2,7 @@
     <arg name="record_prefix" default="/home/nanodrone/dev/bags/all_io" />
     
     <node name="rosbag_record" pkg="rosbag" type="record"
-        args="record -j -o $(arg record_prefix)
+        args="record -o $(arg record_prefix) --split --duration=60
             /mapir_cam/image_raw
             /mapir_cam/camera_info
             /mavpersation/emergency
