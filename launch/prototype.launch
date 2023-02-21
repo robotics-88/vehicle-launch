@@ -5,9 +5,13 @@
     
     <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch"/>
 
+    <arg name="use_mapir" default="true"/>
+    <arg name="use_attollo" default="false"/>
     <include file="$(find vegetation)/launch/vegetation.launch">
         <arg name="run_multispectral_viz" value="false"/>
         <arg name="run_rgb_viz" value="false"/>
+        <arg name="use_mapir" value="$(arg use_mapir)"/>
+        <arg name="use_attollo" value="$(arg use_attollo)"/>
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch"/>
