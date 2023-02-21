@@ -4,6 +4,8 @@
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
     
     <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch"/>
+    <include file="$(find vehicle_launch)/launch/mapir_rgn.launch"/>
+    <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
 
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
