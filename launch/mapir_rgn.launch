@@ -1,5 +1,5 @@
 <launch>
-    <arg name="device_id" default="0"/>
+    <arg name="device_id" default="1"/>
     <arg name="camera_name" default="mapir_rgn"/>
     <arg name="camera_info_yaml" default="$(find vehicle_launch)/params/$(arg camera_name)_info.yaml"/>
     <arg name="image_width" default="640"/>
