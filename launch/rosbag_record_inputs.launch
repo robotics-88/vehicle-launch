@@ -3,6 +3,8 @@
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix) --split --duration=60
+            /attollo_cam/image_raw
+            /attollo_cam/camera_info
             /mapir_rgn/image_raw
             /mapir_rgn/image_rect
             /mapir_rgn/camera_info
