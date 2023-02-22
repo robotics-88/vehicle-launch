@@ -43,9 +43,19 @@ To record only the inputs (i.e., for a bag to be used in development), run:
 
 `roslaunch vehicle_launch rosbag_record_inputs.launch record_prefix:=<your dir>`
 
+^This should generally be preferred compared to below. Recording all topics risks overrunning the buffer significantly and losing all data.
+
 To record all required variables, input or output (i.e., for a bag from flight testing for later analysis), run:
 
 `roslaunch vehicle_launch rosbag_record_all_io.launch record_prefix:=<your dir>`
+
+After flight, if the rosbag record terminal shows warning messages about the buffer overrun, stop the prototype ROS nodes before the bag, and give some time (at least 60sec) before stopping the rosbag node. Verify bags by:
+
+```
+cd ~/dev/bags
+rosbag info <yourbag>.bag
+```
+Then compress all valid bags (bags with any topics shown) with `rosbag compress *.bag` after moving all valid bags to a subfolder. This will significantly speed up file transfer.
 
 # camera calibration
 
