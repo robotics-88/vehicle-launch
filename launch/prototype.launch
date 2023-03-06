@@ -18,7 +18,9 @@
     <arg name="depth_topic" default="/zed2i/zed_node/depth/depth_registered"/>
     <arg name="depth_camerainfo_topic" default="/zed2i/zed_node/depth/camera_info"/>
     
-    <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch"/>
+    <arg name="stereo_zed" default="true"/>
+    <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch" if="$(arg stereo_zed)"/>
+    <include file="$(find vehicle_launch)/launch/intel_rtabmap.launch" unless="$(arg stereo_zed)"/>
 
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
