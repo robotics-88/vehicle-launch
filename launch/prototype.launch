@@ -22,14 +22,20 @@
     <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch" if="$(arg stereo_zed)"/>
     <include file="$(find vehicle_launch)/launch/intel_rtabmap.launch" unless="$(arg stereo_zed)"/>
 
+    <!-- IR cameras -->
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
-
+    <arg name="ir_fps" default="15"/>
     <group if="$(arg use_mapir)">
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch"/>
+        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch">
+            <arg name="fps" value="$(arg ir_fps)"/>
+        </include>
         <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
     </group>
-    <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg use_attollo)"/>
+    <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg use_attollo)">
+        <arg name="fps" value="$(arg ir_fps)"/>
+    </include>
+    <!-- IR cameras -->
 
     <include file="$(find vegetation)/launch/vegetation.launch">
         <arg name="run_multispectral_viz" value="false"/>
