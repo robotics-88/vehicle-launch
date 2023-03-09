@@ -5,6 +5,7 @@
         args="record -o $(arg record_prefix) --split --duration=60
             /attollo_cam/image_raw
             /attollo_cam/camera_info
+            /heatmap_json
             /mapir_cam/image_raw
             /mapir_cam/camera_info
             /mavpersation/emergency
