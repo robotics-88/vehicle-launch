@@ -23,19 +23,27 @@ Launch all offboard perception with (remove last arg once Sequoia camera integra
 
 ## Nano Drone
 
-First ssh into the drone (atm, only ethernet works):
+First ssh into the drone (showing static IP for NETGEAR88-5G):
 
-`ssh ubuntu@192.168.0.17`
+`ssh ubuntu@192.168.1.15`
 
-Launch all nodes with:
+Launch all nodes with (default is ZED + Mapir, include last arg if also Attollo):
 
-`roslaunch vehicle_launch prototype.launch`
+`roslaunch vehicle_launch prototype.launch use_attollo:=true`
 
 ### On PC
 
 Launch vizualization with:
 
-`roslaunch viz_host_machine.launch`
+`roslaunch vehicle_launch viz_host_machine.launch`
+
+## Cameras
+
+At the moment, camera device IDs often change on start-up. Until we can automatically detect and assign IDs, check for camera IDs with:
+
+`v4l2-ctl --list-devices`
+
+Then update the `device_id` param in the respective launch files for Attollo and Mapir.
 
 # recording
 
