@@ -1,0 +1,14 @@
+<launch>
+    <include file="$(find mavros)/launch/apm.launch"/>
+
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
+
+    <include file="$(find explore_uav)/launch/explore.launch"/>
+    <include file="$(find monarch)/launch/monarch.launch"/>
+    <include file="$(find vehicle_launch)/launch/velo16.launch"/>
+
+    <include file="$(find octomap_slice)/launch/octomap_full_handling.launch">
+        <arg name="cloud_topic" value="/velodyne_points"/>
+    </include>
+
+</launch>
