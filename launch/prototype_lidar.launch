@@ -1,5 +1,5 @@
 <launch>
-    <include file="$(find mavros)/launch/apm.launch"/>
+    <include file="$(find vehicle_launch)/launch/apm.launch"/>
 
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
 
