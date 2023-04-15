@@ -1,6 +1,9 @@
 <launch>
     <include file="$(find vehicle_launch)/launch/apm.launch"/>
 
+    <arg name="cloud_topic" default="/velodyne_points"/>
+    <arg name="octomap_res" default="1.0"/> <!-- meter -->
+
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
 
     <include file="$(find explore_uav)/launch/explore.launch"/>
@@ -8,7 +11,8 @@
     <include file="$(find vehicle_launch)/launch/velo16.launch"/>
 
     <include file="$(find octomap_slice)/launch/octomap_full_handling.launch">
-        <arg name="cloud_topic" value="/velodyne_points"/>
+        <arg name="cloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="octomap_res" value="$(arg octomap_res)"/>
     </include>
 
 </launch>
