@@ -47,7 +47,7 @@ cmd:
 # global_position
 global_position:
   frame_id: "map"             # origin frame
-  child_frame_id: "base_link" # body-fixed frame
+  child_frame_id: "odom" # body-fixed frame
   rot_covariance: 99999.0   # covariance for attitude?
   gps_uere: 1.0             # User Equivalent Range Error (UERE) of GPS sensor (m)
   use_relative_alt: true    # use relative altitude for local coordinates
@@ -55,11 +55,11 @@ global_position:
     send: true               # send TF?
     frame_id: "map"  # TF frame_id
     global_frame_id: "world"  # TF earth frame_id
-    child_frame_id: "base_link" # TF child_frame_id
+    child_frame_id: "odom" # TF child_frame_id
 
 # imu_pub
 imu:
-  frame_id: "base_link"
+  frame_id: "odom"
   # need find actual values
   linear_acceleration_stdev: 0.0003
   angular_velocity_stdev: 0.0003490659 // 0.02 degrees
@@ -72,7 +72,7 @@ local_position:
   tf:
     send: true
     frame_id: "map"
-    child_frame_id: "base_link"
+    child_frame_id: "odom"
     send_fcu: false
 
 # param

@@ -1,6 +1,13 @@
 <launch>
-    <node type="rviz" name="multispec_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz" />
-    <node type="rviz" name="zed_rviz" pkg="rviz" args="-d $(find vegetation)/config/zedrgb.rviz" />
+    <!-- <node type="rviz" name="multispec_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz" />
+    <node type="rviz" name="zed_rviz" pkg="rviz" args="-d $(find vegetation)/config/zedrgb.rviz" /> -->
     <node type="rviz" name="lidar_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/lidar.rviz" />
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <arg name="cloud_topic" default="/velodyne_points"/>
+    <include file="$(find aloam_velodyne)/launch/aloam_velodyne_VLP_16.launch">
+        <arg name="map_frame" value="map"/>
+        <arg name="uav_frame" value="base_link"/>
+        <arg name="cloud_topic" value="$(arg cloud_topic)"/>
+    </include>
 </launch>

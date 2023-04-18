@@ -2,7 +2,7 @@
     <include file="$(find vehicle_launch)/launch/apm.launch"/>
 
     <arg name="cloud_topic" default="/velodyne_points"/>
-    <arg name="octomap_res" default="1.0"/> <!-- meter -->
+    <arg name="octomap_res" default="0.2"/> <!-- meter -->
 
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
 
@@ -10,8 +10,15 @@
     <include file="$(find monarch)/launch/monarch.launch"/>
     <include file="$(find vehicle_launch)/launch/velo16.launch"/>
 
-    <include file="$(find octomap_slice)/launch/octomap_full_handling.launch">
+    <!-- <include file="$(find aloam_velodyne)/launch/aloam_velodyne_VLP_16.launch">
+        <arg name="map_frame" value="map"/>
+        <arg name="uav_frame" value="base_link"/>
+        <arg name="rviz" value="false"/>
         <arg name="cloud_topic" value="$(arg cloud_topic)"/>
+    </include> -->
+
+    <include file="$(find octomap_slice)/launch/octomap_full_handling.launch">
+        <arg name="cloud_topic" value="/velodyne_cloud_registered"/>
         <arg name="octomap_res" value="$(arg octomap_res)"/>
     </include>
 
