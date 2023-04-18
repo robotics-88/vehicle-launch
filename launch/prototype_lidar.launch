@@ -22,4 +22,14 @@
         <arg name="octomap_res" value="$(arg octomap_res)"/>
     </include>
 
+    <arg name="use_mapir" default="true"/>
+    <arg name="use_attollo" default="false"/>
+    <arg name="ir_fps" default="15"/>
+    <group if="$(arg use_mapir)">
+        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch">
+            <arg name="fps" value="$(arg ir_fps)"/>
+        </include>
+        <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
+    </group>
+
 </launch>
