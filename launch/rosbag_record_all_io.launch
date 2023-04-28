@@ -14,8 +14,10 @@
             /mavros/global_position/global
             /mavros/local_position/local
             /mavros/obstacle/send
+            /octomap_slice
             /tf
             /tf_static
+            /velodyne_points
             /zed2i/map
             /zed2i/zed_node/depth/camera_info
             /zed2i/zed_node/depth/depth_registered
@@ -24,6 +26,7 @@
             /gci
             /gli
             /gli_heatmap
+            /ndmi
             /ndvi
             /ndwi
             /rci
