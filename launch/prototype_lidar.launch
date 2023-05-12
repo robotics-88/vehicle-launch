@@ -19,8 +19,7 @@
     </include> -->
 
     <include file="$(find vehicle_launch)/launch/oa_dynobs.launch">
-        <arg name="cloud_topic" value="$(arg cloud_topic)"/>
-        <arg name="octomap_res" value="$(arg octomap_res)"/>
+        <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="reg_cloud_topic" value="$(arg reg_cloud_topic)"/>
     </include>
 
