@@ -7,6 +7,7 @@ find_package(OpenCV REQUIRED)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
+  cv_camera
   mavros_msgs
   roscpp
   roslib
