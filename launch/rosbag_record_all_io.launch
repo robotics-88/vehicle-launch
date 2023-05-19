@@ -5,16 +5,23 @@
         args="record -o $(arg record_prefix) --split --duration=60
             /attollo_cam/image_raw
             /attollo_cam/camera_info
+            /cloud_registered
+            /explore/frontiers
+            /goal
             /heatmap_json
+            /kd_pointcloud_accumulated
             /mapir_cam/image_raw
             /mapir_cam/camera_info
             /mavpersation/emergency
             /mapversation/target_polygon
             /mapversation/target_setpoint
             /mavros/global_position/global
-            /mavros/local_position/local
+            /mavros/local_position/pose
             /mavros/obstacle/send
+            /mavros/setpoint_position/local
+            /octomap_full
             /octomap_slice
+            /search_node/trajectory_position
             /tf
             /tf_static
             /velodyne_points
