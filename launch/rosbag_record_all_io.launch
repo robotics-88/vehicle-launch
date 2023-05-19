@@ -10,8 +10,8 @@
             /goal
             /heatmap_json
             /kd_pointcloud_accumulated
-            /mapir_cam/image_raw
-            /mapir_cam/camera_info
+            /mapir_rgn/image_raw
+            /mapir_rgn/camera_info
             /mavpersation/emergency
             /mapversation/target_polygon
             /mapversation/target_setpoint
