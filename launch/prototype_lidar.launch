@@ -1,4 +1,7 @@
 <launch>
+    <arg name="enable_autonomy" default="false"/>
+    <arg name="enable_exploration" default="false"/>
+
     <include file="$(find vehicle_launch)/launch/apm.launch"/>
 
     <arg name="cloud_topic" default="/velodyne_points"/>
@@ -9,7 +12,12 @@
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
 
     <include file="$(find explore_uav)/launch/explore.launch"/>
-    <include file="$(find monarch)/launch/monarch.launch"/>
+
+    <include file="$(find monarch)/launch/monarch.launch">
+        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
+        <arg name="enable_exploration" value="$(arg enable_exploration)"/>
+    </include>
+    
     <include file="$(find vehicle_launch)/launch/velo16.launch"/>
 
     <!-- <include file="$(find aloam_velodyne)/launch/aloam_velodyne_VLP_16.launch">
