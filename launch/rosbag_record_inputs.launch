@@ -13,9 +13,11 @@
             /mavpersation/emergency
             /mapversation/target_polygon
             /mapversation/target_setpoint
+            /mavros/battery
             /mavros/global_position/global
             /mavros/local_position/pose
             /mavros/obstacle/send
+            /mavros/state
             /octomap_slice
             /tf
             /tf_static

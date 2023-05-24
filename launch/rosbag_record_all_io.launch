@@ -3,6 +3,7 @@
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix) --split --duration=60
+            /actual_path
             /attollo_cam/image_raw
             /attollo_cam/camera_info
             /cloud_registered
@@ -15,10 +16,13 @@
             /mavpersation/emergency
             /mapversation/target_polygon
             /mapversation/target_setpoint
+            /mavros/battery
             /mavros/global_position/global
             /mavros/local_position/pose
             /mavros/obstacle/send
+            /mavros/odometry/out
             /mavros/setpoint_position/local
+            /mavros/state
             /octomap_full
             /octomap_slice
             /search_node/trajectory_position
