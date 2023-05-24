@@ -25,6 +25,7 @@
             /mavros/state
             /octomap_full
             /octomap_slice
+            /path
             /search_node/trajectory_position
             /tf
             /tf_static
