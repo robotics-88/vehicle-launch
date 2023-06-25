@@ -20,6 +20,8 @@
 
   <depend>cv_camera</depend>
   <depend>mavros_msgs</depend>
+  <depend>octomap_rviz_plugins</depend>
+  <depend>rosbridge_server</depend>
   <depend>roscpp</depend>
   <depend>roslib</depend>
   <depend>std_msgs</depend>

@@ -9,6 +9,8 @@ find_package(OpenCV REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   cv_camera
   mavros_msgs
+  octomap_rviz_plugins
+  rosbridge_server
   roscpp
   roslib
   std_msgs
