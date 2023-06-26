@@ -65,6 +65,12 @@ rosbag info <yourbag>.bag
 ```
 Then compress all valid bags (bags with any topics shown) with `rosbag compress *.bag` after moving all valid bags to a subfolder. This will significantly speed up file transfer.
 
+If jpegs are needed, run
+
+`roslaunch vehicle_launch jpeg_from_bag.launch bag:=<your bag>`,
+
+then `mv ~/.ros/frame*.jpg <desired dir>`.
+
 # camera calibration
 
 Requires a checkerboard. Generates the camera info yaml for undistorting images and 3D projection.
