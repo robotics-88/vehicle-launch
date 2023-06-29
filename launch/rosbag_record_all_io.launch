@@ -18,6 +18,7 @@
             /mapversation/target_setpoint
             /mavros/battery
             /mavros/global_position/global
+            /mavros/imu/data
             /mavros/local_position/pose
             /mavros/obstacle/send
             /mavros/odometry/out
