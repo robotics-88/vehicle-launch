@@ -20,7 +20,7 @@
     <!-- Autopilot -->
     <include file="$(find vehicle_launch)/launch/apm.launch"/>
     <!-- Required command for MAVROS to publish mav topics -->
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
     <include file="$(find vehicle_launch)/launch/velo16.launch"/>
 
