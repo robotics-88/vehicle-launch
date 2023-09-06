@@ -84,3 +84,11 @@ Then, run the camera calibrator:
 `rosrun camera_calibration cameracalibrator.py --size 7x7 --square 0.05715 image:=/mapir_cam/image_raw camera:=/mapir_cam`
 
 A more detailed tutorial for the calibrator can be found [here](http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration).
+
+# GoPro
+
+When connected by USB, the GoPro is not available for ROS until the following is run:
+
+`sudo gopro webcam -p enx -n -a`
+
+after following the instructions at this [repo](https://github.com/jschmid1/gopro_as_webcam_on_linux). Note GoPro still needs a camera calibration yaml using the standard chessboard process.
