@@ -72,12 +72,12 @@
         <arg name="raw_cloud_topic" value="$(arg raw_lidar_topic)"/>
         <arg name="reg_cloud_topic" value="$(arg registered_lidar_topic)"/>
     </include> -->
-    <node pkg="rs_to_velodyne" type="rs_to_velodyne" name="rs_to_velodyne" args="XYZI XYZIR">
+    <!-- <node pkg="rs_to_velodyne" type="rs_to_velodyne" name="rs_to_velodyne" args="XYZI XYZIR">
         <remap from="rslidar_points" to="airsim_ros_node/base_link_frd/lidar/Lidar2"/>
     </node>
     <node pkg="tf" type="static_transform_publisher" name="velodyne_pub" args="0 0 0 0 0 0 base_link/Lidar2 velodyne 100"/>
 
-    <include file="$(find airsim_launch)/launch/airsim_cmu_lio.launch"/>
+    <include file="$(find airsim_launch)/launch/airsim_cmu_lio.launch"/> -->
 
     <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen">
         <param name="default_speed" value="$(arg default_speed)"/>
