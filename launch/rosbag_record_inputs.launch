@@ -1,5 +1,5 @@
 <launch>
-    <arg name="record_prefix" default="/home/nanodrone/dev/bags/inputs_only" />
+    <arg name="record_prefix" default="/home/erinpc/src/bags/airsim/longer/inputs_" />
     
     <node name="rosbag_record" pkg="rosbag" type="record"
         args="record -o $(arg record_prefix) --split --duration=60

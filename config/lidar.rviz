@@ -8,6 +8,8 @@ Panels:
         - /Status1
         - /Mapir1
         - /Obs Avoid Path1/Offset1
+        - /Mavros Obstacle1
+        - /Mavros Obstacle1/Status1
       Splitter Ratio: 0.5
     Tree Height: 823
   - Class: rviz/Selection
@@ -182,6 +184,8 @@ Visualization Manager:
           Value: true
         base_link_frd:
           Value: true
+        base_link_frd_stabilized:
+          Value: true
         map:
           Value: true
         map_ned:
@@ -203,15 +207,16 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          base_link_frd:
-            {}
-          mapir_cam:
-            mapir_rgn:
-              {}
-          velodyne:
-            {}
         map:
+          base_link:
+            base_link_frd:
+              base_link_frd_stabilized:
+                {}
+            mapir_cam:
+              mapir_rgn:
+                {}
+            velodyne:
+              {}
           map_ned:
             {}
         odom:
@@ -333,8 +338,8 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color: 255; 0; 127
+      Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -345,7 +350,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.009999999776482582
+      Size (m): 0.10000000149011612
       Style: Flat Squares
       Topic: /mavros/obstacle/send
       Unreliable: false
@@ -380,7 +385,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 6.066391944885254
+      Distance: 6.049981117248535
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -396,9 +401,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 0.9997968673706055
       Target Frame: <Fixed Frame>
-      Yaw: 3.0104100704193115
+      Yaw: 2.8454103469848633
     Saved: ~
 Window Geometry:
   Displays:
