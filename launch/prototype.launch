@@ -1,28 +1,42 @@
 <launch>
-    <include file="$(find mavros)/launch/apm.launch"/>
+    <!-- Safe guards -->
+    <arg name="enable_autonomy" default="false"/>
+    <arg name="enable_exploration" default="false"/>
 
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 10 1"/>
+    <!-- Pointcloud topics, shared -->
+    <arg name="cloud_topic" default="/velodyne_points"/>
+    <arg name="reg_cloud_topic" default="/cloud_registered"/>
 
-    <arg name="swir_topic" default="/attollo_cam/image_raw"/>
-    <arg name="swir_info_topic" default="/attollo_cam/camera_info"/>
+    <!-- Octomap args -->
+    <arg name="octomap_res" default="0.2"/> <!-- meter -->
+    <arg name="rviz" default="false"/>
 
-    <!-- Intel realsense -->
-    <!-- <arg name="rgb_topic" default="/camera/color/image_raw"/>
-    <arg name="rgb_info_topic" default="/camera/color/camera_info"/>
-    <arg name="depth_topic" default="/camera/depth/image_rect_raw"/>
-    <arg name="depth_camerainfo_topic" default="/camera/depth/camera_info"/> -->
+    <!-- Common control args -->
+    <arg name="min_alt" default="0.2"/>
+    <arg name="max_alt" default="10.0"/>
+    <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
+    <arg name="default_speed" default="0.2"/> <!-- m/s-->
 
-    <!-- ZED2i -->
-    <arg name="rgb_topic" default="/zed2i/zed_node/left/image_rect_color"/>
-    <arg name="rgb_info_topic" default="/zed2i/zed_node/left/camera_info"/>
-    <arg name="depth_topic" default="/zed2i/zed_node/depth/depth_registered"/>
-    <arg name="depth_camerainfo_topic" default="/zed2i/zed_node/depth/camera_info"/>
-    
-    <arg name="stereo_zed" default="true"/>
-    <include file="$(find vehicle_launch)/launch/zed_rtabmap.launch" if="$(arg stereo_zed)"/>
-    <include file="$(find vehicle_launch)/launch/intel_rtabmap.launch" unless="$(arg stereo_zed)"/>
+    <!-- Autopilot -->
+    <include file="$(find vehicle_launch)/launch/apm.launch"/>
+    <!-- Required command for MAVROS to publish mav topics -->
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
-    <!-- IR cameras -->
+    <include file="$(find vehicle_launch)/launch/velo16.launch"/>
+
+    <include file="$(find vehicle_launch)/launch/oa_dynobs.launch">
+        <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="reg_cloud_topic" value="$(arg reg_cloud_topic)"/>
+        <arg name="min_alt" value="$(arg min_alt)"/>
+        <arg name="max_alt" value="$(arg max_alt)"/>
+    </include>
+
+    <include file="$(find monarch)/launch/monarch.launch">
+        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
+        <arg name="enable_exploration" value="$(arg enable_exploration)"/>
+        <arg name="default_altitude_m" value="$(arg default_alt)"/>
+    </include>
+
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
     <arg name="ir_fps" default="15"/>
@@ -32,32 +46,5 @@
         </include>
         <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
     </group>
-    <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg use_attollo)">
-        <arg name="fps" value="$(arg ir_fps)"/>
-    </include>
-    <!-- IR cameras -->
-
-    <include file="$(find vegetation)/launch/vegetation.launch">
-        <arg name="run_multispectral_viz" value="false"/>
-        <arg name="run_rgb_viz" value="false"/>
-        <arg name="use_mapir" value="$(arg use_mapir)"/>
-        <arg name="use_attollo" value="$(arg use_attollo)"/>
-        <arg name="swir_topic" value="$(arg swir_topic)"/>
-        <arg name="swir_info_topic" value="$(arg swir_info_topic)"/>
-        <arg name="rgb_topic" value="$(arg rgb_topic)"/>
-        <arg name="rgb_info_topic" value="$(arg rgb_info_topic)"/>
-        <arg name="depth_topic" value="$(arg depth_topic)"/>
-        <arg name="depth_camerainfo_topic" value="$(arg depth_camerainfo_topic)"/>
-    </include>
-
-    <include file="$(find explore_uav)/launch/explore.launch"/>
-    <include file="$(find monarch)/launch/monarch.launch"/>
-
-    <arg name="depth_image" default="zed2i/zed_node/depth/depth_registered"/>
-    <arg name="depth_info" default="zed2i/zed_node/depth/camera_info"/>
-    <node pkg="depth_image_to_mavlink" type="depth_image_to_mavlink_node" respawn="false" name="depth_image_to_mavlink" output="screen">
-        <param name="depth_image" value="$(arg depth_image)"/>
-        <param name="depth_info" value="$(arg depth_info)"/>
-    </node>
 
 </launch>
