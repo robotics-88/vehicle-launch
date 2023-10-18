@@ -37,6 +37,11 @@
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
 
+    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch">
+        <arg name="point_cloud_topic" value="$(arg raw_lidar_topic)"/>
+        <arg name="data_type" value="point_cloud"/>
+    </include>
+
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
     <arg name="ir_fps" default="15"/>
