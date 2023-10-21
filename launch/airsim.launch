@@ -71,7 +71,7 @@
         <arg name="data_type" value="point_cloud"/>
     </include>
 
-    <group if="$(arg do_slam)"/>
+    <group if="$(arg do_slam)">
         <include file="$(find airsim_launch)/launch/airsim_oa.launch">
             <arg name="min_alt" value="$(arg min_alt)"/>
             <arg name="max_alt" value="$(arg max_alt)"/>
