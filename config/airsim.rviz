@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Lidar Returns1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 744
@@ -84,8 +83,8 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color: 0; 255; 255
+      Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -98,7 +97,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.10000000149011612
       Style: Flat Squares
-      Topic: /airsim_ros_node/base_link_frd/lidar/Lidar2
+      Topic: /airsim_ros_node/MyVehicle/lidar/Lidar2
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -239,7 +238,7 @@ Visualization Manager:
       Marker Topic: /map_region
       Name: Assigned Map Region
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -270,6 +269,22 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: MavrosSetpoint
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /mavros/setpoint_position/local
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -298,7 +313,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 68.30122375488281
+      Distance: 50.037784576416016
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -306,17 +321,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 6.910782814025879
-        Y: -7.481991291046143
-        Z: 2.4517393112182617
+        X: 1.7797363996505737
+        Y: -0.8523705005645752
+        Z: 0.8508428931236267
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.29479727149009705
+      Pitch: 0.4953985810279846
       Target Frame: <Fixed Frame>
-      Yaw: 4.690391540527344
+      Yaw: 3.3204057216644287
     Saved: ~
 Window Geometry:
   Displays:

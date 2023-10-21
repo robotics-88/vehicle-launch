@@ -19,6 +19,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <depend>cv_camera</depend>
+  <depend>image_proc</depend>
   <depend>mavros_msgs</depend>
   <depend>octomap_rviz_plugins</depend>
   <depend>rosbridge_server</depend>

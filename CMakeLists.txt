@@ -8,6 +8,7 @@ find_package(OpenCV REQUIRED)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   cv_camera
+  image_proc
   mavros_msgs
   octomap_rviz_plugins
   rosbridge_server
