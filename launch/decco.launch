@@ -3,12 +3,21 @@
     <arg name="enable_autonomy" default="false"/>
     <arg name="enable_exploration" default="false"/>
 
+    <!-- Which nodes -->
+    <arg name="do_exploration" default="false"/>
+    <arg name="do_octomap" default="false"/>
+    <arg name="do_bendyruler" default="true"/>
+    <arg name="do_velodyne" default="true"/>
+    <arg name="do_vegetation" default="true"/>
+    <arg name="use_mapir" default="true"/>
+    <arg name="use_attollo" default="false"/>
+
     <!-- Pointcloud topics, shared -->
     <arg name="cloud_topic" default="/velodyne_points"/>
     <arg name="reg_cloud_topic" default="/cloud_registered"/>
 
     <!-- Octomap args -->
-    <arg name="octomap_res" default="0.2"/> <!-- meter -->
+    <arg name="map_resolution" default="1.0"/> <!-- meter -->
     <arg name="rviz" default="false"/>
 
     <!-- Common control args -->
@@ -22,7 +31,7 @@
     <!-- Required command for MAVROS to publish mav topics -->
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
-    <include file="$(find vehicle_launch)/launch/velo16.launch"/>
+    <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
 
     <include file="$(find vehicle_launch)/launch/oa_dynobs.launch">
         <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
@@ -37,13 +46,33 @@
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
 
-    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch">
-        <arg name="point_cloud_topic" value="$(arg raw_lidar_topic)"/>
+    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_bendyruler)">
+        <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="data_type" value="point_cloud"/>
     </include>
 
-    <arg name="use_mapir" default="true"/>
-    <arg name="use_attollo" default="false"/>
+    <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
+        <arg name="cloud_in" value="$(arg cloud_topic)"/>
+        <arg name="default_alt" value="$(arg default_alt)"/>
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
+
+    <include file="$(find octomap_slice)/launch/octomap_full_handling.launch" if="$(arg do_octomap)">
+        <arg name="cloud_topic" value="$(arg reg_cloud_topic)"/>
+        <arg name="octomap_res" value="$(arg map_resolution)"/>
+        <arg name="slice_height" value="$(arg default_alt)"/>
+        <arg name="rviz" value="$(arg rviz)"/>
+    </include>
+
+    <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
+        <arg name="pointcloud_topic" value="$(arg cloud_topic)"/> <!-- Change to registered cloud topic once SLAM is working well -->
+        <arg name="run_multispectral_viz" value="false"/>
+        <arg name="run_rgb_viz" value="false"/>
+        <arg name="use_mapir" value="$(arg use_mapir)"/>
+        <arg name="use_attollo" value="$(arg use_attollo)"/>
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
+
     <arg name="ir_fps" default="15"/>
     <group if="$(arg use_mapir)">
         <include file="$(find vehicle_launch)/launch/mapir_rgn.launch">

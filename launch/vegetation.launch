@@ -1,0 +1,58 @@
+<launch>
+
+    <arg name="use_mapir" default="true"/>
+    <arg name="use_attollo" default="false"/>
+    <!-- Dont need use_zed param bc zed is minimally required for heatmaps -->
+    <arg name="no_zed" default="true"/>
+
+    <arg name="veg_processing_period" default="0.1"/>
+    <arg name="green_image_topic" default="green_image"/>
+    <arg name="nir_image_topic" default="/mapir_rgn/image_rect"/>
+    <arg name="red_image_topic" default="red_image"/>
+    <arg name="rededge_image_topic" default="rededge_image"/>
+
+    <arg name="swir_topic" default="/attollo_cam/image_raw"/>
+    <arg name="swir_info_topic" default="/attollo_cam/camera_info"/>
+
+    <arg name="pointcloud_topic" default="/velodyne_points"/>
+    <arg name="map_resolution" default="1.0"/>
+
+    <!-- Intel realsense -->
+    <!-- <arg name="rgb_topic" default="/camera/color/image_raw"/>
+    <arg name="rgb_info_topic" default="/camera/color/camera_info"/>
+    <arg name="depth_topic" default="/camera/depth/image_rect_raw"/>
+    <arg name="depth_camerainfo_topic" default="/camera/depth/camera_info"/> -->
+
+    <!-- ZED2i -->
+    <arg name="rgb_topic" default="/zed2i/zed_node/left/image_rect_color"/>
+    <arg name="rgb_info_topic" default="/zed2i/zed_node/left/camera_info"/>
+    <arg name="depth_topic" default="/zed2i/zed_node/depth/depth_registered"/>
+    <arg name="depth_camerainfo_topic" default="/zed2i/zed_node/depth/camera_info"/>
+
+    <arg name="do_object_det" default="false"/>
+
+    <arg name="pub_multispectral_viz" default="true"/>
+    <arg name="pub_rgb_viz" default="true"/>
+    <arg name="run_multispectral_viz" default="true"/>
+    <arg name="run_rgb_viz" default="true"/>
+
+    <arg name="map_frame_id" default="map"/>
+
+    <arg name="use_octomap" default="true"/>
+    <arg name="octomap_topic" default="/zed2i/octomap_binary"/>
+
+    <include file="$(find vegetation)/launch/vegetation.launch">
+        <arg name="pointcloud_topic" value="$(arg pointcloud_topic)"/>
+        <arg name="run_multispectral_viz" value="$(arg run_multispectral_viz)"/>
+        <arg name="run_rgb_viz" value="$(arg run_rgb_viz)"/>
+        <arg name="use_octomap" value="$(arg use_octomap)"/>
+        <arg name="use_mapir" value="$(arg use_mapir)"/>
+        <arg name="use_attollo" value="$(arg use_attollo)"/>
+        <arg name="swir_topic" value="$(arg swir_topic)"/>
+        <arg name="swir_info_topic" value="$(arg swir_info_topic)"/>
+        <arg name="rgb_topic" value="$(arg rgb_topic)"/>
+        <arg name="rgb_info_topic" value="$(arg rgb_info_topic)"/>
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
+
+</launch>
