@@ -8,7 +8,7 @@
     <arg name="lidar_type" default="2"/>
     <arg name="N_SCANS" default="16"/>
 
-    <include file="$(find fast_lio)/launch/mapping_avia.launch">
+    <include file="$(find fast_lio)/launch/mapping_mid360.launch">
         <arg name="uav_frame" value="$(arg uav_frame)"/>
         <arg name="map_frame" value="$(arg map_frame)"/>
         <arg name="raw_cloud_topic" value="$(arg raw_cloud_topic)"/>
