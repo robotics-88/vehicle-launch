@@ -1,4 +1,8 @@
 <launch>
+
+    <!-- Simulation args -->
+    <arg name="simulate" default="false"/>
+
     <!-- Safe guards -->
     <arg name="enable_autonomy" default="false"/>
     <arg name="enable_exploration" default="false"/>
@@ -11,21 +15,26 @@
     -->
     <arg name="lidar_type" default="0"/>
 
-    <!-- Which nodes -->
+    <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="false"/>
     <arg name="do_octomap" default="false"/>
     <arg name="do_rangedata" default="true"/>
-    <arg name="do_mid360" default="$(eval lidar_type == 0)"/>
-    <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
     <arg name="do_vegetation" default="false"/>
     <arg name="do_monarch" default="false"/>
-    <arg name="use_mapir" default="false"/>
-    <arg name="use_attollo" default="false"/>
+
+    <arg name="do_mid360" default="$(eval lidar_type == 0)"/>
+    <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
+    <arg name="do_mapir" default="false"/>
+    <arg name="do_attollo" default="false"/>
 
     <!-- Pointcloud topics, shared -->
-    <arg name="cloud_topic" default="/livox/lidar" if="$(eval lidar_type == 0)"/>
-    <arg name="cloud_topic" default="/velodyne_points" if="$(eval lidar_type == 2)"/>
+    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 0)"/>
+    <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval lidar_type == 2)"/>
+    <arg name="cloud_topic_sim" default="/velodyne_points" if="$(arg simulate)"/>
+
+    <arg name="cloud_topic" default="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
+    <arg name="cloud_topic" default="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
     <arg name="reg_cloud_topic" default="/cloud_registered"/>
 
     <!-- Common control args -->
@@ -34,9 +43,11 @@
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
 
-    <!-- Autopilot -->
+    <!-- MAVROS nodes -->
     <include file="$(find vehicle_launch)/launch/apm.launch">
         <arg name="do_slam" value="$(arg do_slam)"/>
+        <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
+        <arg name="fcu_url" value="udp://127.0.0.1:14551@" if="$(arg simulate)"/>
     </include>
     <!-- Required command for MAVROS to publish mav topics -->
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
@@ -45,15 +56,14 @@
         <param name="default_speed" value="$(arg default_speed)"/>
     </node>
 
+    <!-- Simulation -->
+    <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)"/>
 
-    <!-- Lidar nodes -->
-    <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-
-    <group if="$(arg do_mid360)">
-        <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch">
-            <arg name="xfer_format" value="0"/>
-        </include>
-        <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+    <!-- Hardware nodes (non-simulation only) -->
+    <group unless="$(arg simulate)">
+        <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
+        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
+        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
     </group>
 
     <!-- Feature nodes -->
@@ -77,7 +87,7 @@
     </include>
 
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
-    <arg name="rviz" default="false"/>
+    <arg name="rviz" default="$(arg simulate)"/>
     <include file="$(find octomap_slice)/launch/octomap_full_handling.launch" if="$(arg do_octomap)">
         <arg name="cloud_topic" value="$(arg reg_cloud_topic)"/>
         <arg name="octomap_res" value="$(arg map_resolution)"/>
@@ -89,18 +99,10 @@
         <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
         <arg name="run_multispectral_viz" value="false"/>
         <arg name="run_rgb_viz" value="false"/>
-        <arg name="use_mapir" value="$(arg use_mapir)"/>
-        <arg name="use_attollo" value="$(arg use_attollo)"/>
+        <arg name="do_mapir" value="$(arg do_mapir)"/>
+        <arg name="do_attollo" value="$(arg do_attollo)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
     </include>
-
-    <arg name="ir_fps" default="15"/>
-    <group if="$(arg use_mapir)">
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch">
-            <arg name="fps" value="$(arg ir_fps)"/>
-        </include>
-        <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
-    </group>
 
     <include file="$(find monarch)/launch/monarch.launch" if="$(arg do_monarch)">
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
