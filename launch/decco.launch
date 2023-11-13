@@ -57,7 +57,12 @@
     </node>
 
     <!-- Simulation -->
+    <arg name="vehicle_name" default="/airsim_ros_node/MyVehicle"/>
+    <arg name="enable_cameras" default="false"/>
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)"/>
+        <arg name="enable_cameras" value="$(arg enable_cameras)"/>
+        <arg name="vehicle_name" default="$(arg vehicle_name)"/>
+    </include>
 
     <!-- Hardware nodes (non-simulation only) -->
     <group unless="$(arg simulate)">
