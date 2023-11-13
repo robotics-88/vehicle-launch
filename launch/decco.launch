@@ -57,7 +57,7 @@
     </node>
 
     <!-- Simulation -->
-    <arg name="vehicle_name" default="/airsim_ros_node/MyVehicle"/>
+    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)"/>
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>

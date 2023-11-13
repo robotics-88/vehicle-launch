@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="vehicle_name" default="/airsim_ros_node/MyVehicle"/>
+    <arg name="vehicle_name" default="MyVehicle"/>
     <arg name="vehicle_frame" default="base_link"/>
     <arg name="odom_frame" default="odom"/>
     <arg name="map_frame" default="map"/>
@@ -10,7 +10,7 @@
     <arg name="control_pub_freq" default=".1"/>
     <arg name="update_imu_n_sec" default=".1"/>
     <arg name="enable_cameras" default="false"/>
-    <arg name="raw_lidar_topic" value="$(arg vehicle_name)/lidar/Lidar2"/>
+    <arg name="raw_lidar_topic" value="$/airsim_ros_node/(arg vehicle_name)/lidar/Lidar2"/>
 
     <node pkg="airsim_launch" type="airsim_node" respawn="false" name="airsim_ros_node" output="screen">
         <param name="update_airsim_img_response_every_n_sec" value="$(arg image_pub_freq)" />
