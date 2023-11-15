@@ -19,6 +19,8 @@
     <arg name="lidar_type" default="2" if="$(arg simulate)"/>
     <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
 
+    <arg name="imu_topic" default="/mavros/imu/data"/>
+
     <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="false"/>
@@ -72,6 +74,7 @@
     <!-- Feature nodes -->
     <include file="$(find path_planning)/launch/slam.launch" if="$(arg do_slam)">
         <arg name="lidar_type" value="$(arg lidar_type)"/>
+        <arg name="imu_topic" default="$(arg imu_topic)"/>
         <arg name="rviz" value="$(arg simulate)"/>
     </include>
 
