@@ -11,6 +11,8 @@
             /goal
             /heatmap_json
             /kd_pointcloud_accumulated
+            /livox/lidar
+            /livox/imu
             /mapir_rgn/image_raw
             /mapir_rgn/camera_info
             /mavpersation/emergency

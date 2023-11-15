@@ -72,13 +72,15 @@
     </group>
 
     <!-- Feature nodes -->
-    <include file="$(find vehicle_launch)/launch/oa_dynobs.launch" if="$(arg do_slam)">
+    <!-- <include file="$(find vehicle_launch)/launch/oa_dynobs.launch" if="$(arg do_slam)">
         <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="reg_cloud_topic" value="$(arg reg_cloud_topic)"/>
         <arg name="min_alt" value="$(arg min_alt)"/>
         <arg name="max_alt" value="$(arg max_alt)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
-    </include>
+    </include> -->
+
+    <include file="$(find path_planning)/launch/demo_velodyne.launch" if="$(arg do_slam)"/>
 
     <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata)">
         <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
