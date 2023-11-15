@@ -23,7 +23,7 @@
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="true"/>
     <arg name="do_octomap" default="true"/>
-    <arg name="do_rangedata" default="true"/>
+    <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
 
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
@@ -86,7 +86,7 @@
         <param name="default_speed" value="$(arg default_speed)"/>
     </node>
 
-    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata)">
+    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
         <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="data_type" value="point_cloud"/>
     </include>
