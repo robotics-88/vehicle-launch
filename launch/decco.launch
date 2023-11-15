@@ -8,12 +8,13 @@
     <arg name="enable_exploration" default="false"/>
 
     <!-- Which lidar
-        0: Mid360
+        0: Mid40
         1: Horizon
         2: Velodyne
         3: Oust64
+        4: Mid360
     -->
-    <arg name="lidar_type" default="0"/>
+    <arg name="lidar_type" default="4"/>
 
     <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
@@ -23,13 +24,13 @@
     <arg name="do_vegetation" default="false"/>
     <arg name="do_monarch" default="false"/>
 
-    <arg name="do_mid360" default="$(eval lidar_type == 0)"/>
+    <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
     <arg name="do_mapir" default="false"/>
     <arg name="do_attollo" default="false"/>
 
     <!-- Pointcloud topics, shared -->
-    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 0)"/>
+    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 4)"/>
     <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval lidar_type == 2)"/>
     <arg name="cloud_topic_sim" default="/velodyne_points" if="$(arg simulate)"/>
 
