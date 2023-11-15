@@ -14,7 +14,7 @@
         3: Oust64
         4: Mid360
     -->
-    <arg name="lidar_type" default="4"/>
+    <arg name="lidar_type" default="2"/>
 
     <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
