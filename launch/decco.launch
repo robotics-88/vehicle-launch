@@ -52,10 +52,6 @@
     <!-- Required command for MAVROS to publish mav topics -->
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
-    <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen">
-        <param name="default_speed" value="$(arg default_speed)"/>
-    </node>
-
     <!-- Simulation -->
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
@@ -72,15 +68,13 @@
     </group>
 
     <!-- Feature nodes -->
-    <!-- <include file="$(find vehicle_launch)/launch/oa_dynobs.launch" if="$(arg do_slam)">
-        <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
-        <arg name="reg_cloud_topic" value="$(arg reg_cloud_topic)"/>
-        <arg name="min_alt" value="$(arg min_alt)"/>
-        <arg name="max_alt" value="$(arg max_alt)"/>
-        <arg name="lidar_type" value="$(arg lidar_type)"/>
-    </include> -->
+    <include file="$(find path_planning)/launch/demo_velodyne.launch" if="$(arg do_slam)">
+        <arg name="rviz" value="$(arg simulate)"/>
+    </include>
 
-    <include file="$(find path_planning)/launch/demo_velodyne.launch" if="$(arg do_slam)"/>
+    <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen" if="$(arg do_slam)">
+        <param name="default_speed" value="$(arg default_speed)"/>
+    </node>
 
     <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata)">
         <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
