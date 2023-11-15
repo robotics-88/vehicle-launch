@@ -110,8 +110,8 @@
         <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
         <arg name="run_multispectral_viz" value="false"/>
         <arg name="run_rgb_viz" value="false"/>
-        <arg name="do_mapir" value="$(arg do_mapir)"/>
-        <arg name="do_attollo" value="$(arg do_attollo)"/>
+        <arg name="use_mapir" value="$(arg do_mapir)"/>
+        <arg name="use_attollo" value="$(arg do_attollo)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
     </include>
 
