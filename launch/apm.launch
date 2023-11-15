@@ -9,10 +9,12 @@
 	<arg name="log_output" default="screen" />
 	<arg name="fcu_protocol" default="v2.0" />
 	<arg name="respawn_mavros" default="false" />
+	<arg name="do_slam" default="false" />
 
 	<include file="$(find mavros)/launch/node.launch">
 		<arg name="pluginlists_yaml" value="$(find vehicle_launch)/config/apm_pluginlist.yaml" />
-		<arg name="config_yaml" value="$(find vehicle_launch)/config/apm_config.yaml" />
+		<arg name="config_yaml" value="$(find vehicle_launch)/config/apm_config.yaml" unless="$(arg do_slam)"/>
+		<arg name="config_yaml" value="$(find vehicle_launch)/config/apm_config_slam.yaml" if="$(arg do_slam)"/>
 
 		<arg name="fcu_url" value="$(arg fcu_url)" />
 		<arg name="gcs_url" value="$(arg gcs_url)" />

@@ -1,52 +1,102 @@
 <launch>
+
+    <!-- Simulation args -->
+    <arg name="simulate" default="false"/>
+
     <!-- Safe guards -->
-    <arg name="enable_autonomy" default="false"/>
-    <arg name="enable_exploration" default="false"/>
+    <arg name="enable_autonomy" default="$(arg simulate)"/>
+    <arg name="enable_exploration" default="$(arg simulate)"/>
 
-    <!-- Which nodes -->
-    <arg name="do_exploration" default="false"/>
-    <arg name="do_octomap" default="false"/>
-    <arg name="do_bendyruler" default="true"/>
-    <arg name="do_velodyne" default="true"/>
+    <!-- Which lidar
+        0: Mid40
+        1: Horizon
+        2: Velodyne
+        3: Oust64
+        4: Mid360
+
+        Defaults to 'velodyne' in sim and 'mid360' otherwise
+    -->
+    <arg name="lidar_type" default="2" if="$(arg simulate)"/>
+    <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
+
+    <!-- Which nodes / hardware -->
+    <arg name="do_slam" default="true"/>
+    <arg name="do_exploration" default="true"/>
+    <arg name="do_octomap" default="true"/>
+    <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
-    <arg name="use_mapir" default="true"/>
-    <arg name="use_attollo" default="false"/>
 
-    <!-- Pointcloud topics, shared -->
-    <arg name="cloud_topic" default="/velodyne_points"/>
-    <arg name="reg_cloud_topic" default="/cloud_registered"/>
+    <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
+    <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
+    <arg name="do_mapir" default="true"/>
+    <arg name="do_attollo" default="false"/>
 
-    <!-- Octomap args -->
-    <arg name="map_resolution" default="1.0"/> <!-- meter -->
-    <arg name="rviz" default="false"/>
+    <!-- Pointcloud and IMU topics based on whether we are simulating -->
+    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 4)"/>
+    <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval lidar_type == 2)"/>
+    <arg name="cloud_topic_sim" default="/velodyne_points" if="$(arg simulate)"/>
 
-    <!-- Common control args -->
-    <arg name="min_alt" default="0.2"/>
-    <arg name="max_alt" default="10.0"/>
+    <arg name="cloud_topic" default="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
+    <arg name="cloud_topic" default="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
+
+    <arg name="imu_topic_hw" default="/livox/imu" if="$(eval lidar_type == 4)"/>
+    <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval lidar_type == 2)"/>
+    <arg name="imu_topic_sim" default="/mavros/imu/data" if="$(arg simulate)"/>
+
+    <arg name="imu_topic" default="$(arg imu_topic_hw)" unless="$(arg simulate)"/>
+    <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
+
+    <!-- Common args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
+    <arg name="map_resolution" default="1.0"/> <!-- meter -->
 
-    <!-- Autopilot -->
-    <include file="$(find vehicle_launch)/launch/apm.launch"/>
+    <!-- MAVROS nodes -->
+    <include file="$(find vehicle_launch)/launch/apm.launch">
+        <arg name="do_slam" value="$(arg do_slam)"/>
+        <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
+        <arg name="fcu_url" value="udp://127.0.0.1:14551@" if="$(arg simulate)"/>
+    </include>
     <!-- Required command for MAVROS to publish mav topics -->
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
-    <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-
-    <include file="$(find vehicle_launch)/launch/oa_dynobs.launch">
-        <arg name="raw_cloud_topic" value="$(arg cloud_topic)"/>
-        <arg name="reg_cloud_topic" value="$(arg reg_cloud_topic)"/>
-        <arg name="min_alt" value="$(arg min_alt)"/>
-        <arg name="max_alt" value="$(arg max_alt)"/>
+    <!-- Simulation -->
+    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
+    <arg name="enable_cameras" default="false"/>
+    <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
+        <arg name="do_slam" value="$(arg do_slam)"/>
+        <arg name="enable_cameras" value="$(arg enable_cameras)"/>
+        <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
 
-    <include file="$(find monarch)/launch/monarch.launch">
-        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
-        <arg name="enable_exploration" value="$(arg enable_exploration)"/>
-        <arg name="default_altitude_m" value="$(arg default_alt)"/>
+    <!-- Non-simulation only nodes -->
+    <group unless="$(arg simulate)">
+        <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
+        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
+        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+
+        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
+            <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
+            <arg name="run_multispectral_viz" value="false"/>
+            <arg name="run_rgb_viz" value="false"/>
+            <arg name="use_mapir" value="$(arg do_mapir)"/>
+            <arg name="use_attollo" value="$(arg do_attollo)"/>
+            <arg name="map_resolution" value="$(arg map_resolution)"/>
+        </include>
+    </group>
+
+    <!-- Feature nodes -->
+    <include file="$(find path_planning)/launch/slam.launch" if="$(arg do_slam)">
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
+        <arg name="imu_topic" default="$(arg imu_topic)"/>
+        <arg name="rviz" value="$(arg simulate)"/>
     </include>
 
-    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_bendyruler)">
+    <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen" if="$(arg do_slam)">
+        <param name="default_speed" value="$(arg default_speed)"/>
+    </node>
+
+    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
         <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="data_type" value="point_cloud"/>
     </include>
@@ -57,28 +107,18 @@
         <arg name="map_resolution" value="$(arg map_resolution)"/>
     </include>
 
+    <arg name="rviz" default="$(arg simulate)"/>
     <include file="$(find octomap_slice)/launch/octomap_full_handling.launch" if="$(arg do_octomap)">
-        <arg name="cloud_topic" value="$(arg reg_cloud_topic)"/>
+        <arg name="cloud_topic" value="/cloud_registered"/>
         <arg name="octomap_res" value="$(arg map_resolution)"/>
         <arg name="slice_height" value="$(arg default_alt)"/>
         <arg name="rviz" value="$(arg rviz)"/>
     </include>
 
-    <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
-        <arg name="pointcloud_topic" value="$(arg cloud_topic)"/> <!-- Change to registered cloud topic once SLAM is working well -->
-        <arg name="run_multispectral_viz" value="false"/>
-        <arg name="run_rgb_viz" value="false"/>
-        <arg name="use_mapir" value="$(arg use_mapir)"/>
-        <arg name="use_attollo" value="$(arg use_attollo)"/>
-        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    <include file="$(find monarch)/launch/monarch.launch">
+        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
+        <arg name="enable_exploration" value="$(arg enable_exploration)"/>
+        <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
-
-    <arg name="ir_fps" default="15"/>
-    <group if="$(arg use_mapir)">
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch">
-            <arg name="fps" value="$(arg ir_fps)"/>
-        </include>
-        <include file="$(find vehicle_launch)/launch/static_tf.launch"/>
-    </group>
 
 </launch>
