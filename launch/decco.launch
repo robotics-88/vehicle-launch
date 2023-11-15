@@ -69,11 +69,20 @@
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
 
-    <!-- Hardware nodes (non-simulation only) -->
+    <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
         <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
         <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+
+        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
+            <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
+            <arg name="run_multispectral_viz" value="false"/>
+            <arg name="run_rgb_viz" value="false"/>
+            <arg name="use_mapir" value="$(arg do_mapir)"/>
+            <arg name="use_attollo" value="$(arg do_attollo)"/>
+            <arg name="map_resolution" value="$(arg map_resolution)"/>
+        </include>
     </group>
 
     <!-- Feature nodes -->
@@ -104,15 +113,6 @@
         <arg name="octomap_res" value="$(arg map_resolution)"/>
         <arg name="slice_height" value="$(arg default_alt)"/>
         <arg name="rviz" value="$(arg rviz)"/>
-    </include>
-
-    <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
-        <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
-        <arg name="run_multispectral_viz" value="false"/>
-        <arg name="run_rgb_viz" value="false"/>
-        <arg name="use_mapir" value="$(arg do_mapir)"/>
-        <arg name="use_attollo" value="$(arg do_attollo)"/>
-        <arg name="map_resolution" value="$(arg map_resolution)"/>
     </include>
 
     <include file="$(find monarch)/launch/monarch.launch">
