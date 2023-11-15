@@ -13,8 +13,11 @@
         2: Velodyne
         3: Oust64
         4: Mid360
+
+        Defaults to 'velodyne' in sim and 'mid360' otherwise
     -->
-    <arg name="lidar_type" default="2"/>
+    <arg name="lidar_type" default="2" if="$(arg simulate)"/>
+    <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
 
     <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
@@ -36,7 +39,6 @@
 
     <arg name="cloud_topic" default="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
     <arg name="cloud_topic" default="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
-    <arg name="reg_cloud_topic" default="/cloud_registered"/>
 
     <!-- Common control args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
@@ -55,6 +57,7 @@
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
+        <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
@@ -90,7 +93,7 @@
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
     <arg name="rviz" default="$(arg simulate)"/>
     <include file="$(find octomap_slice)/launch/octomap_full_handling.launch" if="$(arg do_octomap)">
-        <arg name="cloud_topic" value="$(arg reg_cloud_topic)"/>
+        <arg name="cloud_topic" value="/cloud_registered"/>
         <arg name="octomap_res" value="$(arg map_resolution)"/>
         <arg name="slice_height" value="$(arg default_alt)"/>
         <arg name="rviz" value="$(arg rviz)"/>
