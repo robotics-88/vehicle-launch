@@ -68,7 +68,8 @@
     </group>
 
     <!-- Feature nodes -->
-    <include file="$(find path_planning)/launch/demo_velodyne.launch" if="$(arg do_slam)">
+    <include file="$(find path_planning)/launch/slam.launch" if="$(arg do_slam)">
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
         <arg name="rviz" value="$(arg simulate)"/>
     </include>
 
