@@ -19,8 +19,6 @@
     <arg name="lidar_type" default="2" if="$(arg simulate)"/>
     <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
 
-    <arg name="imu_topic" default="/mavros/imu/data"/>
-
     <!-- Which nodes / hardware -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="false"/>
@@ -34,13 +32,20 @@
     <arg name="do_mapir" default="false"/>
     <arg name="do_attollo" default="false"/>
 
-    <!-- Pointcloud topics, shared -->
+    <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 4)"/>
     <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval lidar_type == 2)"/>
     <arg name="cloud_topic_sim" default="/velodyne_points" if="$(arg simulate)"/>
 
     <arg name="cloud_topic" default="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
     <arg name="cloud_topic" default="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
+
+    <arg name="imu_topic_hw" default="/livox/imu" if="$(eval lidar_type == 4)"/>
+    <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval lidar_type == 2)"/>
+    <arg name="imu_topic_sim" default="/mavros/imu/data" if="$(arg simulate)"/>
+
+    <arg name="imu_topic" default="$(arg imu_topic_hw)" unless="$(arg simulate)"/>
+    <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
 
     <!-- Common control args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
