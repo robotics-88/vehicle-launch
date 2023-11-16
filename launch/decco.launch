@@ -25,6 +25,7 @@
     <arg name="do_octomap" default="true"/>
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
+    <arg name="do_species_map" default="true"/>
 
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
@@ -46,6 +47,9 @@
     <arg name="imu_topic" default="$(arg imu_topic_hw)" unless="$(arg simulate)"/>
     <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
 
+    <arg name="image_topic" default="/mapir_rgn/image_rect" unless="$(arg simulate)"/>
+    <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
+
     <!-- Common args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
@@ -63,6 +67,8 @@
     <!-- Simulation -->
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
+    <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
+    <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
         <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
@@ -119,6 +125,13 @@
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
         <arg name="enable_exploration" value="$(arg enable_exploration)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
+    </include>
+
+    <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
+        <arg name="image_topic" value="$(arg image_topic)"/>
+        <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
+        <arg name="pointcloud_topic" value="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
+        <arg name="pointcloud_topic" value="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
     </include>
 
 </launch>
