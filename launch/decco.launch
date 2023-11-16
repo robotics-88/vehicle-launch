@@ -130,8 +130,8 @@
     <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
         <arg name="image_topic" value="$(arg image_topic)"/>
         <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
-        <arg name="pointcloud_topic" value="$(arg cloud_topic_hw)" unless="$(arg simulate)"/>
-        <arg name="pointcloud_topic" value="$(arg cloud_topic_sim)" if="$(arg simulate)"/>
+        <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="use_cvshow" value="$(arg simulate)"/>
     </include>
 
 </launch>
