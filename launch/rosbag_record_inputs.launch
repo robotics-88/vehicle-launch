@@ -24,6 +24,8 @@
             /octomap_slice
             /tf
             /tf_static
+            /tree_json
+            /tree_markers
             /velodyne_points
             /zed2i/map
             /zed2i/zed_node/depth/camera_info

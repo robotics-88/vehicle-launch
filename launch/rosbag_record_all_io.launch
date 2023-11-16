@@ -18,6 +18,7 @@
             /mavpersation/emergency
             /mapversation/target_polygon
             /mapversation/target_setpoint
+            /mask_contour
             /mavros/battery
             /mavros/global_position/global
             /mavros/imu/data
@@ -30,8 +31,11 @@
             /octomap_slice
             /path
             /search_node/trajectory_position
+            /segmented_images
             /tf
             /tf_static
+            /tree_json
+            /tree_markers
             /velodyne_points
             /zed2i/map
             /zed2i/zed_node/depth/camera_info
