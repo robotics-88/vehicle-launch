@@ -2,6 +2,8 @@
 
     <!-- Simulation args -->
     <arg name="simulate" default="false"/>
+    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
+    <arg name="enable_cameras" default="false"/>
 
     <!-- Safe guards -->
     <arg name="enable_autonomy" default="$(arg simulate)"/>
@@ -48,7 +50,9 @@
     <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
 
     <arg name="image_topic" default="/mapir_rgn/image_rect" unless="$(arg simulate)"/>
+    <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
+    <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
 
     <!-- Common args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
@@ -65,10 +69,6 @@
     <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
 
     <!-- Simulation -->
-    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
-    <arg name="enable_cameras" default="false"/>
-    <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
-    <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
         <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
