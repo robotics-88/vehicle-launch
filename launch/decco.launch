@@ -50,6 +50,7 @@
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
+    <arg name="goal_topic" default="/goal"/>
 
     <!-- MAVROS nodes -->
     <include file="$(find vehicle_launch)/launch/apm.launch">
@@ -120,5 +121,11 @@
         <arg name="enable_exploration" value="$(arg enable_exploration)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
+
+    <include file="$(find task_manager_88)/launch/task_manager.launch">
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
+    </include>
+
+    <include file="$(find bag_recorder)/launch/default.launch"/>
 
 </launch>
