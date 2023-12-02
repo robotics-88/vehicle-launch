@@ -82,14 +82,6 @@
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
 
-    <!-- TO BE REMOVED AFTER TESTED IN PR BEFORE APPROVAL -->
-    <include file="$(find vehicle_launch)/launch/airsimvegtest.launch"/>
-    <!-- TO BE MOVED INTO THE NON-SIM GROUP BEFORE APPROVAL  -->
-    <include file="$(find bag_recorder)/launch/default.launch">
-        <arg name="configuration_directory" value="$(arg configuration_directory)"/>
-        <arg name="data_directory" value="$(arg data_directory)"/>
-    </include>
-
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
@@ -103,6 +95,11 @@
             <arg name="use_mapir" value="$(arg do_mapir)"/>
             <arg name="use_attollo" value="$(arg do_attollo)"/>
             <arg name="map_resolution" value="$(arg map_resolution)"/>
+        </include>
+
+        <include file="$(find bag_recorder)/launch/default.launch">
+            <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+            <arg name="data_directory" value="$(arg data_directory)"/>
         </include>
     </group>
 
@@ -129,12 +126,7 @@
     </include>
 
     <arg name="rviz" default="$(arg simulate)"/>
-    <include file="$(find octomap_slice)/launch/octomap_full_handling.launch" if="$(arg do_octomap)">
-        <arg name="cloud_topic" value="/cloud_registered"/>
-        <arg name="octomap_res" value="$(arg map_resolution)"/>
-        <arg name="slice_height" value="$(arg default_alt)"/>
-        <arg name="rviz" value="$(arg rviz)"/>
-    </include>
+    <include file="$(find octomap_slice)/launch/costmap.launch" if="$(arg do_octomap)"/>
 
     <include file="$(find monarch)/launch/monarch.launch">
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
