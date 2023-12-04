@@ -120,6 +120,7 @@
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="cloud_in" value="$(arg cloud_topic)"/>
         <arg name="default_alt" value="$(arg default_alt)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
