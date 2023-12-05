@@ -77,7 +77,6 @@
 
     <!-- Simulation -->
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
-        <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
