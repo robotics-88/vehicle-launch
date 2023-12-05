@@ -21,14 +21,15 @@
     <arg name="lidar_type" default="2" if="$(arg simulate)"/>
     <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
 
-    <!-- Which nodes / hardware -->
+    <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="true"/>
-    <arg name="do_octomap" default="false"/>
+    <arg name="do_octomap" default="$(arg simulate)"/>
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
-    <arg name="do_species_map" default="true"/>
-
+    <arg name="do_species_map" default="false"/> <!-- TODO revise to do image seg live, but not species map-->
+    <arg name="do_record" default="true"/>
+    <!-- Which hardware -->
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
     <arg name="do_mapir" default="true"/>
@@ -54,10 +55,16 @@
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
 
+     <!-- Recording args -->
+    <arg name="configuration_directory" value="$(find vehicle_launch)/config/"/>
+    <arg name="user" value="$(env USER)"/>
+    <arg name="data_directory" default="/home/$(arg user)/src/bags/"/>
+
     <!-- Common args -->
     <arg name="default_alt" default="2.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
+    <arg name="goal_topic" default="/goal"/>
 
     <!-- MAVROS nodes -->
     <include file="$(find vehicle_launch)/launch/apm.launch">
@@ -87,6 +94,11 @@
             <arg name="use_mapir" value="$(arg do_mapir)"/>
             <arg name="use_attollo" value="$(arg do_attollo)"/>
             <arg name="map_resolution" value="$(arg map_resolution)"/>
+        </include>
+
+        <include file="$(find bag_recorder)/launch/default.launch">
+            <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+            <arg name="data_directory" value="$(arg data_directory)"/>
         </include>
     </group>
 
@@ -131,6 +143,11 @@
         <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
         <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
         <arg name="use_cvshow" value="$(arg simulate)"/>
+    </include>
+
+    <include file="$(find task_manager_88)/launch/task_manager.launch">
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
+        <arg name="do_record" value="$(arg do_record)"/>
     </include>
 
 </launch>
