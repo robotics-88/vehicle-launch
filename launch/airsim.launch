@@ -1,6 +1,5 @@
 <launch>
 
-    <arg name="do_slam" default="true"/>
     <arg name="vehicle_name" default="MyVehicle"/>
     <arg name="vehicle_frame" default="base_link"/>
     <arg name="odom_frame" default="odom"/>
@@ -25,15 +24,13 @@
         <param name="enable_cameras" value="$(arg enable_cameras)" />
     </node>
 
-    <group if="$(arg do_slam)">
-        <include file="$(find rs_to_velodyne)/launch/rs_to_velodyne.launch">
-            <arg name="raw_lidar_topic" value="$(arg raw_lidar_topic)"/>
-            <arg name="input_cloud_type" value="XYZI"/>
-            <arg name="output_cloud_type" value="XYZIR"/>
-        </include>
+    <node pkg="tf" type="static_transform_publisher" name="velodyne_pub" args="0 0 0 0 0 0 base_link/Lidar2 velodyne 100"/>
 
-        <node pkg="tf" type="static_transform_publisher" name="velodyne_pub" args="0 0 0 0 0 0 base_link/Lidar2 velodyne 100"/>
-    </group>
+    <include file="$(find rs_to_velodyne)/launch/rs_to_velodyne.launch">
+        <arg name="raw_lidar_topic" value="$(arg raw_lidar_topic)"/>
+        <arg name="input_cloud_type" value="XYZI"/>
+        <arg name="output_cloud_type" value="XYZIR"/>
+    </include>
 
     <node type="rviz" name="airsim_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/airsim.rviz" output="log"/>
 </launch>
