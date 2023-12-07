@@ -1,3 +1,5 @@
+global_frame: slam_map
+robot_base_frame: base_link
 max_obstacle_height: 10.0  # assume something like an arm is mounted on top of the robot
 
 # Obstacle Cost Shaping (http://wiki.ros.org/costmap_2d/hydro/inflation)
@@ -13,6 +15,7 @@ publish_frequency: 1.0
 origin_x: -20.0
 origin_y: -20.0
 track_unknown_space:  true    #true needed for disabling global path planning through unknown space
+rolling_window: true
 
 obstacle_layer:
   enabled:              true
