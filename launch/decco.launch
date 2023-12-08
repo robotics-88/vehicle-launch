@@ -1,8 +1,8 @@
 <launch>
     <arg name="mavros_map_frame" default="map"/>
-    <arg name="slam_map_frame" default="slam_map"/>
     <arg name="base_frame" default="base_link"/>
-    <arg name="pose_topic" default="/decco/pose"/>
+    <arg name="slam_map_frame" default="slam_map"/>
+    <arg name="slam_pose_topic" default="/decco/pose"/>    
 
     <!-- Simulation args -->
     <arg name="simulate" default="false"/>
@@ -113,8 +113,11 @@
 
     <!-- Feature nodes -->
     <include file="$(find path_planning)/launch/slam.launch" if="$(arg do_slam)">
+        <arg name="base_frame" value="$(arg base_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
-        <arg name="imu_topic" default="$(arg imu_topic)"/>
+        <arg name="imu_topic" value="$(arg imu_topic)"/>
         <arg name="rviz" value="$(arg simulate)"/>
         <arg name="min_alt" value="$(arg min_alt)"/>
         <arg name="max_alt" value="$(arg max_alt)"/>
@@ -131,9 +134,9 @@
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
-        <arg name="pose_topic" value="$(arg pose_topic)"/>
         <arg name="robot_base_frame" value="$(arg base_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="cloud_in" value="$(arg cloud_topic)"/>
         <arg name="default_alt" value="$(arg default_alt)"/>
@@ -162,6 +165,7 @@
     <include file="$(find task_manager_88)/launch/task_manager.launch">
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="do_record" value="$(arg do_record)"/>
     </include>
