@@ -1,5 +1,7 @@
 <launch>
-
+    <arg name="mavros_map_frame" default="map"/>
+    <arg name="slam_map_frame" default="slam_map"/>
+    <arg name="vehicle_frame" default="base_link"/>
     <arg name="use_mapir" default="true"/>
     <arg name="use_attollo" default="false"/>
     <arg name="no_zed" default="true"/> <!-- TODO decide whether to remove zed pipeline entirely, but leave for now-->
@@ -34,9 +36,10 @@
     <arg name="run_multispectral_viz" default="true"/>
     <arg name="run_rgb_viz" default="true"/>
 
-    <arg name="map_frame_id" default="map"/>
-
     <include file="$(find vegetation)/launch/vegetation.launch">
+        <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="vehicle_frame" value="$(arg vehicle_frame)"/>
         <arg name="run_multispectral_viz" value="$(arg run_multispectral_viz)"/>
         <arg name="run_rgb_viz" value="$(arg run_rgb_viz)"/>
         <arg name="use_pointcloud" value="$(arg use_pointcloud)"/>

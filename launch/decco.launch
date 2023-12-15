@@ -71,7 +71,7 @@
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
     <arg name="goal_topic" default="/goal"/>
-    <arg name="obstacle_dist_threshold" default="1.0"/>
+    <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
 
     <!-- MAVROS nodes -->
     <include file="$(find vehicle_launch)/launch/apm.launch">
