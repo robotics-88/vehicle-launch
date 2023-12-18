@@ -28,7 +28,6 @@
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="true"/>
-    <arg name="do_costmap" default="$(arg simulate)"/>
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
     <arg name="do_species_map" default="false"/> <!-- TODO revise to do image seg live, but not species map-->
@@ -144,8 +143,7 @@
         <arg name="map_resolution" value="$(arg map_resolution)"/>
     </include>
 
-    <arg name="rviz" default="$(arg simulate)"/>
-    <include file="$(find vehicle_launch)/launch/costmap.launch" if="$(arg do_costmap)"/>
+    <include file="$(find vehicle_launch)/launch/costmap.launch"/>
 
     <include file="$(find monarch)/launch/monarch.launch">
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>

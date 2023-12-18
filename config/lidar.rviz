@@ -149,8 +149,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10.225479125976562
-        Min Value: -8.186306953430176
+        Max Value: 1.7727677822113037
+        Min Value: -1.3058232069015503
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -233,23 +233,11 @@ Visualization Manager:
       Color Scheme: map
       Draw Behind: false
       Enabled: true
-      Name: OctoSlice
-      Topic: /octomap_slice
+      Name: Costmap
+      Topic: /costmap_node/costmap/costmap
       Unreliable: false
       Use Timestamp: false
       Value: true
-    - Class: octomap_rviz_plugin/OccupancyGrid
-      Enabled: false
-      Max. Height Display: 3.4028234663852886e+38
-      Max. Octree Depth: 16
-      Min. Height Display: -3.4028234663852886e+38
-      Name: OctoFull
-      Octomap Topic: /octomap_full
-      Queue Size: 5
-      Value: false
-      Voxel Alpha: 1
-      Voxel Coloring: Z-Axis
-      Voxel Rendering: Occupied Voxels
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
@@ -389,7 +377,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 65.78131866455078
+      Distance: 36.094600677490234
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -397,17 +385,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.8645433783531189
-        Y: 6.572259426116943
-        Z: 0.5142036080360413
+        X: 2.593064308166504
+        Y: 5.29473876953125
+        Z: -2.5679986476898193
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.489797979593277
+      Pitch: 0.8097985982894897
       Target Frame: <Fixed Frame>
-      Yaw: 3.600430965423584
+      Yaw: 6.035424709320068
     Saved: ~
 Window Geometry:
   Displays:
