@@ -9,6 +9,7 @@ Panels:
         - /Mapir1
         - /Reg PCL1
         - /Obs Avoid Path1/Offset1
+        - /Destination1
         - /Mavros Obstacle1
       Splitter Ratio: 0.5
     Tree Height: 611
@@ -120,8 +121,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 24.58624839782715
-        Min Value: -1.2063345909118652
+        Max Value: 40.057098388671875
+        Min Value: 37.13008117675781
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -192,6 +193,10 @@ Visualization Manager:
           Value: true
         map_ned:
           Value: true
+        mapir_cam:
+          Value: true
+        mapir_rgn:
+          Value: true
         odom:
           Value: true
         odom_ned:
@@ -215,6 +220,9 @@ Visualization Manager:
                   {}
               livox_frame:
                 {}
+              mapir_cam:
+                mapir_rgn:
+                  {}
         odom:
           odom_ned:
             {}
@@ -224,12 +232,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: Costmap
       Topic: /costmap_node/costmap/costmap
       Unreliable: false
       Use Timestamp: false
-      Value: false
+      Value: true
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
@@ -266,7 +274,7 @@ Visualization Manager:
       Queue Size: 10
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
-      Shape: Axes
+      Shape: Arrow
       Topic: /goal
       Unreliable: false
       Value: true
@@ -341,6 +349,14 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /map_region
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -369,7 +385,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 47.72244644165039
+      Distance: 61.40690994262695
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -377,17 +393,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -1.0969080924987793
-        Y: -3.74922251701355
-        Z: -4.125304222106934
+        X: -6.205269813537598
+        Y: 37.8543701171875
+        Z: 9.670899391174316
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7697968482971191
+      Pitch: 1.0797967910766602
       Target Frame: <Fixed Frame>
-      Yaw: 5.635415554046631
+      Yaw: 0.247237429022789
     Saved: ~
 Window Geometry:
   Displays:

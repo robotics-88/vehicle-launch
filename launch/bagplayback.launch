@@ -4,14 +4,17 @@
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>    
 
+    <param name="/use_sim_time" value="true"/>
+    <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+
     <!-- Simulation args -->
     <arg name="simulate" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
 
     <!-- Safe guards -->
-    <arg name="enable_autonomy" default="$(arg simulate)"/>
-    <arg name="enable_exploration" default="$(arg simulate)"/>
+    <arg name="enable_autonomy" default="false"/>
+    <arg name="enable_exploration" default="true"/>
 
     <!-- Which SLAM
         0: FAST LIO (original 'slam' repo)
@@ -67,11 +70,6 @@
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
 
-     <!-- Recording args -->
-    <arg name="configuration_directory" value="$(find vehicle_launch)/config/"/>
-    <arg name="user" value="$(env USER)"/>
-    <arg name="data_directory" default="/home/$(arg user)/src/bags/"/>
-
     <!-- Common args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.5"/>
@@ -81,26 +79,11 @@
     <arg name="goal_topic" default="/goal"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
 
-    <!-- MAVROS nodes -->
-    <include file="$(find vehicle_launch)/launch/apm.launch">
-        <arg name="do_slam" value="$(arg do_slam)"/>
-        <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
-        <arg name="fcu_url" value="udp://127.0.0.1:14551@" if="$(arg simulate)"/>
-    </include>
-    <!-- Required command for MAVROS to publish mav topics -->
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
-
-    <!-- Simulation -->
-    <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
-        <arg name="enable_cameras" value="$(arg enable_cameras)"/>
-        <arg name="vehicle_name" value="$(arg vehicle_name)"/>
-    </include>
-
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
-        <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
+        <!-- <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
         <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/> -->
 
         <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
             <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
@@ -113,10 +96,6 @@
             <arg name="map_resolution" value="$(arg map_resolution)"/>
         </include>
 
-        <include file="$(find bag_recorder)/launch/default.launch">
-            <arg name="configuration_directory" value="$(arg configuration_directory)"/>
-            <arg name="data_directory" value="$(arg data_directory)"/>
-        </include>
     </group>
 
     <!-- Feature nodes -->
@@ -132,6 +111,7 @@
         <arg name="max_alt" value="$(arg max_alt)"/>
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
     </include>
+    <include file="$(find livox_msg_conversions)/launch/convert_to_custom_fastlio.launch"/>
 
     <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen" if="$(arg do_slam)">
         <param name="default_speed" value="$(arg default_speed)"/>
@@ -181,5 +161,7 @@
         <arg name="mapir_topic" value="$(arg image_topic)"/>
         <arg name="do_record" value="$(arg do_record)"/>
     </include>
+
+    <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
 
 </launch>
