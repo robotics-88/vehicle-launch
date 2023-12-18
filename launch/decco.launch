@@ -74,8 +74,8 @@
 
     <!-- Common args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
-    <arg name="min_alt" default="1.5"/>
-    <arg name="max_alt" default="5.0"/>
+    <arg name="min_alt" default="1.0"/>
+    <arg name="max_alt" default="2.5"/>
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
     <arg name="goal_topic" default="/goal"/>

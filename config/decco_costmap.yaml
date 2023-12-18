@@ -37,7 +37,7 @@ obstacle_layer:
     marking: true
     clearing: true
     min_obstacle_height: 1.0
-    max_obstacle_height: 5.0
+    max_obstacle_height: 2.5
   # for debugging only, let's you see the entire voxel grid
 
 #cost_scaling_factor and inflation_radius were now moved to the inflation_layer ns

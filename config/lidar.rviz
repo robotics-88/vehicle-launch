@@ -121,8 +121,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 40.057098388671875
-        Min Value: 37.13008117675781
+        Max Value: 24.26873779296875
+        Min Value: -2.419841766357422
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -193,10 +193,6 @@ Visualization Manager:
           Value: true
         map_ned:
           Value: true
-        mapir_cam:
-          Value: true
-        mapir_rgn:
-          Value: true
         odom:
           Value: true
         odom_ned:
@@ -220,9 +216,6 @@ Visualization Manager:
                   {}
               livox_frame:
                 {}
-              mapir_cam:
-                mapir_rgn:
-                  {}
         odom:
           odom_ned:
             {}
@@ -385,7 +378,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 61.40690994262695
+      Distance: 36.825439453125
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -393,9 +386,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -6.205269813537598
-        Y: 37.8543701171875
-        Z: 9.670899391174316
+        X: 2.3667526245117188
+        Y: 3.1404173374176025
+        Z: 9.769307136535645
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

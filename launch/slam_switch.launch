@@ -12,6 +12,8 @@
         Defaults to 'fast lio'
     -->
     <arg name="slam_type" default="0"/>
+    <arg name="odom_topic" default="/mavros/odometry/out" if="$(eval slam_type == 0)"/>
+    <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 1)"/>
 
     <arg name="simulate" default="false"/>
     <arg name="rviz" default="$(arg simulate)"/>
@@ -57,6 +59,7 @@
         <param name="search/min_alt" value="$(arg min_alt)"/>
         <param name="search/max_alt" value="$(arg max_alt)"/>
         <param name="search/obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+        <remap from="/mavros/odometry/out" to="$(arg odom_topic)"/>
     </node> 
 
 </launch>
