@@ -1,6 +1,18 @@
 <launch>
+    <!-- Which SLAM
+        0: FAST LIO (original 'slam' repo)
+        1: FAST LIO LC
+        2: FASTER LIO
+
+        Defaults to 'fast lio'
+    -->
+    <arg name="slam_type" default="0"/>
+    <arg name="xfer_format" default="0" if="$(eval slam_type == 0)"/>
+    <arg name="xfer_format" default="1" if="$(eval slam_type == 1)"/>
+    <arg name="xfer_format" default="1" if="$(eval slam_type == 2)"/>
+
     <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch">
-        <arg name="xfer_format" value="0"/>
+        <arg name="xfer_format" value="$(arg xfer_format)"/>
     </include>
     <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
 </launch>

@@ -99,7 +99,9 @@
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
+        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
+            <arg name="slam_type" value="$(arg slam_type)"/>
+        </include>
         <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
 
         <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">

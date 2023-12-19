@@ -79,24 +79,16 @@
     <arg name="goal_topic" default="/goal"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
 
-    <!-- Non-simulation only nodes -->
-    <group unless="$(arg simulate)">
-        <!-- <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)"/>
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/> -->
-
-        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
-            <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-            <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
-            <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
-            <arg name="run_multispectral_viz" value="false"/>
-            <arg name="run_rgb_viz" value="false"/>
-            <arg name="use_mapir" value="$(arg do_mapir)"/>
-            <arg name="use_attollo" value="$(arg do_attollo)"/>
-            <arg name="map_resolution" value="$(arg map_resolution)"/>
-        </include>
-
-    </group>
+    <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
+        <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="pointcloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="run_multispectral_viz" value="false"/>
+        <arg name="run_rgb_viz" value="false"/>
+        <arg name="use_mapir" value="$(arg do_mapir)"/>
+        <arg name="use_attollo" value="$(arg do_attollo)"/>
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
 
     <!-- Feature nodes -->
     <include file="$(find vehicle_launch)/launch/slam_switch.launch" if="$(arg do_slam)">
@@ -106,7 +98,7 @@
         <arg name="lidar_type" value="$(arg lidar_type)"/>
         <arg name="imu_topic" value="$(arg imu_topic)"/>
         <arg name="slam_type" value="$(arg slam_type)"/>
-        <arg name="rviz" value="$(arg simulate)"/>
+        <arg name="rviz" value="true"/>
         <arg name="min_alt" value="$(arg min_alt)"/>
         <arg name="max_alt" value="$(arg max_alt)"/>
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
