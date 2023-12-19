@@ -9,7 +9,7 @@
     <!-- Run the costmap node -->
     <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
         <rosparam file="$(find vehicle_launch)/config/decco_costmap.yaml" command="load" ns="costmap" />
-        <remap from="base_scan" to="kd_pointcloud_accumulated"/>
+        <remap from="base_scan" to="cloud_registered"/>
     </node>
 
 </launch>
