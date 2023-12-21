@@ -73,6 +73,7 @@
     <arg name="configuration_directory" value="$(find vehicle_launch)/config/"/>
     <arg name="user" value="$(env USER)"/>
     <arg name="data_directory" default="/home/$(arg user)/src/bags/"/>
+    <arg name="healthbeat_rate" default="5"/>
 
     <!-- Common args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
@@ -120,6 +121,7 @@
         <include file="$(find bag_recorder)/launch/default.launch">
             <arg name="configuration_directory" value="$(arg configuration_directory)"/>
             <arg name="data_directory" value="$(arg data_directory)"/>
+            <arg name="heartbeat_interval" value="$(arg healthbeat_rate)"/>
         </include>
     </group>
 
