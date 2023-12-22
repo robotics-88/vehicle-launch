@@ -73,7 +73,7 @@
     <arg name="configuration_directory" value="$(find vehicle_launch)/config/"/>
     <arg name="user" value="$(env USER)"/>
     <arg name="data_directory" default="/home/$(arg user)/src/bags/"/>
-    <arg name="healthbeat_rate" default="5"/>
+    <arg name="healthbeat_rate" default="1"/>
 
     <!-- Common args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
