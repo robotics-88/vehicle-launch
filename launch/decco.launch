@@ -186,6 +186,7 @@
         <arg name="lidar_topic" value="$(arg cloud_registered_topic)"/>
         <arg name="mapir_topic" value="$(arg image_topic)"/>
         <arg name="do_record" value="$(arg do_record)"/>
+        <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
 
 </launch>
