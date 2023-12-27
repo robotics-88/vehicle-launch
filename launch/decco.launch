@@ -40,7 +40,8 @@
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
     <arg name="do_species_map" default="false"/> <!-- TODO revise to do image seg live, but not species map-->
-    <arg name="do_record" default="true"/>
+    <arg name="do_record" default="true" unless="$(arg simulate)"/>
+    <arg name="do_record" default="false" if="$(arg simulate)"/>
     <!-- Which hardware -->
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
@@ -127,6 +128,7 @@
 
     <!-- Feature nodes -->
     <include file="$(find vehicle_launch)/launch/slam_switch.launch" if="$(arg do_slam)">
+        <arg name="simulate" value="$(arg simulate)"/>
         <arg name="base_frame" value="$(arg base_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
