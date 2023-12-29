@@ -4,14 +4,19 @@
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>    
 
+    <!-- Offline, i.e. using bag playback -->
+    <arg name="offline" default="false"/>
+
     <!-- Simulation args -->
     <arg name="simulate" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
 
     <!-- Safe guards -->
-    <arg name="enable_autonomy" default="$(arg simulate)"/>
-    <arg name="enable_exploration" default="$(arg simulate)"/>
+    <arg name="enable_autonomy" default="$(arg simulate)" unless="$(arg offline)"/>
+    <arg name="enable_autonomy" default="false" if="$(arg offline)"/>
+    <arg name="enable_exploration" default="$(arg simulate)" unless="$(arg offline)"/>
+    <arg name="enable_exploration" default="true" if="$(arg offline)"/>
 
     <!-- Which SLAM
         0: FAST LIO (original 'slam' repo)
@@ -40,8 +45,9 @@
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
     <arg name="do_species_map" default="false"/> <!-- TODO revise to do image seg live, but not species map-->
-    <arg name="do_record" default="true" unless="$(arg simulate)"/>
-    <arg name="do_record" default="false" if="$(arg simulate)"/>
+    <arg name="do_record" default="true" unless="$(eval simulate + offline)"/>
+    <arg name="do_record" default="false" if="$(eval simulate + offline)"/>
+
     <!-- Which hardware -->
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
@@ -79,20 +85,20 @@
     <!-- Common args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.0"/>
-    <arg name="max_alt" default="2.5"/>
+    <arg name="max_alt" default="5.0"/>
     <arg name="default_speed" default="0.2"/> <!-- m/s-->
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
     <arg name="goal_topic" default="/goal"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
 
     <!-- MAVROS nodes -->
-    <include file="$(find vehicle_launch)/launch/apm.launch">
+    <include file="$(find vehicle_launch)/launch/apm.launch" unless="$(arg offline)">
         <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
         <arg name="fcu_url" value="udp://127.0.0.1:14551@" if="$(arg simulate)"/>
     </include>
     <!-- Required command for MAVROS to publish mav topics -->
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1"/>
+    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1" unless="$(arg offline)"/>
 
     <!-- Simulation -->
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
@@ -102,11 +108,19 @@
 
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
-        <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-        <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
-            <arg name="slam_type" value="$(arg slam_type)"/>
-        </include>
-        <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+        <group unless="$(arg offline)">
+            <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
+            <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
+                <arg name="slam_type" value="$(arg slam_type)"/>
+            </include>
+            <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+
+            <include file="$(find bag_recorder)/launch/default.launch">
+                <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+                <arg name="data_directory" value="$(arg data_directory)"/>
+                <arg name="heartbeat_interval" value="$(arg healthbeat_rate)"/>
+            </include>
+        </group>
 
         <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
             <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
@@ -117,12 +131,6 @@
             <arg name="use_mapir" value="$(arg do_mapir)"/>
             <arg name="use_attollo" value="$(arg do_attollo)"/>
             <arg name="map_resolution" value="$(arg map_resolution)"/>
-        </include>
-
-        <include file="$(find bag_recorder)/launch/default.launch">
-            <arg name="configuration_directory" value="$(arg configuration_directory)"/>
-            <arg name="data_directory" value="$(arg data_directory)"/>
-            <arg name="heartbeat_interval" value="$(arg healthbeat_rate)"/>
         </include>
     </group>
 
@@ -190,5 +198,11 @@
         <arg name="do_record" value="$(arg do_record)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
+
+    <group if="$(arg offline)">
+        <param name="/use_sim_time" value="true"/>
+        <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
+        <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+    </group>
 
 </launch>
