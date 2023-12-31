@@ -149,8 +149,10 @@
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
     </include>
 
+    <arg name="acceptance_radius" value="1.0"/>
     <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen" if="$(arg do_slam)">
         <param name="default_speed" value="$(arg default_speed)"/>
+        <param name="acceptance_radius" value="$(arg acceptance_radius)"/>
     </node>
 
     <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
