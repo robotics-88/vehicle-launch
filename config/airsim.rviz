@@ -77,8 +77,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10.43722152709961
-        Min Value: -0.24082258343696594
+        Max Value: 10.127946853637695
+        Min Value: -0.19769802689552307
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -291,6 +291,22 @@ Visualization Manager:
       Unreliable: false
       Use Timestamp: false
       Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: PP Goal
+      Queue Size: 10
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic: /goal
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -335,9 +351,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.784796416759491
+      Pitch: 1.109796166419983
       Target Frame: <Fixed Frame>
-      Yaw: 4.64360237121582
+      Yaw: 4.688603401184082
     Saved: ~
 Window Geometry:
   Displays:

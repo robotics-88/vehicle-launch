@@ -1,7 +1,9 @@
 <launch>
+    <arg name="make_video" default="false"/>
     <!-- <node type="rviz" name="multispec_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz" /> -->
     <!-- <node type="rviz" name="zed_rviz" pkg="rviz" args="-d $(find vegetation)/config/zedrgb.rviz" /> -->
-    <node type="rviz" name="lidar_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/lidar.rviz" />
+    <node type="rviz" name="lidar_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/lidar.rviz" unless="$(arg make_video)" />
+    <node type="rviz" name="lidar_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/makevideo.rviz" if="$(arg make_video)" />
     <!-- <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/> -->
 
 </launch>
