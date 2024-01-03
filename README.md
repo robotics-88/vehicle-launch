@@ -45,7 +45,28 @@ At the moment, camera device IDs often change on start-up. Until we can automati
 
 Then update the `device_id` param in the respective launch files for Attollo and Mapir.
 
+# post-processing
+
+To run postflight visualization
+
+```
+roscore
+rosbag play *.bag --pause --clock
+roslaunch vehicle_launch viz_host_machine.launch
+```
+
+To run post-processing:
+```
+roscore
+rosbag play *.bag --pause --clock /tf:=/tftrash /cloud_registered:=/cloudtrash
+roslaunch vehicle_launch decco.launch offline:=true slam_type:=...
+```
+Note in post-processing, slam_type can be changed but must match the incoming pointcloud type (e.g., slam_type 0 expects Livox data as sensor_msgs/Pointcloud2, and slam_type 1,2 expects custom_livox_msg).
+TODO: update decco.launch and move any unnecessary nodes to a group launched only in offline mode.
+
 # recording
+
+TODO update this section and delete deprecated launch files.
 
 To record only the inputs (i.e., for a bag to be used in development), run:
 

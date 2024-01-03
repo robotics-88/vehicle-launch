@@ -1,0 +1,84 @@
+<launch>
+    <arg name="mavros_map_frame" default="map"/>
+    <arg name="base_frame" default="base_link"/>
+    <arg name="slam_map_frame" default="slam_map"/>
+    <arg name="slam_pose_topic" default="/decco/pose"/>    
+    <arg name="imu_topic" default="/livox/imu"/>
+    <!-- Which SLAM
+        0: FAST LIO (original 'slam' repo)
+        1: FAST LIO LC
+        2: FASTER LIO
+
+        Defaults to 'fast lio'
+    -->
+    <arg name="slam_type" default="0"/>
+    <arg name="odom_topic" default="/mavros/odometry/out" if="$(eval slam_type == 0)"/>
+    <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 1)"/>
+    <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 2)"/>
+
+    <arg name="simulate" default="false"/>
+    <arg name="rviz" default="$(arg simulate)"/>
+    <arg name="lidar_type" default="4"/>
+
+    <!-- Common args -->
+    <arg name="min_alt" default="1.5"/>
+    <arg name="max_alt" default="5.0"/>
+    <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
+
+    <include file="$(find vehicle_launch)/launch/slam_0.launch" if="$(eval slam_type == 0)">
+        <arg name="base_frame" value="$(arg base_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
+        <arg name="imu_topic" value="$(arg imu_topic)"/>
+        <arg name="rviz" value="$(arg rviz)"/>
+        <arg name="min_alt" value="$(arg min_alt)"/>
+        <arg name="max_alt" value="$(arg max_alt)"/>
+        <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+    </include>
+
+    <group if="$(arg simulate)">
+        <include file="$(find fast_lio_lc)/launch/mapping_velodyne.launch" if="$(eval slam_type == 1)">
+            <arg name="rviz" value="$(arg rviz)"/>
+        </include>
+
+        <include file="$(find faster_lio)/launch/mapping_velodyne.launch" if="$(eval slam_type == 2)">
+            <arg name="rviz" value="$(arg rviz)"/>
+        </include>
+    </group>
+
+    <group unless="$(arg simulate)">
+        <include file="$(find fast_lio_lc)/launch/mapping_horizon.launch" if="$(eval slam_type == 1)">
+            <arg name="rviz" value="$(arg rviz)"/>
+        </include>
+
+        <include file="$(find faster_lio)/launch/mapping_horizon.launch" if="$(eval slam_type == 2)">
+            <arg name="rviz" value="$(arg rviz)"/>
+        </include>
+    </group>
+
+    <!-- Path-planner from FAST LIO to be used for all SLAM -->
+    <rosparam>
+        search/max_tau : 0.6
+        search/init_max_tau : 0.8
+        search/max_vel : 2.0
+        search/max_acc : 2.0
+        search/w_time  : 10.0
+        search/horizon  : 100.0
+        search/lambda_heu  : 5.0
+        search/resolution_astar  : 0.1
+        search/time_resolution  : 0.8
+        search/margin  : 0.2
+        search/allocate_num  : 100000
+        search/check_num  : 1
+    </rosparam>
+
+    <node  pkg="path_planning" type="path_planning_node" name="path_planning_node1" args="" output="screen">
+        <param name="search/slam_map_frame" value="$(arg slam_map_frame)"/>
+        <param name="search/min_alt" value="$(arg min_alt)"/>
+        <param name="search/max_alt" value="$(arg max_alt)"/>
+        <param name="search/obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+        <remap from="/mavros/odometry/out" to="$(arg odom_topic)"/>
+    </node> 
+
+</launch>

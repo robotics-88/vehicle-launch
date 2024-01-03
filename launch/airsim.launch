@@ -28,8 +28,6 @@
 
     <include file="$(find rs_to_velodyne)/launch/rs_to_velodyne.launch">
         <arg name="raw_lidar_topic" value="$(arg raw_lidar_topic)"/>
-        <arg name="input_cloud_type" value="XYZI"/>
-        <arg name="output_cloud_type" value="XYZIR"/>
     </include>
 
     <node type="rviz" name="airsim_rviz" pkg="rviz" args="-d $(find vehicle_launch)/config/airsim.rviz" output="log"/>
