@@ -97,8 +97,6 @@
         <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
         <arg name="fcu_url" value="udp://127.0.0.1:14551@" if="$(arg simulate)"/>
     </include>
-    <!-- Required command for MAVROS to publish mav topics -->
-    <node pkg="rosservice" type="rosservice" name="rosservice" args="call --wait /mavros/set_stream_rate 0 50 1" unless="$(arg offline)"/>
 
     <!-- Simulation -->
     <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(arg simulate)">
@@ -199,6 +197,7 @@
         <arg name="mapir_topic" value="$(arg image_topic)"/>
         <arg name="do_record" value="$(arg do_record)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
+        <arg name="simulate" value="$(arg simulate)"/>
     </include>
 
     <group if="$(arg offline)">
