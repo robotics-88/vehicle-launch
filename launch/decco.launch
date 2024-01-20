@@ -91,6 +91,11 @@
     <arg name="goal_topic" default="/goal"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
 
+    <!-- Exploration args -->
+    <arg name="criteria" default="[DIST, ASH, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
+    <arg name="weights" default="[0.2, 0.8, 0.2]"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="dem_name" default="ballard.tif"/>
+
     <!-- MAVROS nodes -->
     <include file="$(find vehicle_launch)/launch/apm.launch" unless="$(arg offline)">
         <arg name="do_slam" value="$(arg do_slam)"/>
@@ -167,6 +172,9 @@
         <arg name="cloud_in" value="$(arg cloud_registered_topic)"/>
         <arg name="default_alt" value="$(arg default_alt)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
+        <arg name="criteria" value="$(arg criteria)"/>
+        <arg name="weights" value="$(arg weights)"/>
+        <arg name="dem_name" value="$(arg dem_name)"/>
     </include>
 
     <include file="$(find vehicle_launch)/launch/costmap.launch"/>
