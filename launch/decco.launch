@@ -147,10 +147,11 @@
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
     </include>
 
+    <arg name="acceptance_radius" default="2.0"/>
     <include file="$(find path_to_mavros)/launch/path_to_mavros.launch" if="$(arg do_slam)">
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-        <arg name="acceptance_radius" value="1.0"/>
+        <arg name="acceptance_radius" value="$(arg acceptance_radius)"/>
     </include>
 
     <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
