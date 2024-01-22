@@ -1,4 +1,10 @@
 <launch>
+
+
+
+                            <!-- Arguments/configuration -->
+
+    <!-- Basic frame/topic names -->
     <arg name="mavros_map_frame" default="map"/>
     <arg name="base_frame" default="base_link"/>
     <arg name="slam_map_frame" default="slam_map"/>
@@ -82,21 +88,28 @@
     <arg name="data_directory" default="/home/$(arg user)/src/bags/"/>
     <arg name="healthbeat_rate" default="1"/>
 
-    <!-- Common args -->
+    <!-- Control args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.0"/>
     <arg name="max_alt" default="5.0"/>
-    <arg name="default_speed" default="0.2"/> <!-- m/s-->
-    <arg name="map_resolution" default="1.0"/> <!-- meter -->
-    <arg name="goal_topic" default="/goal"/>
-    <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles-->
+    <arg name="acceptance_radius" default="2.0"/>
+    <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles--> 
 
     <!-- Exploration args -->
     <arg name="criteria" default="[DIST, ASH, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
     <arg name="weights" default="[0.2, 0.8, 0.2]"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
-    <!-- MAVROS nodes -->
+    <!-- Generic args -->
+    <arg name="map_resolution" default="1.0"/> <!-- meter -->
+    <arg name="goal_topic" default="/goal"/>
+
+
+
+
+                                <!-- ROS nodes -->
+
+    <!-- MAVROS -->
     <include file="$(find vehicle_launch)/launch/apm.launch" unless="$(arg offline)">
         <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="fcu_url" value="/dev/ttyACM0:57600" unless="$(arg simulate)"/>
@@ -152,11 +165,11 @@
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
     </include>
 
-    <arg name="acceptance_radius" value="1.0"/>
-    <node pkg="path_to_mavros" type="path_to_mavros_node" respawn="false" name="path_to_mavros" output="screen" if="$(arg do_slam)">
-        <param name="default_speed" value="$(arg default_speed)"/>
-        <param name="acceptance_radius" value="$(arg acceptance_radius)"/>
-    </node>
+    <include file="$(find path_to_mavros)/launch/path_to_mavros.launch" if="$(arg do_slam)">
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="acceptance_radius" value="$(arg acceptance_radius)"/>
+    </include>
 
     <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
         <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
