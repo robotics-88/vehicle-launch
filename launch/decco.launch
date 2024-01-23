@@ -94,6 +94,7 @@
     <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles--> 
+    <arg name="flightleg_area_m2" default="2023"/> <!-- 1 acre = 4046 m2-->
 
     <!-- Exploration args -->
     <arg name="criteria" default="[DIST, ASH, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
@@ -138,7 +139,7 @@
             </include>
         </group>
 
-        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg do_vegetation)">
+        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg offline)">
             <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
             <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
             <arg name="pointcloud_topic" value="$(arg cloud_registered_topic)"/>
@@ -200,11 +201,8 @@
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
     </include>
 
-    <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
-        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+    <include file="$(find image_segment_yolo)/launch/image_segment.launch" if="$(arg do_species_map)">
         <arg name="image_topic" value="$(arg image_topic)"/>
-        <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
-        <arg name="pointcloud_topic" value="$(arg cloud_registered_topic)"/>
         <arg name="use_cvshow" value="$(arg simulate)"/>
     </include>
 
@@ -225,6 +223,14 @@
         <param name="/use_sim_time" value="true"/>
         <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
         <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+
+        <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
+            <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+            <arg name="image_topic" value="$(arg image_topic)"/>
+            <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
+            <arg name="pointcloud_topic" value="$(arg cloud_registered_topic)"/>
+            <arg name="use_cvshow" value="$(arg simulate)"/>
+        </include>
     </group>
 
 </launch>
