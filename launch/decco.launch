@@ -50,7 +50,7 @@
     <arg name="do_exploration" default="true"/>
     <arg name="do_rangedata_oa" default="true"/>
     <arg name="do_vegetation" default="true"/>
-    <arg name="do_species_map" default="true"/> 
+    <arg name="do_species_map" default="false"/> <!-- Only enable when required e.g. for ASH -->
     <arg name="do_record" default="true" unless="$(eval simulate + offline)"/>
     <arg name="do_record" default="false" if="$(eval simulate + offline)"/>
 
