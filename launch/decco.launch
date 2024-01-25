@@ -97,8 +97,8 @@
     <arg name="flightleg_area_m2" default="2023"/> <!-- 1 acre = 4046 m2-->
 
     <!-- Exploration args -->
-    <arg name="criteria" default="[DIST, ASH, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
-    <arg name="weights" default="[0.2, 0.8, 0.2]"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
+    <arg name="weights" default="[0.6, 0.4]"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
