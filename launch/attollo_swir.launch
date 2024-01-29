@@ -21,5 +21,8 @@
     <group ns="$(arg camera_name)">
         <node pkg="image_proc" type="image_proc" name="image_proc"/>
     </group>
+    
+    <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
+    <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
 
 </launch>

@@ -11,7 +11,7 @@
 
         Defaults to 'fast lio'
     -->
-    <arg name="slam_type" default="0"/>
+    <arg name="slam_type" default="1"/>
     <arg name="odom_topic" default="/mavros/odometry/out" if="$(eval slam_type == 0)"/>
     <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 1)"/>
     <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 2)"/>
@@ -48,7 +48,7 @@
     </group>
 
     <group unless="$(arg simulate)">
-        <include file="$(find fast_lio_lc)/launch/mapping_horizon.launch" if="$(eval slam_type == 1)">
+        <include file="$(find fast_lio_lc)/launch/mapping_mid360.launch" if="$(eval slam_type == 1)">
             <arg name="rviz" value="$(arg rviz)"/>
         </include>
 

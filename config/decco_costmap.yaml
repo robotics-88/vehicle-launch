@@ -7,13 +7,13 @@ robot_radius: 0.50  # distance a circular robot should be clear of the obstacle 
 # footprint: [[x0, y0], [x1, y1], ... [xn, yn]]  # if the robot is not circular
 
 map_type: voxel
-width: 10000
-height: 10000
+width: 100
+height: 100
 resolution: 1.0
 update_frequency: 1.0
 publish_frequency: 1.0
-origin_x: -20.0
-origin_y: -20.0
+origin_x: -50.0
+origin_y: -50.0
 track_unknown_space:  true    #true needed for disabling global path planning through unknown space
 rolling_window: true
 
@@ -33,7 +33,7 @@ obstacle_layer:
   observation_sources:  slam_pcl
   slam_pcl:
     data_type: PointCloud2
-    topic: kd_pointcloud_accumulated
+    topic: cloud_registered
     marking: true
     clearing: true
     min_obstacle_height: 1.0
