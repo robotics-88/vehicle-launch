@@ -11,7 +11,7 @@
     <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
         <rosparam file="$(find vehicle_launch)/config/decco_costmap.yaml" command="load" ns="costmap" />
         <remap from="base_scan" to="cloud_registered"/>
-        <param name="resolution" value="$(arg map_resolution)"/>
+        <rosparam param="resolution" ns="costmap">$(arg map_resolution)</rosparam>
     </node>
 
 </launch>
