@@ -89,7 +89,7 @@
     <arg name="healthbeat_rate" default="1"/>
 
     <!-- Control args -->
-    <arg name="default_alt" default="5.0"/> <!-- Must be between min/max or path planning fails -->
+    <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.0"/>
     <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
@@ -213,6 +213,8 @@
         <arg name="do_record" value="$(arg do_record)"/>
         <arg name="data_directory" value="$(arg data_directory)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
+        <arg name="min_altitude" value="$(arg min_alt)"/>
+        <arg name="max_altitude" value="$(arg max_alt)"/>
         <arg name="simulate" value="$(arg simulate)"/>
         <arg name="offline" value="$(arg offline)"/>
     </include>
