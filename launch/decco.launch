@@ -89,7 +89,7 @@
     <arg name="healthbeat_rate" default="1"/>
 
     <!-- Control args -->
-    <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
+    <arg name="default_alt" default="5.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.0"/>
     <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
@@ -191,7 +191,9 @@
         <arg name="dem_name" value="$(arg dem_name)"/>
     </include>
 
-    <include file="$(find vehicle_launch)/launch/costmap.launch"/>
+    <include file="$(find vehicle_launch)/launch/costmap.launch">
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
 
     <include file="$(find image_segment_yolo)/launch/image_segment.launch" if="$(arg do_species_map)">
         <arg name="image_topic" value="$(arg image_topic)"/>
@@ -212,6 +214,7 @@
         <arg name="data_directory" value="$(arg data_directory)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
         <arg name="simulate" value="$(arg simulate)"/>
+        <arg name="offline" value="$(arg offline)"/>
     </include>
 
     <group if="$(arg offline)">

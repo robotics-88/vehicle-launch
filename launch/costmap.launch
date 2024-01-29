@@ -1,5 +1,6 @@
 <launch>
     <arg name="rviz" default="false"/>
+    <arg name="map_resolution" default="1.0"/> <!-- meter -->
 
     <!-- Publishes the voxel grid to rviz for display -->
     <node pkg="costmap_2d" type="costmap_2d_markers" name="voxel_visualizer" if="$(arg rviz)">
@@ -10,6 +11,7 @@
     <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
         <rosparam file="$(find vehicle_launch)/config/decco_costmap.yaml" command="load" ns="costmap" />
         <remap from="base_scan" to="cloud_registered"/>
+        <param name="resolution" value="$(arg map_resolution)"/>
     </node>
 
 </launch>
