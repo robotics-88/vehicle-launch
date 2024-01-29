@@ -31,7 +31,7 @@
 
         Defaults to 'fast lio'
     -->
-    <arg name="slam_type" default="0"/>
+    <arg name="slam_type" default="1"/>
 
     <!-- Which lidar
         0: Mid40
