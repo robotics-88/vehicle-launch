@@ -16,6 +16,7 @@ origin_x: -50.0
 origin_y: -50.0
 track_unknown_space:  true    #true needed for disabling global path planning through unknown space
 rolling_window: true
+transform_tolerance: 0.15
 
 obstacle_layer:
   enabled:              true
