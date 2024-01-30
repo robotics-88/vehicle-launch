@@ -58,7 +58,7 @@
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
     <arg name="do_mapir" default="true"/>
-    <arg name="do_attollo" default="false"/>
+    <arg name="do_attollo" default="true"/>
 
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 4)"/>
@@ -132,6 +132,7 @@
                 <arg name="slam_type" value="$(arg slam_type)"/>
             </include>
             <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+            <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
 
             <include file="$(find bag_recorder)/launch/default.launch">
                 <arg name="configuration_directory" value="$(arg configuration_directory)"/>
