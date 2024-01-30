@@ -58,7 +58,7 @@ roslaunch vehicle_launch viz_host_machine.launch
 To run post-processing:
 ```
 roscore
-rosbag play *.bag --pause --clock /tf:=/tftrash /cloud_registered:=/cloudtrash
+rosbag play *.bag --pause --clock /tf:=/tftrash /cloud_registered:=/cloudtrash /costmap_node/costmap/costmap:=/costmaptrash
 roslaunch vehicle_launch decco.launch offline:=true slam_type:=...
 ```
 Note in post-processing, slam_type can be changed but must match the incoming pointcloud type (e.g., slam_type 0 expects Livox data as sensor_msgs/Pointcloud2, and slam_type 1,2 expects custom_livox_msg).
