@@ -94,7 +94,7 @@
     <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles--> 
-    <arg name="flightleg_area_m2" default="2023"/> <!-- 1 acre = 4046 m2-->
+    <arg name="flightleg_area_acres" default="3"/> <!-- 1 acre = 4046 m2-->
     <arg name="max_dist_to_polygon" default="50"/> <!-- meters permitted to reach polygon-->
 
     <!-- Exploration args -->
@@ -217,7 +217,7 @@
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
         <arg name="min_altitude" value="$(arg min_alt)"/>
         <arg name="max_altitude" value="$(arg max_alt)"/>
-        <arg name="flightleg_area_m2" value="$(arg flightleg_area_m2)"/>
+        <arg name="flightleg_area_acres" value="$(arg flightleg_area_acres)"/>
         <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
         <arg name="simulate" value="$(arg simulate)"/>
         <arg name="offline" value="$(arg offline)"/>
