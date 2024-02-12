@@ -31,7 +31,7 @@
 
         Defaults to 'fast lio'
     -->
-    <arg name="slam_type" default="0"/>
+    <arg name="slam_type" default="1"/>
 
     <!-- Which lidar
         0: Mid40
@@ -58,7 +58,7 @@
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
     <arg name="do_mapir" default="true"/>
-    <arg name="do_attollo" default="false"/>
+    <arg name="do_attollo" default="true"/>
 
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval lidar_type == 4)"/>
@@ -94,7 +94,8 @@
     <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
     <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles--> 
-    <arg name="flightleg_area_m2" default="2023"/> <!-- 1 acre = 4046 m2-->
+    <arg name="flightleg_area_acres" default="3"/> <!-- 1 acre = 4046 m2-->
+    <arg name="max_dist_to_polygon" default="50"/> <!-- meters permitted to reach polygon-->
 
     <!-- Exploration args -->
     <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
@@ -102,7 +103,7 @@
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
-    <arg name="map_resolution" default="1.0"/> <!-- meter -->
+    <arg name="map_resolution" default="0.1"/> <!-- meter -->
     <arg name="goal_topic" default="/goal"/>
 
 
@@ -131,6 +132,7 @@
                 <arg name="slam_type" value="$(arg slam_type)"/>
             </include>
             <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
+            <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
 
             <include file="$(find bag_recorder)/launch/default.launch">
                 <arg name="configuration_directory" value="$(arg configuration_directory)"/>
@@ -191,7 +193,9 @@
         <arg name="dem_name" value="$(arg dem_name)"/>
     </include>
 
-    <include file="$(find vehicle_launch)/launch/costmap.launch"/>
+    <include file="$(find vehicle_launch)/launch/costmap.launch">
+        <arg name="map_resolution" value="$(arg map_resolution)"/>
+    </include>
 
     <include file="$(find image_segment_yolo)/launch/image_segment.launch" if="$(arg do_species_map)">
         <arg name="image_topic" value="$(arg image_topic)"/>
@@ -211,13 +215,23 @@
         <arg name="do_record" value="$(arg do_record)"/>
         <arg name="data_directory" value="$(arg data_directory)"/>
         <arg name="default_altitude_m" value="$(arg default_alt)"/>
+        <arg name="min_altitude" value="$(arg min_alt)"/>
+        <arg name="max_altitude" value="$(arg max_alt)"/>
+        <arg name="flightleg_area_acres" value="$(arg flightleg_area_acres)"/>
+        <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
         <arg name="simulate" value="$(arg simulate)"/>
+        <arg name="offline" value="$(arg offline)"/>
     </include>
 
     <group if="$(arg offline)">
         <param name="/use_sim_time" value="true"/>
         <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
+        <node type="rviz" name="vegetation_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz"/>
         <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+        <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
+        <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
+        <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
+        <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
 
         <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
             <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>

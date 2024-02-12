@@ -1,6 +1,6 @@
 <launch>
-    <arg name="device_id" default="1"/>
-    <!-- <arg name="device_path" default="/dev/video0"/> -->
+    <!-- <arg name="device_id" default="1"/> -->
+    <arg name="device_path" default="/dev/attollo"/>
     <arg name="camera_name" default="attollo_cam"/>
     <arg name="camera_info_yaml" default="$(find vehicle_launch)/params/attollo_cam_info.yaml"/>
     <arg name="image_width" default="320"/>
@@ -9,8 +9,8 @@
 
     <node pkg="cv_camera" type="cv_camera_node" name="$(arg camera_name)">
         <param name="rate" value="$(arg fps)"/>
-        <param name="device_id" value="$(arg device_id)"/>
-        <!-- <param name="device_path" value="$(arg device_path)"/> -->
+        <!-- <param name="device_id" value="$(arg device_id)"/> -->
+        <param name="device_path" value="$(arg device_path)"/>
         <param name="frame_id" value="$(arg camera_name)"/>
         <param name="camera_info_url" value="file://$(arg camera_info_yaml)"/>
         <param name="pixel_format" value="yuyv"/>
@@ -21,5 +21,8 @@
     <group ns="$(arg camera_name)">
         <node pkg="image_proc" type="image_proc" name="image_proc"/>
     </group>
+    
+    <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
+    <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
 
 </launch>
