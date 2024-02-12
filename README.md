@@ -64,6 +64,10 @@ roslaunch vehicle_launch decco.launch offline:=true slam_type:=...
 Note in post-processing, slam_type can be changed but must match the incoming pointcloud type (e.g., slam_type 0 expects Livox data as sensor_msgs/Pointcloud2, and slam_type 1,2 expects custom_livox_msg).
 TODO: update decco.launch and move any unnecessary nodes to a group launched only in offline mode.
 
+## Texas datasets
+
+For the TX field tests, we had to separately run Attollo and MAVROS, so initialization data is in a separate bag from the flight bag. Combination is manual. First, run the above post-processing command, and wait until map yaw, utm_x, and utm_y print in terminal. Then in `task_manager/launch/task_manager.launch`, update the values accordingly and set `explicit_global_params` to true in that same file. Then run the above post-processing command but with the inflight bag.
+
 # recording
 
 TODO update this section and delete deprecated launch files.
