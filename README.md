@@ -1,6 +1,18 @@
 # prototype vehicle
 Note in either vehicle case, ROS master must be the PC. Thus before any of the below, launch `roscore` on the PC.
 
+## Setting up symlinks/udev rules
+
+After cloning this repo, copy the udev rules in the 'config' folder to the udev rules directory with 
+
+`sudo cp config/99-r88.rules /etc/udev/rules.d/`
+
+Then load the rules with 
+
+`sudo udevadm control --reload-rules && udevadm trigger`
+
+Unplug and replug any USB devices for the changes to immediately take effect (or just reboot the CPU).
+
 ## RPi Drone
 
 First ssh into the drone:

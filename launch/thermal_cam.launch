@@ -1,0 +1,23 @@
+<launch>
+    <arg name="device_path" default="/dev/thermal_cam"/>
+    <arg name="camera_name" default="thermal_cam"/>
+    <arg name="camera_info_yaml" default="$(find vehicle_launch)/params/$(arg camera_name)_info.yaml"/>
+    <arg name="image_width" default="384"/>
+    <arg name="image_height" default="288"/>
+    <arg name="fps" default="25"/>
+    <node pkg="cv_camera" type="cv_camera_node" name="$(arg camera_name)">
+        <param name="rate" value="$(arg fps)"/>
+        <param name="device_path" value="$(arg device_path)"/>
+        <param name="frame_id" value="$(arg camera_name)"/>
+        <param name="camera_info_url" value="file://$(arg camera_info_yaml)"/>
+        <param name="pixel_format" value="yuyv"/>
+        <param name="image_width" value="$(arg image_width)"/>
+        <param name="image_height" value="$(arg image_height)"/>
+    </node>
+    <group ns="$(arg camera_name)">
+        <node pkg="image_proc" type="image_proc" name="image_proc"/>
+    </group>
+    <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link thermal_cam 100"/>
+    <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical 100"/>
+    
+</launch>
