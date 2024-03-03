@@ -17,7 +17,5 @@
     <group ns="$(arg camera_name)">
         <node pkg="image_proc" type="image_proc" name="image_proc"/>
     </group>
-    <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link thermal_cam 100"/>
-    <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical 100"/>
     
 </launch>
