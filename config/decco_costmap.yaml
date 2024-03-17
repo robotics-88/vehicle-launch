@@ -18,12 +18,12 @@ transform_tolerance: 0.25
 raytrace_range: 40.0
 
 plugins: 
-    - {name: aerial_layer,        type: "aerial_layer::AerialLayer"}
+    - {name: clear_layer,         type: "clear_layer::ClearLayer"}
     - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
 
 #clearing layer marks free space in 2D even without a LiDAR return
-aerial_layer:
+clear_layer:
   enabled:              true
 
 obstacle_layer:
