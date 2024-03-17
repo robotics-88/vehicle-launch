@@ -77,8 +77,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 10.127946853637695
-        Min Value: -0.19769802689552307
+        Max Value: 10.153364181518555
+        Min Value: -0.16530965268611908
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -141,6 +141,8 @@ Visualization Manager:
           Value: false
         slam_map:
           Value: true
+        utm:
+          Value: true
         velodyne:
           Value: false
       Marker Alpha: 1
@@ -150,31 +152,32 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          map_ned:
-            {}
-          slam_map:
-            base_link:
-              base_link/Lidar2:
-                velodyne:
-                  {}
-              base_link_frd:
-                base_link_frd_stabilized:
-                  {}
-              front_center_custom_body:
-                front_center_custom_optical:
-                  {}
-              front_left_custom_body:
-                front_left_custom_optical:
-                  {}
-              front_right_custom_body:
-                front_right_custom_optical:
-                  {}
         odom:
           base_link/odom:
             {}
           odom_ned:
             {}
+        utm:
+          map:
+            map_ned:
+              {}
+            slam_map:
+              base_link:
+                base_link/Lidar2:
+                  velodyne:
+                    {}
+                base_link_frd:
+                  base_link_frd_stabilized:
+                    {}
+                front_center_custom_body:
+                  front_center_custom_optical:
+                    {}
+                front_left_custom_body:
+                  front_left_custom_optical:
+                    {}
+                front_right_custom_body:
+                  front_right_custom_optical:
+                    {}
       Update Interval: 0
       Value: true
     - Class: rviz/Image
@@ -283,7 +286,7 @@ Visualization Manager:
       Value: true
     - Alpha: 0.699999988079071
       Class: rviz/Map
-      Color Scheme: map
+      Color Scheme: costmap
       Draw Behind: false
       Enabled: true
       Name: Costmap
