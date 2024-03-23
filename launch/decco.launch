@@ -45,6 +45,14 @@
     <arg name="lidar_type" default="2" if="$(arg simulate)"/>
     <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
 
+    <!-- Which thermal
+        0: Infiray (Gus)
+        1: Seek (Erin)
+
+        Defaults to '0: Infiray'
+    -->
+    <arg name="thermal_type" default="0"/>
+
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_costmap" default="$(arg do_slam)"/>
@@ -58,9 +66,11 @@
     <!-- Which hardware -->
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
     <arg name="do_velodyne" default="$(eval lidar_type == 2)"/>
-    <arg name="do_mapir" default="true"/>
+    <arg name="do_mapir" default="true" unless="$(arg simulate)"/>
+    <arg name="do_mapir" default="false" if="$(arg simulate)"/>
     <arg name="do_mapir_rgb" default="false"/>
-    <arg name="do_attollo" default="true"/>
+    <arg name="do_attollo" default="true" unless="$(arg simulate)"/>
+    <arg name="do_attollo" default="false" if="$(arg simulate)"/>
     <arg name="do_thermal_cam" default="false"/>
 
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
@@ -155,7 +165,7 @@
             <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
             <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
         </group>
-        
+
     </group>
 
     <!-- Feature nodes -->
@@ -222,6 +232,11 @@
         <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
         <arg name="simulate" value="$(arg simulate)"/>
         <arg name="offline" value="$(arg offline)"/>
+        <arg name="do_mapir" value="$(arg do_mapir)"/>
+        <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
+        <arg name="do_attollo" value="$(arg do_attollo)"/>
+        <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
+        <arg name="thermal_type" value="$(arg thermal_type)"/>
     </include>
 
 </launch>
