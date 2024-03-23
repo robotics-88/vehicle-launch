@@ -146,16 +146,16 @@
             </include>
         </group>
 
-        <include file="$(find vehicle_launch)/launch/vegetation.launch" if="$(arg offline)">
-            <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-            <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
-            <arg name="pointcloud_topic" value="$(arg cloud_registered_topic)"/>
-            <arg name="run_multispectral_viz" value="false"/>
-            <arg name="run_rgb_viz" value="false"/>
-            <arg name="use_mapir" value="$(arg do_mapir)"/>
-            <arg name="use_attollo" value="$(arg do_attollo)"/>
-            <arg name="map_resolution" value="$(arg map_resolution)"/>
-        </include>
+        <group if="$(arg offline)">
+            <param name="/use_sim_time" value="true"/>
+            <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
+            <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
+            <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
+            <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
+            <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
+            <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
+        </group>
+        
     </group>
 
     <!-- Feature nodes -->
@@ -177,11 +177,6 @@
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="acceptance_radius" value="$(arg acceptance_radius)"/>
-    </include>
-
-    <include file="$(find range_data_to_mavros)/launch/range_data_to_mavros.launch" if="$(arg do_rangedata_oa)">
-        <arg name="point_cloud_topic" value="$(arg cloud_topic)"/>
-        <arg name="data_type" value="point_cloud"/>
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
@@ -228,24 +223,5 @@
         <arg name="simulate" value="$(arg simulate)"/>
         <arg name="offline" value="$(arg offline)"/>
     </include>
-
-    <group if="$(arg offline)">
-        <param name="/use_sim_time" value="true"/>
-        <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
-        <node type="rviz" name="vegetation_rviz" pkg="rviz" args="-d $(find vegetation)/config/ndwi.rviz"/>
-        <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
-        <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
-        <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
-        <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
-        <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
-
-        <include file="$(find image_segment_yolo)/launch/species_map.launch" if="$(arg do_species_map)">
-            <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
-            <arg name="image_topic" value="$(arg image_topic)"/>
-            <arg name="camera_info_topic" value="$(arg camera_info_topic)"/>
-            <arg name="pointcloud_topic" value="$(arg cloud_registered_topic)"/>
-            <arg name="use_cvshow" value="$(arg simulate)"/>
-        </include>
-    </group>
 
 </launch>
