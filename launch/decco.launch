@@ -144,7 +144,11 @@
             <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
             <include file="$(find vehicle_launch)/launch/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
             <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
-            <include file="$(find vehicle_launch)/launch/thermal_cam.launch" if="$(arg do_thermal_cam)"/>
+
+            <group if="$(arg do_thermal_cam)">
+                <include file="$(find vehicle_launch)/launch/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
+                <include file="$(find vehicle_launch)/launch/seek_cam.launch" if="$(eval thermal_type == 1)"/>
+            </group>
 
             <include file="$(find bag_recorder)/launch/default.launch">
                 <arg name="configuration_directory" value="$(arg configuration_directory)"/>
