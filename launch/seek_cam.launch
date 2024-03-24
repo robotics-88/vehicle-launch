@@ -1,6 +1,9 @@
 <launch>
-    <include file="$(find seek_thermal_88)/launch/seek.launch" />
-    
+    <arg name="rviz" value="false"/>
+    <include file="$(find seek_thermal_88)/launch/seek.launch">
+        <arg name="use_rviz" value="$(arg rviz)"/>
+    </include>
+
     <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link thermal_cam 100"/>
     <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical 100"/>
     
