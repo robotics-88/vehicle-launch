@@ -53,7 +53,7 @@ aerial_layer:
   z_resolution:         0.5
   z_voxels:             16
   unknown_threshold:    15
-  mark_threshold:       12
+  mark_threshold:       2
   combination_method:   1
   track_unknown_space:  true    #true needed for frontier finding
   obstacle_range: 100
