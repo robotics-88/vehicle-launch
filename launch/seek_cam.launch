@@ -1,0 +1,13 @@
+<launch>
+    <arg name="rviz" value="false"/>
+    <include file="$(find seek_thermal_88)/launch/seek.launch">
+        <arg name="use_rviz" value="$(arg rviz)"/>
+    </include>
+    <group ns="seek_thermal">
+        <node pkg="image_proc" type="image_proc" name="image_proc"/>
+    </group>
+
+    <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link seek_thermal 100"/>
+    <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 seek_thermal thermal_optical 100"/>
+    
+</launch>
