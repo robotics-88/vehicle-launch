@@ -137,17 +137,17 @@
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <group unless="$(arg offline)">
-            <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-            <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
+            <include file="$(find vehicle_launch)/launch/sensors/velo16.launch" if="$(arg do_velodyne)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mid360.launch" if="$(arg do_mid360)">
                 <arg name="slam_type" value="$(arg slam_type)"/>
             </include>
-            <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
-            <include file="$(find vehicle_launch)/launch/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
-            <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(arg do_mapir)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(arg do_attollo)"/>
 
             <group if="$(arg do_thermal_cam)">
-                <include file="$(find vehicle_launch)/launch/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
-                <include file="$(find vehicle_launch)/launch/seek_cam.launch" if="$(eval thermal_type == 1)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval thermal_type == 1)"/>
             </group>
             
             <include file="$(find bag_recorder)/launch/default.launch">
@@ -161,6 +161,15 @@
             <param name="/use_sim_time" value="true"/>
             <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
         </group>
+
+        <include file="$(find vehicle_launch)/launch/static_tf.launch">
+            <arg name="do_mid360" value="$(arg do_mid360)"/>
+            <arg name="do_mapir" value="$(arg do_mapir)"/>
+            <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
+            <arg name="do_attollo" value="$(arg do_attollo)" />
+            <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
+            <arg name="thermal_type" value="$(arg thermal_type)"/>
+        </include>
 
     </group>
 
