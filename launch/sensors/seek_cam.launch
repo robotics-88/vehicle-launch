@@ -3,8 +3,8 @@
     <include file="$(find seek_thermal_88)/launch/seek.launch">
         <arg name="use_rviz" value="$(arg rviz)"/>
     </include>
-    <group ns="seek_thermal">
+    <!-- <group ns="seek_thermal">
         <node pkg="image_proc" type="image_proc" name="image_proc"/>
-    </group>
+    </group> -->
     
 </launch>
