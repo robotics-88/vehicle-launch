@@ -4,5 +4,4 @@
         <arg name="device_ip" value="$(arg device_ip)"/>
     </include>
 
-    <node name="velodyne_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 -0.1 0 0 0 base_link velodyne 100"/>
 </launch>

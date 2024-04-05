@@ -1,7 +1,7 @@
 <launch>
     <!-- <arg name="device_id" default="0"/> -->
     <arg name="device_path" default="/dev/mapir"/>
-    <arg name="camera_name" default="mapir_rgn"/>
+    <arg name="camera_name" default="mapir_rgb"/>
     <arg name="camera_info_yaml" default="$(find vehicle_launch)/params/$(arg camera_name)_info.yaml"/>
     <arg name="image_width" default="640"/>
     <arg name="image_height" default="480"/>
@@ -21,8 +21,5 @@
     <group ns="$(arg camera_name)">
         <node pkg="image_proc" type="image_proc" name="image_proc"/>
     </group>
-
-    <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
-    <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
     
 </launch>

@@ -87,7 +87,7 @@
     <arg name="imu_topic" default="$(arg imu_topic_hw)" unless="$(arg simulate)"/>
     <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
 
-    <arg name="image_topic" default="/mapir_rgn/image_rect" unless="$(arg simulate)"/>
+    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(arg simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
@@ -137,19 +137,19 @@
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <group unless="$(arg offline)">
-            <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-            <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
+            <include file="$(find vehicle_launch)/launch/sensors/velo16.launch" if="$(arg do_velodyne)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mid360.launch" if="$(arg do_mid360)">
                 <arg name="slam_type" value="$(arg slam_type)"/>
             </include>
-            <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
-            <include file="$(find vehicle_launch)/launch/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
-            <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(arg do_mapir)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(arg do_attollo)"/>
 
             <group if="$(arg do_thermal_cam)">
-                <include file="$(find vehicle_launch)/launch/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
-                <include file="$(find vehicle_launch)/launch/seek_cam.launch" if="$(eval thermal_type == 1)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval thermal_type == 1)"/>
             </group>
-
+            
             <include file="$(find bag_recorder)/launch/default.launch">
                 <arg name="configuration_directory" value="$(arg configuration_directory)"/>
                 <arg name="data_directory" value="$(arg data_directory)"/>
@@ -160,12 +160,16 @@
         <group if="$(arg offline)">
             <param name="/use_sim_time" value="true"/>
             <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
-            <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
-            <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
-            <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
-            <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
-            <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
         </group>
+
+        <include file="$(find vehicle_launch)/launch/static_tf.launch">
+            <arg name="do_mid360" value="$(arg do_mid360)"/>
+            <arg name="do_mapir" value="$(arg do_mapir)"/>
+            <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
+            <arg name="do_attollo" value="$(arg do_attollo)" />
+            <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
+            <arg name="thermal_type" value="$(arg thermal_type)"/>
+        </include>
 
     </group>
 
