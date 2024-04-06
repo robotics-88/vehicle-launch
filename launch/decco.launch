@@ -6,7 +6,7 @@
 
     <!-- Basic frame/topic names -->
     <arg name="mavros_map_frame" default="map"/>
-    <arg name="base_frame" default="base_link"/>
+    <arg name="base_frame" default="livox_frame"/>
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>    
 
