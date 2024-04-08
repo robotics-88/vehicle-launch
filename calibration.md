@@ -1,4 +1,4 @@
-# camera lidar calibration
+# Camera-Lidar Calibration
 
 Below are the steps to get the Extrinsic matrix between the lidar point clouds and the camera images. For the calibration, we need the dataset in the below format:
 
@@ -9,15 +9,20 @@ Below are the steps to get the Extrinsic matrix between the lidar point clouds a
 ## Install dependencies
 
 [PCL installation](https://pointclouds.org/downloads/)
+
 [Eigen installation](https://robots.uc3m.es/installation-guides/install-eigen.html)
+
 [Ceres-solver installation](http://ceres-solver.org/installation.html)
+
 Cmake
+
 OpenCV
+
 Pangolin
 
 Below are the 2 main repositories that were used for this calibration:
 
-[repo1](https://github.com/DoongLi/livox_camera_lidar_calibration_d2) ; also clone the [repo1_depend](https://github.com/Livox-SDK/livox_ros_driver2) repo inside the src folder of repo 1 and then build it since the mid-360 used livox-ros driver2.
+[repo1](https://github.com/DoongLi/livox_camera_lidar_calibration_d2) ; also clone the [repo1_depend](https://github.com/Livox-SDK/livox_ros_driver2) repo inside the src folder of repo1 and then build it since the mid-360 uses livox-ros driver2.
 
 ```bash
 git clone https://github.com/DoongLi/livox_camera_lidar_calibration_d2
@@ -60,7 +65,7 @@ distortion_coefficients:
   data: 0.03527823763959915, -0.06383912241357363, 0.007655239948373614, 0.008907391781204871, 0
 ```
 
-## step2: convert lidar data to pcd
+## step2: Convert lidar data to pcd
 
 In the repo1 : Check the rosbag path in pcdTransfer.launch, set the number of rosbags, and name the rosbag 0.bag, 1.bag...etc.
 
