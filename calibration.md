@@ -32,9 +32,10 @@ source devel/setup.bash
 ```
 [repo2](https://github.com/PJLab-ADG/SensorsCalibration)
 
-## step1: Get the camera intrinsics
+## Step 1: Get the camera intrinsics
 
 We can use different ways to get the camera intrinsics:
+
 I.  MATLAB (oddxeven row column - inbuilt camera claibrator app) 
 
 II. OpenCV (oddxeven row column - Use the code here: [click me](https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html))
@@ -65,7 +66,7 @@ distortion_coefficients:
   data: 0.03527823763959915, -0.06383912241357363, 0.007655239948373614, 0.008907391781204871, 0
 ```
 
-## step2: Convert lidar data to pcd
+## Step 2: Convert lidar data to pcd
 
 In the repo1 : Check the rosbag path in pcdTransfer.launch, set the number of rosbags, and name the rosbag 0.bag, 1.bag...etc.
 
@@ -75,9 +76,11 @@ Run the command to convert the rosbag to PCD files in batches, they will be save
 PCD files can also be viewed by:
 `pcl_viewer -use_point_picking xx.pcd`
 
-## step3: Get the extrinsic matrix between the corresponding lidar-pcd and camera-images
+## Step 3: Get the extrinsic matrix between the corresponding lidar-pcd and camera-images
 
 Using the above pcd files and the corresponding images in repo2:
+
+Git clone the repo2 with only the lidar2camera and the camera_intrinsic folder (the repo is quite big so other files and folders can be removed)
 ```bash
 cd lidar2camera
 mkdir -p build && cd build
@@ -116,7 +119,7 @@ Distortion:
 
 Refer this github link for more information: [click me](https://github.com/PJLab-ADG/SensorsCalibration/tree/master/lidar2camera)
 
-Note: The Lidar-camera calibration can also be done using just the repo1 where we manually click the board corners in both the images and the pcds and save these corners. Then we have to run the `getExt1.launch` file to get the extrinsic between the camera and the lidar. But there seems to be some convergence problem in the script. So, the cloud points were not aligned with the image as expected.
+Note: The Lidar-camera calibration can also be done using just the repo1 where we manually click the board corners in both the images and the pcds and save these corner coordinates. Then we have to run the `getExt1.launch` file to get the extrinsic between the camera and the lidar. But there seems to be some convergence problem in the script. So, the cloud points were not aligned with the image as expected.
 
 
 
