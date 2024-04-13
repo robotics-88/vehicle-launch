@@ -24,6 +24,7 @@
     <arg name="enable_autonomy" default="false" if="$(arg offline)"/>
     <arg name="enable_exploration" default="$(arg simulate)" unless="$(arg offline)"/>
     <arg name="enable_exploration" default="true" if="$(arg offline)"/>
+    <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
 
     <!-- Which SLAM
         0: FAST LIO (original 'slam' repo)
@@ -225,6 +226,7 @@
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
         <arg name="enable_exploration" value="$(arg enable_exploration)"/>
+        <arg name="use_failsafes" value="$(arg use_failsafes)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="do_slam" value="$(arg do_slam)"/>
