@@ -192,6 +192,9 @@
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="acceptance_radius" value="$(arg acceptance_radius)"/>
+        <arg name="cloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
