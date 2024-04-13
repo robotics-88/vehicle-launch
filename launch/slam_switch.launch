@@ -40,7 +40,7 @@
     </include>
 
     <group if="$(arg simulate)">
-        <include file="$(find fast_lio_lc)/launch/mapping_velodyne.launch" if="$(eval slam_type == 1)">
+        <include file="$(find fast_lio_lc)/launch/mapping_velodyne_sim.launch" if="$(eval slam_type == 1)">
             <arg name="rviz" value="$(arg rviz)"/>
             <arg name="base_frame" value="$(arg base_frame)"/>
             <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
