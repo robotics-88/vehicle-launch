@@ -13,6 +13,7 @@ Panels:
         - /Destination1
       Splitter Ratio: 0.5
     Tree Height: 664
+    Tree Height: 664
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -202,11 +203,11 @@ Visualization Manager:
         map:
           Value: true
         map_ned:
+          Value: false
+        mapir_optical:
           Value: true
-        mapir_cam:
-          Value: false
-        mapir_rgn:
-          Value: false
+        mapir_rgn_cam:
+          Value: true
         odom:
           Value: true
         odom_ned:
@@ -230,16 +231,12 @@ Visualization Manager:
             map_ned:
               {}
             slam_map:
-              base_link:
-                attollo_cam:
-                  attollo_optical:
+              livox_frame:
+                base_link:
+                  base_link_frd:
                     {}
-                base_link_frd:
-                  {}
-                livox_frame:
-                  {}
-                mapir_cam:
-                  mapir_rgn:
+                mapir_rgn_cam:
+                  mapir_optical:
                     {}
       Update Interval: 0
       Value: true
@@ -416,7 +413,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: slam_map
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -440,7 +437,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 61.30393600463867
+      Distance: 39.59521484375
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -456,9 +453,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9903980493545532
+      Pitch: 0.7003986835479736
       Target Frame: <Fixed Frame>
-      Yaw: 3.588573932647705
+      Yaw: 4.765401363372803
     Saved: ~
 Window Geometry:
   Displays:

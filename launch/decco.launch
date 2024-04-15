@@ -6,7 +6,8 @@
 
     <!-- Basic frame/topic names -->
     <arg name="mavros_map_frame" default="map"/>
-    <arg name="base_frame" default="base_link"/>
+    <arg name="mavros_base_frame" default="base_link"/>
+    <arg name="slam_base_frame" default="livox_frame"/>
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>    
 
@@ -23,6 +24,7 @@
     <arg name="enable_autonomy" default="false" if="$(arg offline)"/>
     <arg name="enable_exploration" default="$(arg simulate)" unless="$(arg offline)"/>
     <arg name="enable_exploration" default="true" if="$(arg offline)"/>
+    <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
 
     <!-- Which SLAM
         0: FAST LIO (original 'slam' repo)
@@ -87,7 +89,7 @@
     <arg name="imu_topic" default="$(arg imu_topic_hw)" unless="$(arg simulate)"/>
     <arg name="imu_topic" default="$(arg imu_topic_sim)" if="$(arg simulate)"/>
 
-    <arg name="image_topic" default="/mapir_rgn/image_rect" unless="$(arg simulate)"/>
+    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(arg simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
@@ -133,23 +135,24 @@
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
+    <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 livox_frame base_link 100" if="$(arg simulate)"/>
 
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
         <group unless="$(arg offline)">
-            <include file="$(find vehicle_launch)/launch/velo16.launch" if="$(arg do_velodyne)"/>
-            <include file="$(find vehicle_launch)/launch/mid360.launch" if="$(arg do_mid360)">
+            <include file="$(find vehicle_launch)/launch/sensors/velo16.launch" if="$(arg do_velodyne)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mid360.launch" if="$(arg do_mid360)">
                 <arg name="slam_type" value="$(arg slam_type)"/>
             </include>
-            <include file="$(find vehicle_launch)/launch/mapir_rgn.launch" if="$(arg do_mapir)"/>
-            <include file="$(find vehicle_launch)/launch/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
-            <include file="$(find vehicle_launch)/launch/attollo_swir.launch" if="$(arg do_attollo)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(arg do_mapir)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
+            <include file="$(find vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(arg do_attollo)"/>
 
             <group if="$(arg do_thermal_cam)">
-                <include file="$(find vehicle_launch)/launch/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
-                <include file="$(find vehicle_launch)/launch/seek_cam.launch" if="$(eval thermal_type == 1)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval thermal_type == 0)"/>
+                <include file="$(find vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval thermal_type == 1)"/>
             </group>
-
+            
             <include file="$(find bag_recorder)/launch/default.launch">
                 <arg name="configuration_directory" value="$(arg configuration_directory)"/>
                 <arg name="data_directory" value="$(arg data_directory)"/>
@@ -160,19 +163,23 @@
         <group if="$(arg offline)">
             <param name="/use_sim_time" value="true"/>
             <include file="$(find vehicle_launch)/launch/viz_host_machine.launch"/>
-            <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0.1 0 0 0 base_link livox_frame 100"/>
-            <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link mapir_cam 100"/>
-            <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_cam mapir_rgn 100"/>
-            <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.127 0.01905 0 0 0 0 base_link attollo_cam 100"/>
-            <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
         </group>
+
+        <include file="$(find vehicle_launch)/launch/static_tf.launch">
+            <arg name="do_mid360" value="$(arg do_mid360)"/>
+            <arg name="do_mapir" value="$(arg do_mapir)"/>
+            <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
+            <arg name="do_attollo" value="$(arg do_attollo)" />
+            <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
+            <arg name="thermal_type" value="$(arg thermal_type)"/>
+        </include>
 
     </group>
 
     <!-- Feature nodes -->
     <include file="$(find vehicle_launch)/launch/slam_switch.launch" if="$(arg do_slam)">
         <arg name="simulate" value="$(arg simulate)"/>
-        <arg name="base_frame" value="$(arg base_frame)"/>
+        <arg name="base_frame" value="$(arg slam_base_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
@@ -185,18 +192,18 @@
     </include>
 
     <include file="$(find path_to_mavros)/launch/path_to_mavros.launch" if="$(arg do_slam)">
-        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="acceptance_radius" value="$(arg acceptance_radius)"/>
+        <arg name="cloud_topic" value="$(arg cloud_topic)"/>
+        <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
-        <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-        <arg name="robot_base_frame" value="$(arg base_frame)"/>
-        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="robot_base_frame" value="$(arg mavros_base_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="goal_topic" value="$(arg goal_topic)"/>
-        <arg name="cloud_in" value="$(arg cloud_registered_topic)"/>
         <arg name="default_alt" value="$(arg default_alt)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
         <arg name="criteria" value="$(arg criteria)"/>
@@ -215,9 +222,11 @@
 
     <include file="$(find task_manager_88)/launch/task_manager.launch">
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="base_frame" value="$(arg mavros_base_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
         <arg name="enable_exploration" value="$(arg enable_exploration)"/>
+        <arg name="use_failsafes" value="$(arg use_failsafes)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
         <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="do_slam" value="$(arg do_slam)"/>

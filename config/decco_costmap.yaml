@@ -1,4 +1,4 @@
-global_frame: slam_map
+global_frame: map
 robot_base_frame: base_link
 max_obstacle_height: 10.0 
 
@@ -39,7 +39,7 @@ clear_layer:
   observation_sources:  slam_pcl
   slam_pcl:
     data_type: PointCloud2
-    topic: cloud_registered
+    topic: cloud_registered_map
     marking: true
     clearing: true
     min_obstacle_height: 1.0
