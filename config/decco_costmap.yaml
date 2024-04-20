@@ -5,13 +5,13 @@ max_obstacle_height: 10.0
 robot_radius: 0.50  # distance a circular robot should be clear of the obstacle (kobuki: 0.18)
 # footprint: [[x0, y0], [x1, y1], ... [xn, yn]]  # if the robot is not circular
 
-width: 100
-height: 100
+width: 1000
+height: 1000
 resolution: 1.0
 update_frequency: 1.0
 publish_frequency: 1.0
-origin_x: -50.0
-origin_y: -50.0
+origin_x: -500.0
+origin_y: -500.0
 track_unknown_space:  true    #true needed for frontier finding
 rolling_window: true
 transform_tolerance: 0.25
@@ -35,7 +35,7 @@ clear_layer:
   combination_method:   1
   track_unknown_space:  true    #true needed for frontier finding
   obstacle_range: 100
-  publish_voxel_map: true
+  publish_voxel_map: false
   observation_sources:  slam_pcl
   slam_pcl:
     data_type: PointCloud2
@@ -44,9 +44,10 @@ clear_layer:
     clearing: true
     min_obstacle_height: 1.0
     max_obstacle_height: 10.0
-  # for debugging only, let's you see the entire voxel grid
 
+#aerial layer can accept map-registered pointclouds 
 aerial_layer:
+  sensor_frame:         livox_frame
   enabled:              true
   max_obstacle_height:  10.0
   origin_z:             0.0
@@ -57,7 +58,7 @@ aerial_layer:
   combination_method:   1
   track_unknown_space:  true    #true needed for frontier finding
   obstacle_range: 100
-  publish_voxel_map: true
+  publish_voxel_map: false
   observation_sources:  slam_pcl
   slam_pcl:
     data_type: PointCloud2
@@ -66,7 +67,6 @@ aerial_layer:
     clearing: true
     min_obstacle_height: 1.0
     max_obstacle_height: 10.0
-  # for debugging only, let's you see the entire voxel grid
 
 #cost_scaling_factor and inflation_radius were now moved to the inflation_layer ns
 inflation_layer:
