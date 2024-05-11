@@ -260,7 +260,7 @@
         <param name="image" value="/mapir_rgn/image_rect_color"/>
     </node>
 
-    <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" type="stream" if=$(arg do_thermal_cam)>
+    <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" type="stream" if="$(arg do_thermal_cam)">
         <param name="device" value="/dev/video22"/>
         <param name="width" value="320"/>
         <param name="height" value="240"/>
