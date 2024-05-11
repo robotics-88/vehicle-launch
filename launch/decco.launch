@@ -218,7 +218,7 @@
         <arg name="use_cvshow" value="$(arg simulate)"/>
     </include>
 
-    <include file="$(find task_manager_88)/launch/task_manager.launch">
+    <include file="$(find task_manager)/launch/task_manager.launch">
         <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="base_frame" value="$(arg mavros_base_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
