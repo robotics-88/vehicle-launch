@@ -1,7 +1,6 @@
 <launch>
     <!-- TODO update with calibration outputs and update frame handling so the SLAM map is centered at the IMU coordinates of the Livox Mid360 -->
 
-    <arg name="do_mid360" default="true"/>
     <arg name="do_mapir" default="true"/>
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="true"/>
@@ -36,15 +35,6 @@
             <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link thermal_cam 100"/>
             <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical 100"/>
         </group>
-    </group>
-
-    <!-- This is basically a frame rotation formula so that we can get the transformation in livox_frame instead of base_link frame -->
-    <arg name="lidar_pitch_rotated" value="-$(arg lidar_pitch)"/>
-    <arg name="lidar_x_rotated" value="$(eval -arg('lidar_x') * cos(arg('lidar_pitch_rotated')) - arg('lidar_z') * sin(arg('lidar_pitch_rotated')))"/> 
-    <arg name="lidar_z_rotated" value="$(eval arg('lidar_x') * sin(arg('lidar_pitch_rotated')) - arg('lidar_z') * cos(arg('lidar_pitch_rotated')))"/> 
-    <group if="$(arg do_mid360)">
-        <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher"
-        args="$(arg lidar_x_rotated) 0 $(arg lidar_z_rotated) 0 $(arg lidar_pitch_rotated) 0 livox_frame base_link 100"/>
     </group>
 
 </launch>
