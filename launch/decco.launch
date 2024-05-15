@@ -46,6 +46,15 @@
     -->
     <arg name="lidar_type" default="2" if="$(arg simulate)"/>
     <arg name="lidar_type" default="4" unless="$(arg simulate)"/>
+    <arg name="tilted_lidar" default="false"/>
+
+    <!-- Lidar positioning relative to base_link -->
+    <arg name="lidar_pitch" default="0.0" unless="$(arg tilted_lidar)"/>
+    <arg name="lidar_x" default="0.0" unless="$(arg tilted_lidar)"/>
+    <arg name="lidar_z" default="0.11" unless="$(arg tilted_lidar)"/>
+    <arg name="lidar_pitch" default="0.3926991" if="$(arg tilted_lidar)"/>
+    <arg name="lidar_x" default="0.038" if="$(arg tilted_lidar)"/>
+    <arg name="lidar_z" default="0.11" if="$(arg tilted_lidar)"/>
 
     <!-- Which thermal
         0: Infiray (Gus)
@@ -135,7 +144,7 @@
         <arg name="enable_cameras" value="$(arg enable_cameras)"/>
         <arg name="vehicle_name" value="$(arg vehicle_name)"/>
     </include>
-    <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 livox_frame base_link 100" if="$(arg simulate)"/>
+    <node name="mid360_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 $(arg slam_base_frame) base_link 100" if="$(arg simulate)"/>
 
     <!-- Non-simulation only nodes -->
     <group unless="$(arg simulate)">
@@ -172,6 +181,10 @@
             <arg name="do_attollo" value="$(arg do_attollo)" />
             <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
             <arg name="thermal_type" value="$(arg thermal_type)"/>
+            <arg name="lidar_pitch" value="$(arg lidar_pitch)"/>
+            <arg name="lidar_x" value="$(arg lidar_x)"/>
+            <arg name="lidar_z" value="$(arg lidar_z)"/>
+
         </include>
 
     </group>
@@ -248,6 +261,9 @@
         <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
         <arg name="thermal_type" value="$(arg thermal_type)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
+        <arg name="lidar_pitch" value="$(arg lidar_pitch)"/>
+        <arg name="lidar_x" value="$(arg lidar_x)"/>
+        <arg name="lidar_z" value="$(arg lidar_z)"/>
     </include>
 
 </launch>
