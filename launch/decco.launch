@@ -256,9 +256,9 @@
         <arg name="mapir_topic" value="$(arg image_topic)"/>
         <arg name="do_record" value="$(arg do_record)"/>
         <arg name="data_directory" value="$(arg data_directory)"/>
-        <arg name="default_altitude_m" value="$(arg default_alt)"/>
-        <arg name="min_altitude" value="$(arg min_alt)"/>
-        <arg name="max_altitude" value="$(arg max_alt)"/>
+        <arg name="default_alt" value="$(arg default_alt)"/>
+        <arg name="min_alt" value="$(arg min_alt)"/>
+        <arg name="max_alt" value="$(arg max_alt)"/>
         <arg name="flightleg_area_acres" value="$(arg flightleg_area_acres)"/>
         <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
         <arg name="simulate" value="$(arg simulate)"/>
