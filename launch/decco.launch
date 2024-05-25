@@ -62,6 +62,8 @@
     <arg name="do_species_map" default="false"/> <!-- Only enable when required e.g. for ASH -->
     <arg name="do_record" default="true" unless="$(eval simulate + offline)"/>
     <arg name="do_record" default="false" if="$(eval simulate + offline)"/>
+    <arg name="do_rtsp" default="false" if="$(arg do_slam)"/>
+    <arg name="do_rtsp" default="true" unless="$(arg do_slam)"/>
 
     <!-- Which hardware -->
     <arg name="do_mid360" default="$(eval lidar_type == 4)"/>
@@ -161,23 +163,24 @@
 
 
             <!--                        RTSP Streams for each camera                 -->
+            <group if="$(arg do_rtsp)">
+                <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" type="stream">
+                    <param name="device" value="/dev/video21"/>
+                    <param name="width" value="640"/>
+                    <param name="height" value="480"/>
+                    <param name="fourcc" value="YV12"/>
+                    <remap from="image" to="/mapir_rgn/image_rect_color"/>
+                </node>
 
-            <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" type="stream">
-                <param name="device" value="/dev/video21"/>
-                <param name="width" value="640"/>
-                <param name="height" value="480"/>
-                <param name="fourcc" value="YV12"/>
-                <remap from="image" to="/mapir_rgn/image_rect_color"/>
-            </node>
-
-            <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" type="stream" if="$(arg do_thermal_cam)">
-                <param name="device" value="/dev/video22"/>
-                <param name="width" value="320"/>
-                <param name="height" value="240"/>
-                <param name="fourcc" value="YV12"/>
-                <remap from="image" to="/thermal_cam/image_raw" if="$(eval thermal_type == 0)" />
-                <remap from="image" to="/seek_thermal/image_raw" if="$(eval thermal_type == 1)" />
-            </node>
+                <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" type="stream" if="$(arg do_thermal_cam)">
+                    <param name="device" value="/dev/video22"/>
+                    <param name="width" value="320"/>
+                    <param name="height" value="240"/>
+                    <param name="fourcc" value="YV12"/>
+                    <remap from="image" to="/thermal_cam/image_raw" if="$(eval thermal_type == 0)" />
+                    <remap from="image" to="/seek_thermal/image_raw" if="$(eval thermal_type == 1)" />
+                </node>
+            </group>
             
         </group>
 
