@@ -14,6 +14,7 @@
         Defaults to 'fast lio'
     -->
     <arg name="slam_type" default="1"/>
+    <arg name="planner_type" default="1"/>
     <arg name="odom_topic" default="/mavros/odometry/out" if="$(eval slam_type == 0)"/>
     <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 1)"/>
     <arg name="odom_topic" default="/Odometry" if="$(eval slam_type == 2)"/>
@@ -89,16 +90,30 @@
         search/margin  : 0.2
         search/allocate_num  : 100000
         search/check_num  : 1
-    </rosparam>
+    </rosparam> 
 
-    <node  pkg="path_planning" type="path_planning_node" name="path_planning_node" args="" output="screen">
-        <param name="search/map_frame" value="$(arg mavros_map_frame)"/>
-        <param name="search/pose_topic" value="$(arg path_pose_topic)"/>
-        <param name="search/cloud" value="$(arg cloud_stabilized)"/>
-        <param name="search/min_alt" value="$(arg min_alt)"/>
-        <param name="search/max_alt" value="$(arg max_alt)"/>
-        <param name="search/obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
-        <remap from="/mavros/odometry/out" to="$(arg odom_topic)"/>
-    </node> 
+    <group if="$(eval planner_type == 1)">
+        <node pkg="path_planning" type="path_planning_node" name="path_planning_node" output="screen">
+            <param name="search/map_frame" value="$(arg mavros_map_frame)"/>
+            <param name="search/pose_topic" value="$(arg path_pose_topic)"/>
+            <param name="search/cloud" value="$(arg cloud_stabilized)"/>
+            <param name="search/min_alt" value="$(arg min_alt)"/>
+            <param name="search/max_alt" value="$(arg max_alt)"/>
+            <param name="search/obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+            <remap from="/mavros/odometry/out" to="$(arg odom_topic)"/>
+        </node>
+    </group>
+
+    <group if="$(eval planner_type == 2)">
+        <node pkg="ego_planner" type="ego_planner_node" name="ego_planner_node" output="screen">
+            <param name="search/map_frame" value="$(arg mavros_map_frame)"/>
+            <param name="search/pose_topic" value="$(arg path_pose_topic)"/>
+            <param name="search/cloud" value="$(arg cloud_stabilized)"/>
+            <param name="search/min_alt" value="$(arg min_alt)"/>
+            <param name="search/max_alt" value="$(arg max_alt)"/>
+            <param name="search/obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
+            <remap from="/mavros/odometry/out" to="$(arg odom_topic)"/>
+        </node>
+    </group>
 
 </launch>
