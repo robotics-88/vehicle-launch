@@ -4,6 +4,8 @@
 
                             <!-- Arguments/configuration -->
 
+    <arg name="drone_id" value="0"/>
+
     <!-- Basic frame/topic names -->
     <arg name="mavros_map_frame" default="map"/>
     <arg name="mavros_base_frame" default="base_link"/>
@@ -33,6 +35,8 @@
         Defaults to 'fast lio'
     -->
     <arg name="slam_type" default="1"/>
+    <arg name="planner_type" default="1"/>
+
 
     <!-- Which lidar
         0: Mid40
@@ -157,6 +161,7 @@
             <include file="$(find vehicle_launch)/launch/sensors/velo16.launch" if="$(arg do_velodyne)"/>
             <include file="$(find vehicle_launch)/launch/sensors/mid360.launch" if="$(arg do_mid360)">
                 <arg name="slam_type" value="$(arg slam_type)"/>
+                <arg name="planner_type" value="$(arg planner_type)"/>
             </include>
             <include file="$(find vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(arg do_mapir)"/>
             <include file="$(find vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(arg do_mapir_rgb)"/>
@@ -220,6 +225,7 @@
         <arg name="lidar_type" value="$(arg lidar_type)"/>
         <arg name="imu_topic" value="$(arg imu_topic)"/>
         <arg name="slam_type" value="$(arg slam_type)"/>
+        <arg name="planner_type" value="$(arg planner_type)"/>
         <arg name="rviz" value="$(arg simulate)"/>
         <arg name="min_alt" value="$(arg min_alt)"/>
         <arg name="max_alt" value="$(arg max_alt)"/>
