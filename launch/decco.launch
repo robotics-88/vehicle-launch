@@ -13,6 +13,7 @@
 
     <!-- Offline, i.e. using bag playback -->
     <arg name="offline" default="false"/>
+    <arg name="save_pcd" default="false"/>
 
     <!-- Simulation args -->
     <arg name="simulate" default="false"/>
@@ -276,6 +277,7 @@
         <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
         <arg name="simulate" value="$(arg simulate)"/>
         <arg name="offline" value="$(arg offline)"/>
+        <arg name="save_pcd" value="$(arg save_pcd)"/>
         <arg name="do_mapir" value="$(arg do_mapir)"/>
         <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(arg do_attollo)"/>
