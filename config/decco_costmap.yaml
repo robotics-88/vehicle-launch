@@ -19,12 +19,11 @@ obstacle_range: 40.0
 raytrace_range: 40.0
 
 plugins: 
-    - {name: aerial_layer,        type: "aerial_layer::AerialLayer"}
+    - {name: aerial_layer,        type: "costmap_2d::VoxelLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
     
 #aerial layer can accept map-registered pointclouds 
 aerial_layer:
-  sensor_frame:         livox_frame
   enabled:              true
   max_obstacle_height:  10.0
   origin_z:             0.0
