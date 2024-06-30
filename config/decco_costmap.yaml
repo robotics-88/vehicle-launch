@@ -15,24 +15,25 @@ origin_y: -500.0
 track_unknown_space:  true    #true needed for frontier finding
 rolling_window: true
 transform_tolerance: 0.25
+obstacle_range: 40.0
 raytrace_range: 40.0
 
 plugins: 
-    - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
+    - {name: aerial_layer,        type: "aerial_layer::AerialLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
-
-obstacle_layer:
+    
+#aerial layer can accept map-registered pointclouds 
+aerial_layer:
+  sensor_frame:         livox_frame
   enabled:              true
   max_obstacle_height:  10.0
   origin_z:             0.0
-  z_resolution:         0.2
+  z_resolution:         0.5
   z_voxels:             16
   unknown_threshold:    15
   mark_threshold:       1
   combination_method:   1
-  track_unknown_space:  true    #true needed for disabling global path planning through unknown space
-  # obstacle_range: 100
-  # raytrace_range: 100.0
+  track_unknown_space:  true    #true needed for frontier finding
   publish_voxel_map: false
   observation_sources:  slam_pcl
   slam_pcl:
