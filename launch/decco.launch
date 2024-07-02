@@ -130,6 +130,11 @@
 
     <!-- Generic args -->
     <arg name="map_resolution" default="0.1"/> <!-- meter -->
+    <arg name="goal_topic" default="/goal_raw"/> <!-- meter -->
+
+
+
+    
 
                                 <!-- ROS nodes -->
 
@@ -227,14 +232,14 @@
         <arg name="cloud_topic" value="$(arg cloud_topic)"/>
         <arg name="obstacle_dist_threshold" value="$(arg obstacle_dist_threshold)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
-        <arg name="goal_topic" value="/goal_raw"/>
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
     </include>
 
     <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
         <arg name="map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="robot_base_frame" value="$(arg mavros_base_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
-        <arg name="goal_topic" value="/goal_raw"/>
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="default_alt" value="$(arg default_alt)"/>
         <arg name="map_resolution" value="$(arg map_resolution)"/>
         <arg name="criteria" value="$(arg criteria)"/>
@@ -258,7 +263,7 @@
         <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
         <arg name="use_failsafes" value="$(arg use_failsafes)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
-        <arg name="goal_topic" value="/goal_raw"/>
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
         <arg name="do_slam" value="$(arg do_slam)"/>
         <arg name="costmap_topic" value="/costmap_node/costmap/costmap_updates"/>
         <arg name="lidar_topic" value="$(arg cloud_topic)"/>
