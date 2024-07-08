@@ -74,8 +74,7 @@
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_costmap" default="$(arg do_slam)"/>
-    <!-- <arg name="do_exploration" default="$(arg do_slam)"/> -->
-    <arg name="do_exploration" default="false"/>
+    <arg name="do_exploration" default="$(arg do_slam)"/>
     <arg name="do_species_map" default="false"/> <!-- Only enable when required e.g. for ASH -->
     <arg name="do_record" default="true" unless="$(eval simulate + offline)"/>
     <arg name="do_record" default="false" if="$(eval simulate + offline)"/>
