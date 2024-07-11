@@ -92,6 +92,26 @@
         search/check_num  : 1
     </rosparam> 
 
+    <arg name="max_vel" default="2.0"/>
+    <arg name="max_acc" default="2.0"/>
+    <arg name="drone_id" default="0"/>
+    <arg name="max_jerk" default="4"/>
+    <arg name="feasibility_tolerance" default="0.05"/>
+    <arg name="control_points_distance" default="0.4"/>
+    <arg name="planning_horizon" default="100.0"/>
+    <arg name="use_distinctive_trajs" default="true"/>
+    <arg name="obj_num_set" default="10"/>
+
+    <!-- intrinsic params of the depth camera -->
+    <arg name="cx" value="321.04638671875"/>
+    <arg name="cy" value="243.44969177246094"/>
+    <arg name="fx" value="387.229248046875"/>
+    <arg name="fy" value="387.229248046875"/>
+
+    <arg name="map_size_x_" value="100.0"/>
+    <arg name="map_size_y_" value="100.0"/>
+    <arg name="map_size_z_" value="100.0"/>
+
     <group if="$(eval planner_type == 1)">
         <node pkg="path_planning" type="path_planning_node" name="path_planning_node" output="screen">
             <param name="search/map_frame" value="$(arg mavros_map_frame)"/>
@@ -106,6 +126,91 @@
 
     <group if="$(eval planner_type == 2)">
         <node pkg="ego_planner" type="ego_planner_node" name="ego_planner_node" output="screen">
+            <param name="fsm/flight_type" value="2" type="int"/> <!--! what does 2 mean -->
+    
+            <!-- <arg name="point_num" value="1" />
+            <arg name="point0_x" value="0" />
+            <arg name="point0_y" value="0" />
+            <arg name="point0_z" value="0" /> -->
+            <param name="fsm/waypoint_num" value="1" type="int"/>
+            <param name="fsm/waypoint0_x" value="0" type="double"/> <!--! change this-->
+            <param name="fsm/waypoint0_y" value="0" type="double"/> <!--! change this-->
+            <param name="fsm/waypoint0_z" value="0" type="double"/> <!--! change this-->
+            <param name="fsm/thresh_replan_time" value="1.0" type="double"/>
+            <param name="fsm/thresh_no_replan_meter" value="1.0" type="double"/>
+            <param name="fsm/planning_horizon" value="7.5" type="double"/> <!--always set to 1.5 times grater than sensing horizen-->
+            <param name="fsm/planning_horizen_time" value="3" type="double"/>
+            <param name="fsm/emergency_time" value="1.0" type="double"/>
+            <param name="fsm/realworld_experiment" value="false"/>
+            <param name="fsm/fail_safe" value="true"/>
+
+            <param name="search/max_vel" value="$(arg max_vel)" type="double"/>
+            <param name="search/max_acc" value="$(arg max_acc)" type="double"/>
+            <param name="search/max_jerk" value="$(arg max_jerk)" type="double"/>
+            <param name="search/control_points_distance" value="$(arg control_points_distance)" type="double"/>
+            <param name="search/feasibility_tolerance" value="$(arg feasibility_tolerance)" type="double"/>
+            <param name="search/planning_horizon" value="$(arg planning_horizon)" type="double"/>
+            <param name="search/use_distinctive_trajs" value="$(arg use_distinctive_trajs)" type="bool"/>
+            <param name="search/drone_id" value="$(arg drone_id)"/>
+
+            <param name="optimization/lambda_smooth" value="1.0" type="double"/>
+            <param name="optimization/lambda_collision" value="0.5" type="double"/>
+            <param name="optimization/lambda_feasibility" value="0.1" type="double"/>
+            <param name="optimization/lambda_fitness" value="1.0" type="double"/>
+            <param name="optimization/dist0" value="0.5" type="double"/>
+            <param name="optimization/swarm_clearance" value="0.5" type="double"/>
+            <param name="optimization/max_vel" value="$(arg max_vel)" type="double"/>
+            <param name="optimization/max_acc" value="$(arg max_acc)" type="double"/>
+
+            <param name="bspline/limit_vel" value="$(arg max_vel)" type="double"/>
+            <param name="bspline/limit_acc" value="$(arg max_acc)" type="double"/>
+            <param name="bspline/limit_ratio" value="1.1" type="double"/>
+
+            <param name="grid_map/resolution"      value="0.1" />  <!-- changed this-->
+            <param name="grid_map/map_size_x"   value="$(arg map_size_x_)" /> 
+            <param name="grid_map/map_size_y"   value="$(arg map_size_y_)" /> 
+            <param name="grid_map/map_size_z"   value="$(arg map_size_z_)" /> 
+            <param name="grid_map/local_update_range_x"  value="5.5" /> 
+            <param name="grid_map/local_update_range_y"  value="5.5" /> 
+            <param name="grid_map/local_update_range_z"  value="4.5" /> 
+            <param name="grid_map/obstacles_inflation"     value="0.099" /> 
+            <param name="grid_map/local_map_margin" value="10"/>
+            <param name="grid_map/ground_height"        value="-0.01"/>
+            <!-- camera parameter --><!--!we are not using these for now-->
+            <param name="grid_map/cx" value="$(arg cx)"/>
+            <param name="grid_map/cy" value="$(arg cy)"/>
+            <param name="grid_map/fx" value="$(arg fx)"/>
+            <param name="grid_map/fy" value="$(arg fy)"/>
+            <!-- depth filter --> <!--!we are not using these for now-->
+            <param name="grid_map/use_depth_filter" value="false"/>
+            <param name="grid_map/depth_filter_tolerance" value="0.15"/>
+            <param name="grid_map/depth_filter_maxdist"   value="5.0"/>
+            <param name="grid_map/depth_filter_mindist"   value="0.2"/>
+            <param name="grid_map/depth_filter_margin"    value="2"/>
+            <param name="grid_map/k_depth_scaling_factor" value="1000.0"/>
+            <param name="grid_map/skip_pixel" value="2"/>
+            <!-- local fusion --> <!--!we are prob not using these for now-->
+            <param name="grid_map/p_hit"  value="0.65"/>
+            <param name="grid_map/p_miss" value="0.35"/>
+            <param name="grid_map/p_min"  value="0.12"/>
+            <param name="grid_map/p_max"  value="0.90"/>
+            <param name="grid_map/p_occ"  value="0.80"/>
+            <param name="grid_map/min_ray_length" value="0.1"/>
+            <param name="grid_map/max_ray_length" value="4.5"/>
+
+            <param name="grid_map/virtual_ceil_height"   value="2.9"/>
+            <param name="grid_map/visualization_truncate_height"   value="1.8"/>
+            <param name="grid_map/show_occ_time"  value="false"/>
+            <param name="grid_map/pose_type"     value="1"/>  
+            <param name="grid_map/frame_id"      value="map"/>
+
+
+
+            <!-- objects prediction -->
+            <param name="prediction/obj_num" value="$(arg obj_num_set)" type="int"/>
+            <param name="prediction/lambda" value="1.0" type="double"/>
+            <param name="prediction/predict_rate" value="1.0" type="double"/>
+
             <param name="search/map_frame" value="$(arg mavros_map_frame)"/>
             <param name="search/pose_topic" value="$(arg path_pose_topic)"/>
             <param name="search/cloud" value="$(arg cloud_stabilized)"/>
