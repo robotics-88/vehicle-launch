@@ -263,6 +263,7 @@
     <include file="$(find thermal_88)/launch/thermal_pipeline.launch" if="$(arg do_thermal_cam)">
         <arg name="image_topic" value="$(arg thermal_topic)"/>
         <arg name="camera_info_topic" value="$(arg thermal_info_topic)"/>
+        <arg name="map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="use_rviz" value="$(eval simulate + offline)"/>
     </include>
 
