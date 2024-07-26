@@ -66,7 +66,7 @@
 
         Defaults to '0: Infiray'
     -->
-    <arg name="thermal_type" default="0"/>
+    <arg name="thermal_type" default="1"/>
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
@@ -108,6 +108,11 @@
     <arg name="image_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene" if="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(arg simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(arg vehicle_name)/front_left_custom/Scene/camera_info" if="$(arg simulate)"/>
+
+    <arg name="thermal_topic" default="/thermal_cam/image_rect_color" if="$(eval thermal_type == 0)"/>
+    <arg name="thermal_info_topic" default="/thermal_cam/camera_info" if="$(eval thermal_type == 0)"/>
+    <arg name="thermal_topic" default="/seek_thermal/image_rect_color" if="$(eval thermal_type == 1)"/>
+    <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval thermal_type == 1)"/>
 
      <!-- Recording args -->
     <arg name="configuration_directory" value="$(find vehicle_launch)/config/"/>
@@ -189,8 +194,7 @@
                     <param name="width" value="320"/>
                     <param name="height" value="240"/>
                     <param name="fourcc" value="YV12"/>
-                    <remap from="image" to="/thermal_cam/image_raw" if="$(eval thermal_type == 0)" />
-                    <remap from="image" to="/seek_thermal/image_raw" if="$(eval thermal_type == 1)" />
+                    <remap from="image" to="$(arg thermal_topic)"/>
                 </node>
             </group>
             
@@ -254,6 +258,13 @@
     <include file="$(find image_segment_yolo)/launch/image_segment.launch" if="$(arg do_species_map)">
         <arg name="image_topic" value="$(arg image_topic)"/>
         <arg name="use_cvshow" value="$(arg simulate)"/>
+    </include>
+
+    <include file="$(find thermal_88)/launch/thermal_pipeline.launch" if="$(arg do_thermal_cam)">
+        <arg name="image_topic" value="$(arg thermal_topic)"/>
+        <arg name="camera_info_topic" value="$(arg thermal_info_topic)"/>
+        <arg name="map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="use_rviz" value="$(eval simulate + offline)"/>
     </include>
 
     <include file="$(find task_manager)/launch/task_manager.launch">
