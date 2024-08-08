@@ -2,134 +2,8 @@
 
                             <!-- Arguments/configuration -->
 
-    <!-- Basic frame/topic names -->
-    <arg name="mavros_map_frame" default="map"/>
-    <arg name="mavros_base_frame" default="base_link"/>
-    <arg name="slam_base_frame" default="livox_frame"/>
-    <arg name="slam_map_frame" default="slam_map"/>
-    <arg name="slam_pose_topic" default="/decco/pose"/>    
-
-    <!-- Offline, i.e. using bag playback -->
-    <arg name="offline" default="false"/>
-    <arg name="save_pcd" default="false"/>
-
-    <!-- Simulation args -->
     <arg name="simulate" default="false"/>
-    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
-    <arg name="enable_cameras" default="false"/>
-
-    <!-- Safe guards -->
-    <arg name="enable_autonomy" default="$(var simulate)" unless="$(var offline)"/>
-    <arg name="enable_autonomy" default="false" if="$(var offline)"/>
-    <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
-
-    <!-- Which SLAM
-        0: FAST LIO (original 'slam' repo)
-        1: FAST LIO LC
-        2: FASTER LIO
-
-        Defaults to 'fast lio'
-    -->
-    <arg name="slam_type" default="1"/>
-
-    <!-- Which lidar
-        0: Mid40
-        1: Horizon
-        2: Velodyne
-        3: Oust64
-        4: Mid360
-
-        Defaults to 'velodyne' in sim and 'mid360' otherwise
-    -->
-    <arg name="lidar_type" default="2" if="$(var simulate)"/>
-    <arg name="lidar_type" default="4" unless="$(var simulate)"/>
-    <arg name="tilted_lidar" default="false"/>
-
-    <!-- Lidar positioning relative to base_link -->
-    <!-- <let name="lidar_pitch" value="0.0" unless="$(var tilted_lidar)"/>
-    <let name="lidar_x" value="0.0" unless="$(var tilted_lidar)"/>
-    <let name="lidar_z" value="0.11" unless="$(var tilted_lidar)"/>
-    <let name="lidar_pitch" value="0.3926991" if="$(var tilted_lidar)"/>
-    <let name="lidar_x" value="0.038" if="$(var tilted_lidar)"/>
-    <let name="lidar_z" value="0.128" if="$(var tilted_lidar)"/>
-    <let name="lidar_pitch_rotated" value="-$(var lidar_pitch)"/>
-    <let name="lidar_x_rotated" value="$(eval -var('lidar_x') * cos(var('lidar_pitch_rotated')) - var('lidar_z') * sin(var('lidar_pitch_rotated')))"/> 
-    <let name="lidar_z_rotated" value="$(eval var('lidar_x') * sin(var('lidar_pitch_rotated')) - var('lidar_z') * cos(var('lidar_pitch_rotated')))"/> 
-    <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
-        args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 $(var slam_base_frame) $(var mavros_base_frame)"/> -->
-
-    <!-- Which thermal
-        0: Infiray (Gus)
-        1: Seek (Erin)
-
-        Defaults to '0: Infiray'
-    -->
-    <arg name="thermal_type" default="0"/>
-
-    <!-- Which nodes -->
-    <arg name="do_slam" default="true"/>
-    <arg name="do_costmap" default="$(var do_slam)"/>
-    <arg name="do_exploration" default="$(var do_slam)"/>
-    <arg name="do_species_map" default="false"/> <!-- Only enable when required e.g. for ASH -->
-    <!-- <arg name="do_record" default="$(eval)" unless="$(eval $(var simulate) + $(var offline))"/> 
-    <arg name="do_record" default="false" if="$(eval '$(var simulate) + $(var offline)')"/> -->
-    <arg name="do_rtsp" default="false" if="$(var do_slam)"/>
-    <arg name="do_rtsp" default="true" unless="$(var do_slam)"/>
-
-    <!-- Which hardware -->
-    <arg name="do_mid360" default="$(eval '\'$(var lidar_type)\' == \'4'')"/>
-    <!-- <arg name="do_velodyne" default="$(eval $(var lidar_type) == 2)"/>  --><!--
-    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
-    <arg name="do_mapir" default="false" if="$(var simulate)"/>
-    <arg name="do_mapir_rgb" default="false"/>
-    <arg name="do_attollo" default="false" />
-    <arg name="do_thermal_cam" default="false"/>
-
-    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval $(var lidar_type) == 4)"/>
-    <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval $(var lidar_type) == 2)"/>
-    <arg name="cloud_topic_sim" default="/velodyne_points" if="$(var simulate)"/>
-
-    <arg name="cloud_topic" default="$(var cloud_topic_hw)" unless="$(var simulate)"/>
-    <arg name="cloud_topic" default="$(var cloud_topic_sim)" if="$(var simulate)"/>
-
-    <arg name="cloud_registered_topic" default="/cloud_registered"/>
-
-    <arg name="imu_topic_hw" default="/livox/imu" if="$(eval $(var lidar_type) == 4)"/>
-    <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval $(var lidar_type) == 2)"/> -->
-    <arg name="imu_topic_sim" default="/mavros/imu/data" if="$(var simulate)"/>
-
-    <arg name="imu_topic" default="$(var imu_topic_hw)" unless="$(var simulate)"/>
-    <arg name="imu_topic" default="$(var imu_topic_sim)" if="$(var simulate)"/>
-
-    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(var simulate)"/>
-    <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
-    <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(var simulate)"/>
-    <arg name="camera_info_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene/camera_info" if="$(var simulate)"/>
-
-     <!-- Recording args -->
-    <let name="configuration_directory" value="$(find-pkg-share vehicle_launch)/config/"/>
-    <let name="user" value="$(env USER)"/>
-    <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
-    <arg name="healthbeat_rate" default="1"/>
-
-    <!-- Control args -->
-    <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
-    <arg name="min_alt" default="1.0"/>
-    <arg name="max_alt" default="5.0"/>
-    <arg name="acceptance_radius" default="2.0"/>
-    <arg name="obstacle_dist_threshold" default="2.0"/> <!-- Decco diam is ~1m, so this should mean 1.5m clear of obstacles--> 
-    <arg name="flightleg_area_acres" default="15"/> <!-- 1 acre = 4046 m2-->
-    <arg name="max_dist_to_polygon" default="100"/> <!-- meters permitted to reach polygon-->
-
-    <!-- Exploration args -->
-    <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
-    <arg name="weights" default="[0.6, 0.4]"/> <!-- should add to 1, vector of weights for criteria-->
-    <arg name="dem_name" default="ballard.tif"/>
-
-    <!-- Generic args -->
-    <arg name="map_resolution" default="0.1"/> <!-- meter -->
-    <arg name="goal_topic" default="/goal_raw"/> <!-- meter -->
-
+    <arg name="offline" default="false"/>
 
                                 <!-- ROS nodes -->
 
@@ -139,5 +13,11 @@
     <include file="$(find-pkg-share vehicle_launch)/launch/apm.launch" unless="$(var offline)">
         <arg name="fcu_url" value="$(var fcu_url)"/>
     </include>
+
+    <!-- Simulation -->
+    <!-- <include file="$(find vehicle_launch)/launch/airsim.launch" if="$(var simulate)">
+        <arg name="enable_cameras" value="$(arg enable_cameras)"/>
+        <arg name="vehicle_name" value="$(arg vehicle_name)"/>
+    </include> -->
 
 </launch>
