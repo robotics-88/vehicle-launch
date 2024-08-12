@@ -9,7 +9,10 @@
     <arg name="mavros_base_frame" default="base_link"/>
     <arg name="slam_base_frame" default="livox_frame"/>
     <arg name="slam_map_frame" default="slam_map"/>
-    <arg name="slam_pose_topic" default="/decco/pose"/>    
+    <arg name="slam_pose_topic" default="/decco/pose"/>  
+    <arg name="gnss_topic" default="/mavros/global_position/global"/>
+    <arg name="use_gps" default="0"/>
+
 
     <!-- Offline, i.e. using bag playback -->
     <arg name="offline" default="false"/>
@@ -134,7 +137,13 @@
     <arg name="goal_topic" default="/goal_raw"/> <!-- meter -->
 
 
+    <include file="$(find bag_recorder)/launch/default.launch">
+        <arg name="configuration_directory" value="$(arg configuration_directory)"/>
+        <arg name="data_directory" value="$(arg data_directory)"/>
+        <arg name="heartbeat_interval" value="$(arg healthbeat_rate)"/>
+    </include>
 
+    <!-- <include file="$(find cpu_monitor)/launch/cpu_monitor.launch"/> -->
 
                                 <!-- ROS nodes -->
 
@@ -217,6 +226,8 @@
         <arg name="base_frame" value="$(arg slam_base_frame)"/>
         <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
+        <arg name="gnss_topic" value="$(arg gnss_topic)"/>
+        <arg name="use_gps" value="$(arg use_gps)"/>
         <arg name="lidar_type" value="$(arg lidar_type)"/>
         <arg name="imu_topic" value="$(arg imu_topic)"/>
         <arg name="slam_type" value="$(arg slam_type)"/>
@@ -235,7 +246,7 @@
         <arg name="goal_topic" value="$(arg goal_topic)"/>
     </include>
 
-    <include file="$(find explore_uav)/launch/explore.launch" if="$(arg do_exploration)">
+    <include file="$(find explore_uav)/launch/explore.launch" if="false">
         <arg name="map_frame" value="$(arg mavros_map_frame)"/>
         <arg name="robot_base_frame" value="$(arg mavros_base_frame)"/>
         <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
