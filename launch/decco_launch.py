@@ -20,13 +20,13 @@ def setup_nodes(context, *args, **kwargs):
     mavros = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(os.path.join(
             get_package_share_directory('vehicle_launch'),
-            'launch/apm.launch')
+            'launch/apm.xml')
         ),
         launch_arguments={'fcu_url': fcu_url}.items(),
     )
 
     return [mavros]
-    
+
 
 
 def generate_launch_description():
@@ -41,7 +41,7 @@ def generate_launch_description():
     )
     launch_args.append(simulate_launch_arg)
 
-    return LaunchDescription(launch_args + 
-        [
+    return LaunchDescription([
+        simulate_launch_arg, 
         OpaqueFunction(function=setup_nodes)
         ])
