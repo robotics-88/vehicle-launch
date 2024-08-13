@@ -17,4 +17,7 @@
     <!-- Simulation -->
     <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)"/>
 
+
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/launch/config/distal.rviz" output="log"/>
+
 </launch>
