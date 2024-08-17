@@ -15,7 +15,7 @@
     </include>
 
     <!-- Simulation -->
-    <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)"/>
+    <!-- <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)"/> -->
 
     <!-- Feature nodes -->
 
