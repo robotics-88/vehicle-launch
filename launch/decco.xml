@@ -10,7 +10,7 @@
     <!-- MAVROS -->
     <let name="fcu_url" value="/dev/cubeorange:57600" unless="$(var simulate)"/>
     <let name="fcu_url" value="udp://127.0.0.1:14551@" if="$(var simulate)"/>
-    <include file="$(find-pkg-share mavros)/launch/apm.launch" unless="$(var offline)">
+    <include file="$(find-pkg-share vehicle_launch)/launch/apm.launch" unless="$(var offline)">
         <arg name="fcu_url" value="$(var fcu_url)"/>
     </include>
 
@@ -18,7 +18,40 @@
     <!-- <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)"/> -->
 
     <!-- Feature nodes -->
+    <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="true">
+        <!-- TODO: add args -->
+        <!-- <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
+        <arg name="base_frame" value="$(arg mavros_base_frame)"/>
+        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
+        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
+        <arg name="use_failsafes" value="$(arg use_failsafes)"/>
+        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
+        <arg name="goal_topic" value="$(arg goal_topic)"/>
+        <arg name="do_slam" value="$(arg do_slam)"/>
+        <arg name="costmap_topic" value="/costmap_node/costmap/costmap_updates"/>
+        <arg name="lidar_topic" value="$(arg cloud_topic)"/>
+        <arg name="mapir_topic" value="$(arg image_topic)"/>
+        <arg name="do_record" value="$(arg do_record)"/>
+        <arg name="data_directory" value="$(arg data_directory)"/>
+        <arg name="default_alt" value="$(arg default_alt)"/>
+        <arg name="min_alt" value="$(arg min_alt)"/>
+        <arg name="max_alt" value="$(arg max_alt)"/>
+        <arg name="flightleg_area_acres" value="$(arg flightleg_area_acres)"/>
+        <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
+        <arg name="simulate" value="$(arg simulate)"/>
+        <arg name="offline" value="$(arg offline)"/>
+        <arg name="save_pcd" value="$(arg save_pcd)"/>
+        <arg name="do_mapir" value="$(arg do_mapir)"/>
+        <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
+        <arg name="do_attollo" value="$(arg do_attollo)"/>
+        <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
+        <arg name="thermal_type" value="$(arg thermal_type)"/>
+        <arg name="lidar_type" value="$(arg lidar_type)"/>
+        <arg name="lidar_pitch" value="$(arg lidar_pitch)"/>
+        <arg name="lidar_x" value="$(arg lidar_x)"/>
+        <arg name="lidar_z" value="$(arg lidar_z)"/> -->
+    </include>
 
-    <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/launch/config/distal.rviz" output="log"/> -->
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log"/>
 
 </launch>
