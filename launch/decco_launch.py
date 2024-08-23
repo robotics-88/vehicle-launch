@@ -20,7 +20,7 @@ def setup_nodes(context, *args, **kwargs):
     mavros = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(os.path.join(
             get_package_share_directory('vehicle_launch'),
-            'launch/apm.xml')
+            'launch/apm.launch')
         ),
         launch_arguments={'fcu_url': fcu_url}.items(),
     )

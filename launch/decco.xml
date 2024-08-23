@@ -4,6 +4,10 @@
 
     <arg name="simulate" default="false"/>
     <arg name="offline" default="false"/>
+    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
+
+    <arg name="do_slam" default="true"/>
+    <arg name="enable_cameras" default="false"/> <!-- Enabling cameras slows the publish rate of everything to 3Hz so only enable if required -->
 
                                 <!-- ROS nodes -->
 
@@ -15,7 +19,11 @@
     </include>
 
     <!-- Simulation -->
-    <!-- <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)"/> -->
+    <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)">
+        <arg name="do_slam" value="$(var do_slam)"/>
+        <arg name="enable_cameras" value="$(var enable_cameras)"/>
+        <arg name="vehicle_name" value="$(var vehicle_name)"/>
+    </include>
 
     <!-- Feature nodes -->
     <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="true">
@@ -52,6 +60,7 @@
         <arg name="lidar_z" value="$(arg lidar_z)"/> -->
     </include>
 
-    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log"/>
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/>
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/airsim.rviz" output="log" if="$(var simulate)"/>
 
 </launch>
