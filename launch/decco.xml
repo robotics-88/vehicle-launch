@@ -15,6 +15,7 @@
     <let name="fcu_url" value="/dev/cubeorange:57600" unless="$(var simulate)"/>
     <let name="fcu_url" value="udp://127.0.0.1:14551@" if="$(var simulate)"/>
     <include file="$(find-pkg-share vehicle_launch)/launch/apm.launch" unless="$(var offline)">
+        <arg name="do_slam" value="$(var do_slam)"/>
         <arg name="fcu_url" value="$(var fcu_url)"/>
     </include>
 
