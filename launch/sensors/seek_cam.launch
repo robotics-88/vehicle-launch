@@ -1,10 +1,7 @@
 <launch>
     <arg name="rviz" value="false"/>
-    <include file="$(find seek_thermal_88)/launch/seek.launch">
-        <arg name="use_rviz" value="$(arg rviz)"/>
+    <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
+        <arg name="use_rviz" value="$(var rviz)"/>
     </include>
-    <!-- <group ns="seek_thermal">
-        <node pkg="image_proc" type="image_proc" name="image_proc"/>
-    </group> -->
     
 </launch>

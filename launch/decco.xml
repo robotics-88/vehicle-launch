@@ -50,12 +50,18 @@
         <arg name="vehicle_name" value="$(var vehicle_name)"/>
     </include>
 
-    <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
-        <arg name="image_topic" value="$(var thermal_topic)"/>
-        <arg name="camera_info_topic" value="$(var thermal_info_topic)"/>
-        <arg name="map_frame" value="$(var mavros_map_frame)"/>
-        <arg name="use_rviz" value="$(var offline)"/>
-    </include>
+    <group if="$(var do_thermal_cam)">
+
+        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
+            <arg name="image_topic" value="$(var thermal_topic)"/>
+            <arg name="camera_info_topic" value="$(var thermal_info_topic)"/>
+            <arg name="map_frame" value="$(var mavros_map_frame)"/>
+            <arg name="use_rviz" value="$(var offline)"/>
+        </include>
+        
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
+    </group>
 
     <!-- Feature nodes -->
     <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="true">
