@@ -2,12 +2,36 @@
 
                             <!-- Arguments/configuration -->
 
+    <!-- Basic frame/topic names -->
+    <arg name="mavros_map_frame" default="map"/>
+
     <arg name="simulate" default="false"/>
     <arg name="offline" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
 
     <arg name="do_slam" default="true"/>
     <arg name="enable_cameras" default="false"/> <!-- Enabling cameras slows the publish rate of everything to 3Hz so only enable if required -->
+    
+    <!-- Which thermal
+        0: Infiray (Gus)
+        1: Seek (Erin)
+
+        Defaults to '0: Infiray'
+    -->
+    <arg name="thermal_type" default="1"/>
+
+    <!-- Which hardware -->
+    <arg name="do_thermal_cam" default="false"/>
+
+    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(var simulate)"/>
+    <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
+    <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(var simulate)"/>
+    <arg name="camera_info_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene/camera_info" if="$(var simulate)"/>
+
+    <arg name="thermal_topic" default="/thermal_cam/image_rect_color" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
+    <arg name="thermal_info_topic" default="/thermal_cam/camera_info" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
+    <arg name="thermal_topic" default="/seek_thermal/image_rect_color" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
+    <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
                                 <!-- ROS nodes -->
 
@@ -26,39 +50,46 @@
         <arg name="vehicle_name" value="$(var vehicle_name)"/>
     </include>
 
+    <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
+        <arg name="image_topic" value="$(var thermal_topic)"/>
+        <arg name="camera_info_topic" value="$(var thermal_info_topic)"/>
+        <arg name="map_frame" value="$(var mavros_map_frame)"/>
+        <arg name="use_rviz" value="$(var offline)"/>
+    </include>
+
     <!-- Feature nodes -->
     <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="true">
         <!-- TODO: add args -->
-        <!-- <arg name="mavros_map_frame" value="$(arg mavros_map_frame)"/>
-        <arg name="base_frame" value="$(arg mavros_base_frame)"/>
-        <arg name="slam_map_frame" value="$(arg slam_map_frame)"/>
-        <arg name="enable_autonomy" value="$(arg enable_autonomy)"/>
-        <arg name="use_failsafes" value="$(arg use_failsafes)"/>
-        <arg name="slam_pose_topic" value="$(arg slam_pose_topic)"/>
-        <arg name="goal_topic" value="$(arg goal_topic)"/>
-        <arg name="do_slam" value="$(arg do_slam)"/>
+        <!-- <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
+        <arg name="base_frame" value="$(var mavros_base_frame)"/>
+        <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
+        <arg name="enable_autonomy" value="$(var enable_autonomy)"/>
+        <arg name="use_failsafes" value="$(var use_failsafes)"/>
+        <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+        <arg name="goal_topic" value="$(var goal_topic)"/>
+        <arg name="do_slam" value="$(var do_slam)"/>
         <arg name="costmap_topic" value="/costmap_node/costmap/costmap_updates"/>
-        <arg name="lidar_topic" value="$(arg cloud_topic)"/>
-        <arg name="mapir_topic" value="$(arg image_topic)"/>
-        <arg name="do_record" value="$(arg do_record)"/>
-        <arg name="data_directory" value="$(arg data_directory)"/>
-        <arg name="default_alt" value="$(arg default_alt)"/>
-        <arg name="min_alt" value="$(arg min_alt)"/>
-        <arg name="max_alt" value="$(arg max_alt)"/>
-        <arg name="flightleg_area_acres" value="$(arg flightleg_area_acres)"/>
-        <arg name="max_dist_to_polygon" value="$(arg max_dist_to_polygon)"/>
-        <arg name="simulate" value="$(arg simulate)"/>
-        <arg name="offline" value="$(arg offline)"/>
-        <arg name="save_pcd" value="$(arg save_pcd)"/>
-        <arg name="do_mapir" value="$(arg do_mapir)"/>
-        <arg name="do_mapir_rgb" value="$(arg do_mapir_rgb)"/>
-        <arg name="do_attollo" value="$(arg do_attollo)"/>
-        <arg name="do_thermal_cam" value="$(arg do_thermal_cam)"/>
-        <arg name="thermal_type" value="$(arg thermal_type)"/>
-        <arg name="lidar_type" value="$(arg lidar_type)"/>
-        <arg name="lidar_pitch" value="$(arg lidar_pitch)"/>
-        <arg name="lidar_x" value="$(arg lidar_x)"/>
-        <arg name="lidar_z" value="$(arg lidar_z)"/> -->
+        <arg name="lidar_topic" value="$(var cloud_topic)"/>
+        <arg name="mapir_topic" value="$(var image_topic)"/>
+        <arg name="do_record" value="$(var do_record)"/>
+        <arg name="data_directory" value="$(var data_directory)"/>
+        <arg name="default_alt" value="$(var default_alt)"/>
+        <arg name="min_alt" value="$(var min_alt)"/>
+        <arg name="max_alt" value="$(var max_alt)"/>
+        <arg name="flightleg_area_acres" value="$(var flightleg_area_acres)"/>
+        <arg name="max_dist_to_polygon" value="$(var max_dist_to_polygon)"/>
+        <arg name="simulate" value="$(var simulate)"/>
+        <arg name="offline" value="$(var offline)"/>
+        <arg name="save_pcd" value="$(var save_pcd)"/>
+        <arg name="do_mapir" value="$(var do_mapir)"/>
+        <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
+        <arg name="do_attollo" value="$(var do_attollo)"/>
+        <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+        <arg name="thermal_type" value="$(var thermal_type)"/>
+        <arg name="lidar_type" value="$(var lidar_type)"/>
+        <arg name="lidar_pitch" value="$(var lidar_pitch)"/>
+        <arg name="lidar_x" value="$(var lidar_x)"/>
+        <arg name="lidar_z" value="$(var lidar_z)"/> -->
     </include>
 
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/>
