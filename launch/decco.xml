@@ -29,6 +29,10 @@
     -->
     <arg name="thermal_type" default="1"/>
 
+
+    <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
+    <arg name="cloud_topic" default="/velodyne_points" if="$(var simulate)"/>
+
     <!-- Which hardware -->
     <arg name="do_thermal_cam" default="false"/>
 
@@ -44,6 +48,8 @@
 
     <!-- Control args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
+    <arg name="acceptance_radius" default="2.0"/>
+    <arg name="obstacle_dist_threshold" default="2.0"/>
 
     <!-- Exploration args -->
     <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
@@ -145,10 +151,17 @@
         <arg name="do_attollo" value="$(var do_attollo)"/>
         <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
         <arg name="thermal_type" value="$(var thermal_type)"/>
-        <arg name="lidar_type" value="$(var lidar_type)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch)"/>
         <arg name="lidar_x" value="$(var lidar_x)"/>
         <arg name="lidar_z" value="$(var lidar_z)"/> -->
+    </include>
+
+    <include file="$(find-pkg-share path_manager)/launch/path_manager.launch" if="$(var do_slam)">
+        <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
+        <arg name="acceptance_radius" value="$(var acceptance_radius)"/>
+        <arg name="cloud_topic" value="$(var cloud_topic)"/>
+        <arg name="obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
+        <arg name="goal_topic" value="$(var goal_topic)"/>
     </include>
 
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/>
