@@ -16,6 +16,9 @@
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
+    <arg name="do_rtsp" default="false" if="$(var do_slam)"/>
+    <arg name="do_rtsp" default="true" unless="$(var do_slam)"/>
+    
     <arg name="enable_cameras" default="false"/> <!-- Enabling cameras slows the publish rate of everything to 3Hz so only enable if required -->
     
     <!-- Which thermal
@@ -92,6 +95,25 @@
         
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
+    </group>
+
+    <!--                        RTSP Streams for each camera                 -->
+    <group if="$(var do_rtsp)">
+        <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" exec="stream">
+            <param name="device" value="/dev/video21"/>
+            <param name="width" value="640"/>
+            <param name="height" value="480"/>
+            <param name="fourcc" value="YV12"/>
+            <remap from="image" to="/mapir_rgn/image_rect_color"/>
+        </node>
+
+        <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
+            <param name="device" value="/dev/video22"/>
+            <param name="width" value="320"/>
+            <param name="height" value="240"/>
+            <param name="fourcc" value="YV12"/>
+            <remap from="image" to="$(var thermal_topic)"/>
+        </node>
     </group>
 
     <!-- Feature nodes -->
