@@ -10,11 +10,28 @@
     <arg name="slam_pose_topic" default="/decco/pose"/>   
 
     <arg name="simulate" default="false"/>
+    <arg name="rviz" default="$(var simulate)"/>
     <arg name="offline" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
 
+
+
+    <!-- Which lidar
+        0: Mid40
+        1: Horizon
+        2: Velodyne
+        3: Oust64
+        4: Mid360
+
+        Defaults to 'velodyne' in sim and 'mid360' otherwise
+    -->
+    <arg name="lidar_type" default="2" if="$(var simulate)"/>
+    <arg name="lidar_type" default="4" unless="$(var simulate)"/>
+    <arg name="tilted_lidar" default="false"/>
+
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
+    <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
     <arg name="do_rtsp" default="false" if="$(var do_slam)"/>
     <arg name="do_rtsp" default="true" unless="$(var do_slam)"/>
@@ -29,12 +46,25 @@
     -->
     <arg name="thermal_type" default="1"/>
 
-
-    <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
-    <arg name="cloud_topic" default="/velodyne_points" if="$(var simulate)"/>
-
     <!-- Which hardware -->
     <arg name="do_thermal_cam" default="false"/>
+    
+    <!-- Pointcloud and IMU topics based on whether we are simulating -->
+    <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
+    <arg name="cloud_topic_hw" default="/velodyne_points" if="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
+    <arg name="cloud_topic_sim" default="/velodyne_points" if="$(var simulate)"/>
+
+    <arg name="cloud_topic" default="$(var cloud_topic_hw)" unless="$(var simulate)"/>
+    <arg name="cloud_topic" default="$(var cloud_topic_sim)" if="$(var simulate)"/>
+
+    <arg name="cloud_registered_topic" default="/cloud_registered"/>
+
+    <arg name="imu_topic_hw" default="/livox/imu" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
+    <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
+    <arg name="imu_topic_sim" default="/mavros/imu/data" if="$(var simulate)"/>
+
+    <arg name="imu_topic" default="$(var imu_topic_hw)" unless="$(var simulate)"/>
+    <arg name="imu_topic" default="$(var imu_topic_sim)" if="$(var simulate)"/>
 
     <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(var simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
@@ -77,6 +107,25 @@
         <arg name="vehicle_name" value="$(var vehicle_name)"/>
     </include>
 
+    <!-- SLAM -->
+    <group if="$(var do_slam)">
+        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne_sim.launch" if="$(var simulate)">
+            <arg name="rviz" value="$(var rviz)"/>
+            <arg name="base_frame" value="$(var mavros_base_frame)"/>
+            <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
+            <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+            <arg name="imu_topic" value="$(var imu_topic)"/>
+        </include>
+
+        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_mid360.py" unless="$(var simulate)">
+            <arg name="rviz" value="$(var rviz)"/>
+            <arg name="base_frame" value="$(var mavros_base_frame)"/>
+            <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
+            <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+            <arg name="imu_topic" value="$(var imu_topic)"/>
+        </include>
+    </group>
+
     <!-- Exploration & Frontier Search -->
     <include file="$(find-pkg-share explore_uav)/launch/explore.launch" if="$(var do_exploration)">
         <arg name="map_frame" value="$(var mavros_map_frame)"/>
@@ -89,6 +138,11 @@
         <arg name="weights" value="$(var weights)"/>
         <arg name="dem_name" value="$(var dem_name)"/>
     </include>
+
+    <!-- Exploration Costmap -->
+    <!-- <include file="$(find-pkg-share vehicle_launch)/launch/costmap.launch" if="$(var do_costmap)">
+        <arg name="map_resolution" value="$(var map_resolution)"/>
+    </include> -->
 
     <!-- Thermal Camera & Processing Pipeline -->
     <group if="$(var do_thermal_cam)">
