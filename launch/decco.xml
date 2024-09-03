@@ -76,6 +76,12 @@
     <arg name="thermal_topic" default="/seek_thermal/image_rect_color" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
     <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
+     <!-- Recording args -->
+    <arg name="configuration_directory" default="$(find-pkg-share vehicle_launch)/config/"/>
+    <arg name="user" default="$(env USER)"/>
+    <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
+    <arg name="healthbeat_rate" default="1.0"/>
+
     <!-- Control args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="acceptance_radius" default="2.0"/>
@@ -106,6 +112,37 @@
         <arg name="enable_cameras" value="$(var enable_cameras)"/>
         <arg name="vehicle_name" value="$(var vehicle_name)"/>
     </include>
+
+    <!-- Non-Sim Only -->
+    <group unless="$(var simulate)">
+        <group unless="$(var offline)">
+            <!--                        RTSP Streams for each camera                 -->
+            <group if="$(var do_rtsp)">
+                <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" exec="stream">
+                    <param name="device" value="/dev/video21"/>
+                    <param name="width" value="640"/>
+                    <param name="height" value="480"/>
+                    <param name="fourcc" value="YV12"/>
+                    <remap from="image" to="/mapir_rgn/image_rect_color"/>
+                </node>
+
+                <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
+                    <param name="device" value="/dev/video22"/>
+                    <param name="width" value="320"/>
+                    <param name="height" value="240"/>
+                    <param name="fourcc" value="YV12"/>
+                    <remap from="image" to="$(var thermal_topic)"/>
+                </node>
+            </group>
+
+            <!-- Bag Recorder -->
+            <include file="$(find-pkg-share bag_recorder)/launch/default.launch">
+                <arg name="configuration_directory" value="$(var configuration_directory)"/>
+                <arg name="data_directory" value="$(var data_directory)"/>
+                <arg name="heartbeat_interval" value="$(var healthbeat_rate)"/>
+            </include>
+        </group>
+    </group>
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
@@ -155,25 +192,6 @@
         
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
-    </group>
-
-    <!--                        RTSP Streams for each camera                 -->
-    <group if="$(var do_rtsp)">
-        <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" exec="stream">
-            <param name="device" value="/dev/video21"/>
-            <param name="width" value="640"/>
-            <param name="height" value="480"/>
-            <param name="fourcc" value="YV12"/>
-            <remap from="image" to="/mapir_rgn/image_rect_color"/>
-        </node>
-
-        <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
-            <param name="device" value="/dev/video22"/>
-            <param name="width" value="320"/>
-            <param name="height" value="240"/>
-            <param name="fourcc" value="YV12"/>
-            <remap from="image" to="$(var thermal_topic)"/>
-        </node>
     </group>
 
     <!-- Feature nodes -->
