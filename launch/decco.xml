@@ -9,11 +9,20 @@
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>   
 
-    <arg name="simulate" default="false"/>
-    <arg name="rviz" default="$(var simulate)"/>
+    <!-- Offline, i.e. using bag playback -->
     <arg name="offline" default="false"/>
-    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
+    <arg name="save_pcd" default="false"/>
 
+    <!-- Simulation args -->
+    <arg name="simulate" default="false"/>
+    <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
+    <arg name="enable_cameras" default="false"/>
+    <arg name="rviz" default="$(var simulate)"/>
+
+    <!-- Safe guards -->
+    <arg name="enable_autonomy" default="$(var simulate)" unless="$(var offline)"/>
+    <arg name="enable_autonomy" default="false" if="$(var offline)"/>
+    <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
 
 
     <!-- Which lidar
