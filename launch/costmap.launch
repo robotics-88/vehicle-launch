@@ -3,15 +3,18 @@
     <arg name="map_resolution" default="1.0"/> <!-- meter -->
 
     <!-- Publishes the voxel grid to rviz for display -->
-    <node pkg="costmap_2d" type="costmap_2d_markers" name="voxel_visualizer" if="$(arg rviz)">
+    <!-- <node pkg="nav2_costmap_2d" exec="costmap_2d_markers" name="voxel_visualizer" if="$(var rviz)">
         <remap from="voxel_grid" to="costmap/voxel_grid"/>
-    </node>
+    </node> -->
 
     <!-- Run the costmap node -->
-    <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
-        <rosparam file="$(find vehicle_launch)/config/decco_costmap.yaml" command="load" ns="costmap" />
-        <remap from="base_scan" to="cloud_registered"/>
-        <rosparam param="resolution" ns="costmap" subst_value="True">$(arg map_resolution)</rosparam>
-    </node>
+    <group>
+        <push-ros-namespace namespace="costmap"/>
+        <node name="costmap_node" pkg="nav2_costmap_2d" exec="nav2_costmap_2d_node" >
+            <remap from="base_scan" to="cloud_registered"/>
+            <param from="$(find-pkg-share vehicle_launch)/config/decco_costmap.yaml"/>
+            <param name="resolution" value="$(var map_resolution)"/>
+        </node>
+    </group>
 
 </launch>

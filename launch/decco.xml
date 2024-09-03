@@ -47,6 +47,12 @@
     <arg name="thermal_type" default="1"/>
 
     <!-- Which hardware -->
+    <arg name="do_mid360" default="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
+    <arg name="do_velodyne" default="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
+    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
+    <arg name="do_mapir" default="false" if="$(var simulate)"/>
+    <arg name="do_mapir_rgb" default="false"/>
+    <arg name="do_attollo" default="false" />
     <arg name="do_thermal_cam" default="false"/>
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
@@ -142,6 +148,19 @@
                 <arg name="heartbeat_interval" value="$(var healthbeat_rate)"/>
             </include>
         </group>
+
+        <group if="$(var offline)">
+            <!-- <param name="/use_sim_time" value="true"/> -->
+            <include file="$(find-pkg-share vehicle_launch)/launch/viz_host_machine.launch"/>
+        </group>
+
+        <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch">
+            <arg name="do_mapir" value="$(var do_mapir)"/>
+            <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
+            <arg name="do_attollo" value="$(var do_attollo)" />
+            <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+            <arg name="thermal_type" value="$(var thermal_type)"/>
+        </include>
     </group>
 
     <!-- SLAM -->
