@@ -9,12 +9,11 @@
     <arg name="slam_map_frame" default="slam_map"/>
     <arg name="slam_pose_topic" default="/decco/pose"/>   
 
-    <!-- Offline, i.e. using bag playback -->
+    <!-- Options -->
+    <arg name="simulate" default="false"/>
+    <arg name="rviz" default="$(var simulate)"/>
     <arg name="offline" default="false"/>
     <arg name="save_pcd" default="false"/>
-
-    <!-- Simulation args -->
-    <arg name="simulate" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
     <arg name="enable_cameras" default="false"/>
     <arg name="rviz" default="$(var simulate)"/>
@@ -37,6 +36,12 @@
     <arg name="lidar_type" default="2" if="$(var simulate)"/>
     <arg name="lidar_type" default="4" unless="$(var simulate)"/>
     <arg name="tilted_lidar" default="false"/>
+    <arg name="lidar_pitch" default="0.0" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_x" default="0.0" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_z" default="0.11" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch" default="0.3926991" if="$(var tilted_lidar)"/>
+    <arg name="lidar_x" default="0.038" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z" default="0.128" if="$(var tilted_lidar)"/>
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
@@ -63,6 +68,12 @@
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="false" />
     <arg name="do_thermal_cam" default="false"/>
+    <arg name="do_mid360" default="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
+    <arg name="do_velodyne" default="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
+    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
+    <arg name="do_mapir" default="false" if="$(var simulate)"/>
+    <arg name="do_mapir_rgb" default="false"/>
+    <arg name="do_attollo" default="false" />
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
@@ -99,8 +110,12 @@
 
     <!-- Control args -->
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
+    <arg name="min_alt" default="1.0"/>
+    <arg name="max_alt" default="5.0"/>
     <arg name="acceptance_radius" default="2.0"/>
     <arg name="obstacle_dist_threshold" default="2.0"/>
+    <arg name="flightleg_area_acres" default="15.0"/> <!-- 1 acre = 4046 m2-->
+    <arg name="max_dist_to_polygon" default="100.0"/> <!-- meters permitted to reach polygon-->
 
     <!-- Exploration args -->
     <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
@@ -226,9 +241,12 @@
     </group>
 
     <!-- Feature nodes -->
-    <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="true">
-        <!-- TODO: add args -->
-        <!-- <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
+    <arg name="enable_autonomy" default="false"/>
+    <arg name="use_failsafes" default="false"/>
+    <arg name="do_record" default="true"/>
+    <arg name="data_directory" default="/home/$(env USER)/src/bags/"/>
+    <include file="$(find-pkg-share task_manager)/launch/task_manager.launch">
+        <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
         <arg name="base_frame" value="$(var mavros_base_frame)"/>
         <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
         <arg name="enable_autonomy" value="$(var enable_autonomy)"/>
@@ -256,7 +274,7 @@
         <arg name="thermal_type" value="$(var thermal_type)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch)"/>
         <arg name="lidar_x" value="$(var lidar_x)"/>
-        <arg name="lidar_z" value="$(var lidar_z)"/> -->
+        <arg name="lidar_z" value="$(var lidar_z)"/>
     </include>
 
     <include file="$(find-pkg-share path_manager)/launch/path_manager.launch" if="$(var do_slam)">
