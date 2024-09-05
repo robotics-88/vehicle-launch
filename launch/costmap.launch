@@ -9,11 +9,12 @@
 
     <!-- Run the costmap node -->
     <group>
-        <node name="costmap_node" pkg="nav2_costmap_2d" exec="nav2_costmap_2d" >
+        <!-- <node name="costmap_node" pkg="nav2_costmap_2d" exec="nav2_costmap_2d" >
             <param from="$(find-pkg-share vehicle_launch)/config/decco_costmap.yaml"/>
             <remap from="costmap/base_scan" to="/airsim_ros_node/MyVehicle/lidar/Lidar2"/>
             <param name="costmap/resolution" value="costmap/$(var map_resolution)"/>
-        </node>
+        </node> -->
+        <include file="$(find-pkg-share vehicle_launch)/launch/costmap_server.launch.py"/>
     </group>
 
 </launch>

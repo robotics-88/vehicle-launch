@@ -223,9 +223,10 @@
     </include>
 
     <!-- Exploration Costmap -->
-    <!-- <include file="$(find-pkg-share vehicle_launch)/launch/costmap.launch" if="$(var do_costmap)">
+    <!-- TODO: Change from costmap to elevation map as exploration basis -->
+    <include file="$(find-pkg-share vehicle_launch)/launch/costmap.launch" if="$(var do_costmap)">
         <arg name="map_resolution" value="$(var map_resolution)"/>
-    </include> -->
+    </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
     <group if="$(var do_thermal_cam)">
