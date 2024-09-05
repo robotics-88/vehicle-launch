@@ -36,19 +36,45 @@
     <arg name="lidar_type" default="2" if="$(var simulate)"/>
     <arg name="lidar_type" default="4" unless="$(var simulate)"/>
     <arg name="tilted_lidar" default="false"/>
-    <arg name="lidar_pitch" default="0.0" unless="$(var tilted_lidar)"/>
+
+    <!-- Lidar positioning relative to base_link -->
+    <!-- <arg name="lidar_pitch" default="0.0" unless="$(var tilted_lidar)"/>
     <arg name="lidar_x" default="0.0" unless="$(var tilted_lidar)"/>
-    <arg name="lidar_z" default="0.11" unless="$(var tilted_lidar)"/>
-    <arg name="lidar_pitch" default="0.3926991" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z" default="0.11" unless="$(var tilted_lidar)"/> -->
+    <arg name="lidar_x_rotated" default="0.0" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_z_rotated" default="0.0" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch_rotated" default="0.0" unless="$(var tilted_lidar)"/>
+
+    <!-- <arg name="lidar_pitch" default="0.3926991" if="$(var tilted_lidar)"/>
     <arg name="lidar_x" default="0.038" if="$(var tilted_lidar)"/>
-    <arg name="lidar_z" default="0.128" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z" default="0.128" if="$(var tilted_lidar)"/> -->
+    <arg name="lidar_x_rotated" default="0.0138761" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z_rotated" default="-0.132799" if="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch_rotated" default="-0.3926991" if="$(var tilted_lidar)"/>
+
+    <!-- <arg name="lidar_x_rotated" value="$(eval -arg('lidar_x') * cos(var('lidar_pitch_rotated')) - arg('lidar_z') * sin(var('lidar_pitch_rotated')))"/> 
+    <arg name="lidar_z_rotated" value="$(eval arg('lidar_x') * sin(var('lidar_pitch_rotated')) - arg('lidar_z') * cos(var('lidar_pitch_rotated')))"/>  -->
+    <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
+        args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 $(var slam_base_frame) base_link"/>
+
+    <arg name="lidar_pitch" default="-$(var lidar_pitch_rotated)"/>
+    <arg name="lidar_x" default="-$(var lidar_x_rotated)"/>
+    <arg name="lidar_z" default="-$(var lidar_z_rotated)"/>
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
-    <arg name="do_rtsp" default="false" if="$(var do_slam)"/>
-    <arg name="do_rtsp" default="true" unless="$(var do_slam)"/>
+    <arg name="do_rtsp" default="false"/>
+    <arg name="do_record" default="false"/>
+
+    <!-- Set IRL-only args -->
+    <group unless="$(var simulate)">
+        <group unless="$(var offline)">
+            <arg name="do_rtsp" default="true"/>
+            <arg name="do_record" default="true"/>
+        </group>
+    </group>
     
     <arg name="enable_cameras" default="false"/> <!-- Enabling cameras slows the publish rate of everything to 3Hz so only enable if required -->
     
