@@ -263,11 +263,7 @@
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
     </group>
 
-    <!-- Feature nodes -->
-    <arg name="enable_autonomy" default="false"/>
-    <arg name="use_failsafes" default="false"/>
-    <arg name="do_record" default="true"/>
-    <arg name="data_directory" default="/home/$(env USER)/src/bags/"/>
+    <!-- Task Manager (Main Control Loop) -->
     <include file="$(find-pkg-share task_manager)/launch/task_manager.launch">
         <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
         <arg name="base_frame" value="$(var mavros_base_frame)"/>
