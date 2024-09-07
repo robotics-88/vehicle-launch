@@ -296,6 +296,34 @@
         <arg name="lidar_z" value="$(var lidar_z_rotated)"/>
     </include>
 
+
+    <!-- Path-planner from FAST LIO to be used for all SLAM -->
+    <arg name="path_pose_topic" default="/mavros/vision_pose/pose"/>
+    <arg name="cloud_stabilized" default="/cloud_registered_map"/>
+    <arg name="odom_topic" default="/mavros/odometry/out"/>
+    <node  pkg="path_planning" exec="path_planning_node" name="path_planning_node" args="" output="screen">
+        <param name="search/max_tau" value="0.6"/>
+        <param name="search/init_max_tau" value="0.8"/>
+        <param name="search/max_vel" value="2.0"/>
+        <param name="search/max_acc" value="2.0"/>
+        <param name="search/w_time" value="10.0"/>
+        <param name="search/horizon" value="100.0"/>
+        <param name="search/lambda_heu" value="5.0"/>
+        <param name="search/resolution_astar" value="0.1"/>
+        <param name="search/time_resolution" value="0.8"/>
+        <param name="search/margin" value="0.2"/>
+        <param name="search/allocate_num" value="100000"/>
+        <param name="search/check_num" value="1"/>
+
+        <param name="search/map_frame" value="$(var mavros_map_frame)"/>
+        <param name="search/pose_topic" value="$(var path_pose_topic)"/>
+        <param name="search/cloud" value="$(var cloud_stabilized)"/>
+        <param name="search/min_alt" value="$(var min_alt)"/>
+        <param name="search/max_alt" value="$(var max_alt)"/>
+        <param name="search/obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
+        <remap from="/mavros/odometry/out" to="$(var odom_topic)"/>
+    </node> 
+
     <include file="$(find-pkg-share path_manager)/launch/path_manager.launch" if="$(var do_slam)">
         <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
         <arg name="acceptance_radius" value="$(var acceptance_radius)"/>
