@@ -140,8 +140,8 @@
     <arg name="max_dist_to_polygon" default="100.0"/> <!-- meters permitted to reach polygon-->
 
     <!-- Exploration args -->
-    <arg name="criteria" default="[DIST, INFO]"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
-    <arg name="weights" default="[0.6, 0.4]"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="criteria" default="DIST,INFO"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
+    <arg name="weights" default="0.6,0.4"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
