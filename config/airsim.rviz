@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Path1
       Splitter Ratio: 0.5
     Tree Height: 424
   - Class: rviz_common/Selection
@@ -115,8 +116,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 14.345562934875488
-        Min Value: 0.006863117218017578
+        Max Value: 15.663915634155273
+        Min Value: -1.1555023193359375
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -185,7 +186,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        frontiers: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -197,7 +198,7 @@ Visualization Manager:
       Enabled: true
       Name: Marker
       Namespaces:
-        {}
+        "": true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -232,7 +233,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /kino_path
+        Value: /search_node/trajectory_position
       Value: true
     - Alpha: 1
       Axes Length: 1
@@ -300,7 +301,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 66.85615539550781
+      Distance: 54.6338005065918
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -315,10 +316,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6853983998298645
+      Pitch: 1.0203983783721924
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.5803980827331543
+      Yaw: 1.5353981256484985
     Saved: ~
 Window Geometry:
   Displays:
