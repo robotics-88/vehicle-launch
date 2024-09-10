@@ -196,7 +196,6 @@
         </group>
 
         <group if="$(var offline)">
-            <!-- <param name="/use_sim_time" value="true"/> -->
             <include file="$(find-pkg-share vehicle_launch)/launch/viz_host_machine.launch"/>
         </group>
 
@@ -213,6 +212,9 @@
     <group if="$(var do_slam)">
     <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
         <arg name="config_file" value="velodyne.yaml"/>
+    </include>
+    <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
+        <arg name="config_file" value="mid360.yaml"/>
     </include>
         <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne_sim.launch" if="$(var simulate)">
             <arg name="rviz" value="$(var rviz)"/>
