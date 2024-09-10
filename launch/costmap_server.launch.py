@@ -48,7 +48,7 @@ def generate_launch_description():
     start_map_server_cmd = launch_ros.actions.Node(
         package='nav2_map_server',
         executable='map_server',
-        output='screen',
+        output='log',
         emulate_tty=True,  # https://github.com/ros2/launch/issues/188
         parameters=[map_server_config_path]
     )
@@ -57,7 +57,7 @@ def generate_launch_description():
         package='nav2_planner',
         executable='planner_server',
         name='planner_server',
-        output='screen',
+        output='log',
         emulate_tty=True,  # https://github.com/ros2/launch/issues/188
         parameters=[planner_server_config_path]
     )
@@ -66,7 +66,7 @@ def generate_launch_description():
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager',
-        output='screen',
+        output='log',
         emulate_tty=True,  # https://github.com/ros2/launch/issues/188
         parameters=[
             {'use_sim_time': use_sim_time},
