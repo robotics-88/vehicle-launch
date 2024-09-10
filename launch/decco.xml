@@ -334,7 +334,7 @@
         <arg name="goal_topic" value="$(var goal_topic)"/>
     </include>
 
-    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/>
+    <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/> -->
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/airsim.rviz" output="log" if="$(var simulate)"/>
 
 </launch>
