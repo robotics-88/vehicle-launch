@@ -6,12 +6,9 @@
 
         Defaults to 'fast lio'
     -->
-    <arg name="slam_type" default="0"/>
-    <arg name="xfer_format" default="0" if="$(eval slam_type == 0)"/>
-    <arg name="xfer_format" default="1" if="$(eval slam_type == 1)"/>
-    <arg name="xfer_format" default="1" if="$(eval slam_type == 2)"/>
+    <arg name="xfer_format" default="1"/>
 
-    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch">
-        <arg name="xfer_format" value="$(arg xfer_format)"/>
+    <include file="$(find-pkg-share livox_ros_driver2)/launch_ROS2/msg_MID360_launch.py">
+        <arg name="xfer_format" value="$(var xfer_format)"/>
     </include>
 </launch>
