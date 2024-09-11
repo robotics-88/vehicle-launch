@@ -90,12 +90,6 @@
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="false" />
     <arg name="do_thermal_cam" default="false"/>
-    <arg name="do_mid360" default="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
-    <arg name="do_velodyne" default="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
-    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
-    <arg name="do_mapir" default="false" if="$(var simulate)"/>
-    <arg name="do_mapir_rgb" default="false"/>
-    <arg name="do_attollo" default="false" />
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
