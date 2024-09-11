@@ -165,6 +165,8 @@
         <arg name="vehicle_name" value="$(var vehicle_name)"/>
     </include>
 
+    <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
+
     <!-- Non-Sim Only -->
     <group unless="$(var simulate)">
         <group unless="$(var offline)">
@@ -186,13 +188,6 @@
                     <remap from="image" to="$(var thermal_topic)"/>
                 </node>
             </group>
-
-            <!-- Bag Recorder -->
-            <include file="$(find-pkg-share bag_recorder)/launch/default.launch">
-                <arg name="configuration_directory" value="$(var configuration_directory)"/>
-                <arg name="data_directory" value="$(var data_directory)"/>
-                <arg name="heartbeat_interval" value="$(var healthbeat_rate)"/>
-            </include>
         </group>
 
         <group if="$(var offline)">
