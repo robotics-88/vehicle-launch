@@ -3,13 +3,13 @@
     <arg name="device" default="/dev/mapir"/>
     <arg name="camera_name" default="mapir_rgn"/>
     <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
-    <arg name="image_width" default="640"/>
-    <arg name="image_height" default="480"/>
+    <arg name="image_width" default="1280"/>
+    <arg name="image_height" default="720"/>
 
     <group>
         <push-ros-namespace namespace="$(var camera_name)"/>
 
-        <node pkg="simple_opencv" exec="minimal_opencv_ros2_node">
+        <node pkg="simple_opencv" exec="minimal_opencv_ros2_node" output="log">
             <param name="fps" value="$(var fps)"/>
             <param name="device" value="$(var device)"/>
             <param name="camera_name" value="$(var camera_name)"/>
