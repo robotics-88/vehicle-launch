@@ -186,13 +186,6 @@
                     <remap from="image" to="$(var thermal_topic)"/>
                 </node>
             </group>
-
-            <!-- Bag Recorder -->
-            <include file="$(find-pkg-share bag_recorder)/launch/default.launch">
-                <arg name="configuration_directory" value="$(var configuration_directory)"/>
-                <arg name="data_directory" value="$(var data_directory)"/>
-                <arg name="heartbeat_interval" value="$(var healthbeat_rate)"/>
-            </include>
         </group>
 
         <group if="$(var offline)">
@@ -207,6 +200,13 @@
             <arg name="thermal_type" value="$(var thermal_type)"/>
         </include>
     </group>
+
+            <!-- Bag Recorder -->
+            <include file="$(find-pkg-share bag_recorder)/launch/default.launch">
+                <arg name="configuration_directory" value="$(var configuration_directory)"/>
+                <arg name="data_directory" value="$(var data_directory)"/>
+                <arg name="heartbeat_interval" value="$(var healthbeat_rate)"/>
+            </include>
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
