@@ -55,20 +55,20 @@
     <!-- <arg name="lidar_x_rotated" value="$(eval -arg('lidar_x') * cos(var('lidar_pitch_rotated')) - arg('lidar_z') * sin(var('lidar_pitch_rotated')))"/> 
     <arg name="lidar_z_rotated" value="$(eval arg('lidar_x') * sin(var('lidar_pitch_rotated')) - arg('lidar_z') * cos(var('lidar_pitch_rotated')))"/>  -->
     <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
-        args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 $(var slam_base_frame) base_link"/>
+        args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 livox_frame base_link"/>
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
     <arg name="do_rtsp" default="false"/>
-    <arg name="do_record" default="false"/>
+    <arg name="do_record" default="true" unless="$(var simulate)"/>
+    <arg name="do_record" default="false" if="$(var simulate)"/>
 
     <!-- Set IRL-only args -->
     <group unless="$(var simulate)">
         <group unless="$(var offline)">
             <arg name="do_rtsp" default="true"/>
-            <arg name="do_record" default="true"/>
         </group>
     </group>
     
@@ -210,6 +210,7 @@
     </include>
     <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
         <arg name="config_file" value="mid360.yaml"/>
+        <arg name="base_frame" value="$(var slam_base_frame)"/>
     </include>
         <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne_sim.launch" if="$(var simulate)">
             <arg name="rviz" value="$(var rviz)"/>
