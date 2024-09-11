@@ -90,12 +90,6 @@
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="false" />
     <arg name="do_thermal_cam" default="false"/>
-    <arg name="do_mid360" default="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
-    <arg name="do_velodyne" default="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
-    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
-    <arg name="do_mapir" default="false" if="$(var simulate)"/>
-    <arg name="do_mapir_rgb" default="false"/>
-    <arg name="do_attollo" default="false" />
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic_hw" default="/livox/lidar" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
@@ -170,6 +164,12 @@
     <!-- Non-Sim Only -->
     <group unless="$(var simulate)">
         <group unless="$(var offline)">
+            <!--                                 Hardware                            -->
+            <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mid360.launch" if="$(var do_mid360)"/>
+            <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(var do_mapir)"/>
+            <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
+            <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
+
             <!--                        RTSP Streams for each camera                 -->
             <group if="$(var do_rtsp)">
                 <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" exec="stream">
