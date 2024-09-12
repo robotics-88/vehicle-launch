@@ -82,8 +82,6 @@ Visualization Manager:
           Value: true
         utm:
           Value: true
-        velodyne:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -91,24 +89,24 @@ Visualization Manager:
       Show Names: false
       Tree:
         map:
+          base_link:
+            base_link/Lidar2:
+              {}
+            base_link_frd:
+              {}
+            front_center_custom_body:
+              front_center_custom_optical:
+                {}
+            front_left_custom_body:
+              front_left_custom_optical:
+                {}
+            front_right_custom_body:
+              front_right_custom_optical:
+                {}
           map_ned:
             {}
           slam_map:
-            base_link:
-              base_link/Lidar2:
-                velodyne:
-                  {}
-              base_link_frd:
-                {}
-              front_center_custom_body:
-                front_center_custom_optical:
-                  {}
-              front_left_custom_body:
-                front_left_custom_optical:
-                  {}
-              front_right_custom_body:
-                front_right_custom_optical:
-                  {}
+            {}
         utm:
           {}
       Update Interval: 0
@@ -186,7 +184,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        frontiers: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -198,7 +196,7 @@ Visualization Manager:
       Enabled: true
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -255,6 +253,31 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /goal
       Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: Lawnmower
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /lawnmower
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Map area
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map_region
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -301,7 +324,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 54.6338005065918
+      Distance: 36.54268264770508
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -316,10 +339,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0203983783721924
+      Pitch: 0.8053984642028809
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.5353981256484985
+      Yaw: 1.930397868156433
     Saved: ~
 Window Geometry:
   Displays:
@@ -337,5 +360,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1200
-  X: 1307
+  X: 720
   Y: 113
