@@ -59,6 +59,7 @@
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
+    <arg name="do_pcl_analysis" default="false"/>
     <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
     <arg name="do_rtsp" default="false"/>
@@ -100,6 +101,7 @@
     <arg name="cloud_topic" default="$(var cloud_topic_sim)" if="$(var simulate)"/>
 
     <arg name="cloud_registered_topic" default="/cloud_registered"/>
+    <arg name="cloud_stabilized" default="/cloud_registered_map"/>
 
     <arg name="imu_topic_hw" default="/livox/imu" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
     <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
@@ -247,6 +249,11 @@
         <arg name="map_resolution" value="$(var map_resolution)"/>
     </include>
 
+    <!-- PCL Analysis -->
+    <include file="$(find-pkg-share pcl_analysis)/launch/pcl_analysis.launch" if="$(var do_pcl_analysis)">
+        <arg name="point_cloud_topic" value="$(var cloud_stabilized)"/>
+    </include>
+
     <!-- Thermal Camera & Processing Pipeline -->
     <group if="$(var do_thermal_cam)">
         <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
@@ -296,7 +303,6 @@
 
     <!-- Path-planner from FAST LIO to be used for all SLAM -->
     <arg name="path_pose_topic" default="/mavros/vision_pose/pose"/>
-    <arg name="cloud_stabilized" default="/cloud_registered_map"/>
     <arg name="odom_topic" default="/mavros/odometry/out"/>
     <node  pkg="path_planning" exec="path_planning_node" name="path_planning_node" args="" output="screen">
         <param name="search/max_tau" value="0.6"/>
