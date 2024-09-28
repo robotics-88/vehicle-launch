@@ -50,7 +50,8 @@ def generate_launch_description():
         executable='map_server',
         output='log',
         emulate_tty=True,  # https://github.com/ros2/launch/issues/188
-        parameters=[map_server_config_path]
+        parameters=[map_server_config_path],
+        arguments=['--ros-args', '--log-level', 'error']
     )
 
     start_costmap_cmd = launch_ros.actions.Node(
@@ -59,7 +60,8 @@ def generate_launch_description():
         name='planner_server',
         output='log',
         emulate_tty=True,  # https://github.com/ros2/launch/issues/188
-        parameters=[planner_server_config_path]
+        parameters=[planner_server_config_path],
+        arguments=['--ros-args', '--log-level', 'error'],
     )
 
     start_lifecycle_manager_cmd = launch_ros.actions.Node(
@@ -72,7 +74,8 @@ def generate_launch_description():
             {'use_sim_time': use_sim_time},
             {'autostart': autostart},
             {'node_names': lifecycle_nodes},
-        ]
+        ],
+        arguments=['--ros-args', '--log-level', 'error'],
     )
 
     ld = LaunchDescription()
