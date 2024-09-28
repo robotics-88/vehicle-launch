@@ -60,6 +60,7 @@
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
     <arg name="do_pcl_analysis" default="false"/>
+    <arg name="do_trail" default="false"/>
     <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
     <arg name="do_rtsp" default="false"/>
@@ -252,6 +253,7 @@
     <!-- PCL Analysis -->
     <include file="$(find-pkg-share pcl_analysis)/launch/pcl_analysis.launch" if="$(var do_pcl_analysis)">
         <arg name="point_cloud_topic" value="$(var cloud_stabilized)"/>
+        <arg name="do_trail" value="$(var do_trail)"/>
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
