@@ -59,7 +59,7 @@
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
-    <arg name="do_pcl_analysis" default="false"/>
+    <arg name="do_pcl_analysis" default="true"/>
     <arg name="do_trail" default="false"/>
     <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
