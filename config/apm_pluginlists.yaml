@@ -13,6 +13,7 @@
       - imu
       - local_position
       - obstacle_distance
+      # - odometry
       - open_drone_id
       - param
       - setpoint_position

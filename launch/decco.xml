@@ -208,14 +208,14 @@
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
-        <!-- <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
-            <arg name="config_file" value="velodyne.yaml"/>
+        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
+            <arg name="config_file" value="velodyne16_sim.yaml"/>
         </include>
         <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
             <arg name="config_file" value="mid360.yaml"/>
-        </include> -->
+        </include>
 
-        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
+        <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
             <arg name="rviz" value="$(var rviz)"/>
             <arg name="base_frame" value="$(var slam_base_frame)"/>
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
@@ -228,7 +228,7 @@
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
             <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
             <arg name="imu_topic" value="$(var imu_topic)"/>
-        </include>
+        </include> -->
     </group>
 
     <!-- Exploration & Frontier Search -->
