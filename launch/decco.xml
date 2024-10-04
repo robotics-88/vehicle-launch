@@ -335,6 +335,8 @@
         <arg name="cloud_topic" value="$(var cloud_topic)"/>
         <arg name="obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
         <arg name="goal_topic" value="$(var goal_topic)"/>
+        <arg name="adjust_altitude_volume" value="true"/>
+        <arg name="default_alt" value="$(var default_alt)"/>
     </include>
 
     <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/> -->
