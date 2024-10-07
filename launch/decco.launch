@@ -38,22 +38,14 @@
     <arg name="tilted_lidar" default="false"/>
 
     <!-- Lidar positioning relative to base_link -->
-    <!-- <arg name="lidar_pitch" default="0.0" unless="$(var tilted_lidar)"/>
-    <arg name="lidar_x" default="0.0" unless="$(var tilted_lidar)"/>
-    <arg name="lidar_z" default="0.11" unless="$(var tilted_lidar)"/> -->
     <arg name="lidar_x_rotated" default="0.0" unless="$(var tilted_lidar)"/>
     <arg name="lidar_z_rotated" default="0.0" unless="$(var tilted_lidar)"/>
     <arg name="lidar_pitch_rotated" default="0.0" unless="$(var tilted_lidar)"/>
 
-    <!-- <arg name="lidar_pitch" default="0.3926991" if="$(var tilted_lidar)"/>
-    <arg name="lidar_x" default="0.038" if="$(var tilted_lidar)"/>
-    <arg name="lidar_z" default="0.128" if="$(var tilted_lidar)"/> -->
     <arg name="lidar_x_rotated" default="0.0138761" if="$(var tilted_lidar)"/>
     <arg name="lidar_z_rotated" default="-0.132799" if="$(var tilted_lidar)"/>
     <arg name="lidar_pitch_rotated" default="-0.3926991" if="$(var tilted_lidar)"/>
 
-    <!-- <arg name="lidar_x_rotated" value="$(eval -arg('lidar_x') * cos(var('lidar_pitch_rotated')) - arg('lidar_z') * sin(var('lidar_pitch_rotated')))"/> 
-    <arg name="lidar_z_rotated" value="$(eval arg('lidar_x') * sin(var('lidar_pitch_rotated')) - arg('lidar_z') * cos(var('lidar_pitch_rotated')))"/>  -->
     <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
         args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 livox_frame base_link"/>
 
@@ -215,6 +207,7 @@
             <arg name="config_file" value="mid360.yaml"/>
         </include>
 
+        <!-- TODO decide which SLAM to use, make optional or delete -->
         <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
             <arg name="rviz" value="$(var rviz)"/>
             <arg name="base_frame" value="$(var slam_base_frame)"/>
@@ -339,7 +332,6 @@
         <arg name="default_alt" value="$(var default_alt)"/>
     </include>
 
-    <!-- <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/distal.rviz" output="log" unless="$(var simulate)"/> -->
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/airsim.rviz" output="log" if="$(var simulate)"/>
 
 </launch>
