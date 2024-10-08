@@ -10,30 +10,30 @@
     <arg name="lidar_x" default="0.0"/>
     <arg name="lidar_z" default="0.11"/>
 
-    <group if="$(eval do_mapir + do_mapir_rgb)">
-        <arg name="mapir_name" value="mapir_rgn_cam" if="$(arg do_mapir)"/>
-        <arg name="mapir_name" value="mapir_rgb_cam" if="$(arg do_mapir_rgb)"/>
+    <!-- <group if="$(eval do_mapir + do_mapir_rgb)"> -->
+        <arg name="mapir_name" default="mapir_rgn_cam" if="$(var do_mapir)"/>
+        <arg name="mapir_name" default="mapir_rgb_cam" if="$(var do_mapir_rgb)"/>
 
-        <node name="mapir_static_tf" pkg="tf" type="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link $(arg mapir_name) 100"/>
-        <node name="mapir_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 $(arg mapir_name) mapir_optical 100"/>
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link $(var mapir_name)"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 $(var mapir_name) mapir_optical"/>
+    <!-- </group> -->
+
+    <group if="$(var do_attollo)">
+        <node name="attollo_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.110 -0.040 .057 0 0 0 base_link attollo_cam"/>
+        <node name="attollo_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical"/>
     </group>
 
-    <group if="$(arg do_attollo)">
-        <node name="attollo_static_tf" pkg="tf" type="static_transform_publisher" args="0.110 -0.040 .057 0 0 0 base_link attollo_cam 100"/>
-        <node name="attollo_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo_cam attollo_optical 100"/>
-    </group>
-
-    <group if="$(arg do_thermal_cam)">
+    <group if="$(var do_thermal_cam)">
         <!-- Infiray-->
-        <group if="$(eval thermal_type == 0)">
-            <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.088 -0.040 0.057 0 0 0 base_link thermal_cam 100"/>
-            <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical 100"/>
+        <group if="$(eval '\'$(var thermal_type)\' == \'0\'')">
+            <node name="thermal_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.088 -0.040 0.057 0 0 0 base_link thermal_cam"/>
+            <node name="thermal_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 thermal_cam thermal_optical"/>
         </group>
 
         <!-- Seek-->
-        <group if="$(eval thermal_type == 1)">
-            <node name="thermal_static_tf" pkg="tf" type="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link seek 100"/>
-            <node name="thermal_optical_static_tf" pkg="tf" type="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 seek thermal_optical 100"/>
+        <group if="$(eval '\'$(var thermal_type)\' == \'1\'')">
+            <node name="thermal_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link seek_cam"/>
+            <node name="thermal_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 seek_cam seek_optical"/>
         </group>
     </group>
 
