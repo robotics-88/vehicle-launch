@@ -130,7 +130,7 @@
 
     <!-- Exploration args -->
     <arg name="criteria" default="DIST,INFO"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
-    <arg name="weights" default="0.6,0.4"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="weights" default="0.95,0.05"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
@@ -200,16 +200,16 @@
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
-        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
+        <!-- <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
             <arg name="config_file" value="velodyne16_sim.yaml"/>
         </include>
         <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
             <arg name="config_file" value="mid360.yaml"/>
-        </include>
+        </include> -->
 
         <!-- TODO decide which SLAM to use, make optional or delete -->
-        <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
-            <arg name="rviz" value="$(var rviz)"/>
+        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
+            <arg name="rviz" value="false"/>
             <arg name="base_frame" value="$(var slam_base_frame)"/>
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
             <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
@@ -221,7 +221,7 @@
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
             <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
             <arg name="imu_topic" value="$(var imu_topic)"/>
-        </include> -->
+        </include>
     </group>
 
     <!-- Exploration & Frontier Search -->
@@ -289,6 +289,7 @@
         <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
         <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+        <arg name="do_trail" value="$(var do_trail)"/>
         <arg name="thermal_type" value="$(var thermal_type)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch_rotated)"/>
         <arg name="lidar_x" value="$(var lidar_x_rotated)"/>
