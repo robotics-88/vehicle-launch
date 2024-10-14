@@ -185,9 +185,9 @@
             </group>
         </group>
 
-        <group if="$(var offline)">
+        <!-- <group if="$(var offline)">
             <include file="$(find-pkg-share vehicle_launch)/launch/viz_host_machine.launch"/>
-        </group>
+        </group> -->
 
         <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch">
             <arg name="do_mapir" value="$(var do_mapir)"/>
@@ -200,15 +200,15 @@
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
-        <!-- <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
+        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
             <arg name="config_file" value="velodyne16_sim.yaml"/>
         </include>
         <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
             <arg name="config_file" value="mid360.yaml"/>
-        </include> -->
+        </include>
 
         <!-- TODO decide which SLAM to use, make optional or delete -->
-        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
+        <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
             <arg name="rviz" value="false"/>
             <arg name="base_frame" value="$(var slam_base_frame)"/>
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
@@ -221,7 +221,7 @@
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
             <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
             <arg name="imu_topic" value="$(var imu_topic)"/>
-        </include>
+        </include> -->
     </group>
 
     <!-- Exploration & Frontier Search -->
@@ -306,7 +306,7 @@
         <param name="search/max_vel" value="2.0"/>
         <param name="search/max_acc" value="2.0"/>
         <param name="search/w_time" value="10.0"/>
-        <param name="search/horizon" value="100.0"/>
+        <param name="search/horizon" value="20.0"/>
         <param name="search/lambda_heu" value="5.0"/>
         <param name="search/resolution_astar" value="0.1"/>
         <param name="search/time_resolution" value="0.8"/>
