@@ -8,6 +8,7 @@ Panels:
         - /Status1
         - /Path1
         - /Mavros Setpoint1
+        - /Pose1
       Splitter Ratio: 0.5
     Tree Height: 584
   - Class: rviz_common/Selection
@@ -117,8 +118,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 11.42422103881836
-        Min Value: -0.02648654580116272
+        Max Value: 23.711732864379883
+        Min Value: -5.413615703582764
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -187,7 +188,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        {}
+        frontiers: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -199,7 +200,7 @@ Visualization Manager:
       Enabled: true
       Name: Marker
       Namespaces:
-        {}
+        "": true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -272,7 +273,7 @@ Visualization Manager:
       Enabled: true
       Name: Map area
       Namespaces:
-        {}
+        "": true
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -300,6 +301,39 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /mavros/setpoint_position/local
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Marker
+      Namespaces:
+        "": true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /trail_line
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 3
+      Head Radius: 1
+      Name: Pose
+      Shaft Length: 3
+      Shaft Radius: 1
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /explorable_goal
       Value: true
   Enabled: true
   Global Options:
@@ -347,7 +381,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 15.788661003112793
+      Distance: 61.512229919433594
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -362,10 +396,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3653985857963562
+      Pitch: 1.000398874282837
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.335397720336914
+      Yaw: 4.23539400100708
     Saved: ~
 Window Geometry:
   Displays:

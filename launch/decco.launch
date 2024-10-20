@@ -114,7 +114,7 @@
     <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
      <!-- Recording args -->
-    <arg name="configuration_directory" default="$(find-pkg-share vehicle_launch)/config/"/>
+    <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/trails.config"/>
     <arg name="user" default="$(env USER)"/>
     <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
     <arg name="healthbeat_rate" default="1.0"/>
@@ -185,9 +185,9 @@
             </group>
         </group>
 
-        <!-- <group if="$(var offline)">
+        <group if="$(var offline)">
             <include file="$(find-pkg-share vehicle_launch)/launch/viz_host_machine.launch"/>
-        </group> -->
+        </group>
 
         <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch">
             <arg name="do_mapir" value="$(var do_mapir)"/>
@@ -276,6 +276,7 @@
         <arg name="lidar_topic" value="$(var cloud_topic)"/>
         <arg name="mapir_topic" value="$(var image_topic)"/>
         <arg name="do_record" value="$(var do_record)"/>
+        <arg name="record_config_file" value="$(var record_config_file)"/>
         <arg name="data_directory" value="$(var data_directory)"/>
         <arg name="default_alt" value="$(var default_alt)"/>
         <arg name="min_alt" value="$(var min_alt)"/>
@@ -316,7 +317,7 @@
 
         <param name="search/map_frame" value="$(var mavros_map_frame)"/>
         <param name="search/pose_topic" value="$(var path_pose_topic)"/>
-        <param name="search/cloud" value="$(var cloud_stabilized)"/>
+        <param name="search/cloud" value="cloud_to_use"/>
         <param name="search/min_alt" value="$(var min_alt)"/>
         <param name="search/max_alt" value="$(var max_alt)"/>
         <param name="search/obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
