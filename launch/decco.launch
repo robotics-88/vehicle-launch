@@ -53,7 +53,6 @@
     <arg name="do_slam" default="true"/>
     <arg name="do_pcl_analysis" default="true"/>
     <arg name="do_trail" default="false"/>
-    <arg name="do_costmap" default="$(var do_slam)"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
     <arg name="do_rtsp" default="false"/>
     <arg name="do_record" default="true" unless="$(var simulate)"/>
@@ -114,7 +113,7 @@
     <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
      <!-- Recording args -->
-    <arg name="configuration_directory" default="$(find-pkg-share vehicle_launch)/config/"/>
+    <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/trails.config"/>
     <arg name="user" default="$(env USER)"/>
     <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
     <arg name="healthbeat_rate" default="1.0"/>
@@ -129,8 +128,8 @@
     <arg name="max_dist_to_polygon" default="100.0"/> <!-- meters permitted to reach polygon-->
 
     <!-- Exploration args -->
-    <arg name="criteria" default="DIST,INFO"/> <!-- options="[DIST, INFO, EFFICIENCY, ASH]" -->
-    <arg name="weights" default="0.6,0.4"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="criteria" default="DIST,INFO,SAFETY"/> <!-- options="[DIST, INFO, EFFICIENCY, SAFETY, ASH]" -->
+    <arg name="weights" default="0.7,0.05,0.25"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
@@ -209,7 +208,7 @@
 
         <!-- TODO decide which SLAM to use, make optional or delete -->
         <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
-            <arg name="rviz" value="$(var rviz)"/>
+            <arg name="rviz" value="false"/>
             <arg name="base_frame" value="$(var slam_base_frame)"/>
             <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
             <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
@@ -235,12 +234,6 @@
         <arg name="criteria" value="$(var criteria)"/>
         <arg name="weights" value="$(var weights)"/>
         <arg name="dem_name" value="$(var dem_name)"/>
-    </include>
-
-    <!-- Exploration Costmap -->
-    <!-- TODO: Change from costmap to elevation map as exploration basis -->
-    <include file="$(find-pkg-share vehicle_launch)/launch/costmap.launch" if="$(var do_costmap)">
-        <arg name="map_resolution" value="$(var map_resolution)"/>
     </include>
 
     <!-- PCL Analysis -->
@@ -276,6 +269,7 @@
         <arg name="lidar_topic" value="$(var cloud_topic)"/>
         <arg name="mapir_topic" value="$(var image_topic)"/>
         <arg name="do_record" value="$(var do_record)"/>
+        <arg name="record_config_file" value="$(var record_config_file)"/>
         <arg name="data_directory" value="$(var data_directory)"/>
         <arg name="default_alt" value="$(var default_alt)"/>
         <arg name="min_alt" value="$(var min_alt)"/>
@@ -289,6 +283,7 @@
         <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
         <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+        <arg name="do_trail" value="$(var do_trail)"/>
         <arg name="thermal_type" value="$(var thermal_type)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch_rotated)"/>
         <arg name="lidar_x" value="$(var lidar_x_rotated)"/>
@@ -305,7 +300,7 @@
         <param name="search/max_vel" value="2.0"/>
         <param name="search/max_acc" value="2.0"/>
         <param name="search/w_time" value="10.0"/>
-        <param name="search/horizon" value="100.0"/>
+        <param name="search/horizon" value="20.0"/>
         <param name="search/lambda_heu" value="5.0"/>
         <param name="search/resolution_astar" value="0.1"/>
         <param name="search/time_resolution" value="0.8"/>

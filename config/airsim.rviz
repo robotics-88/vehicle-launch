@@ -6,8 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Path1
-        - /Mavros Setpoint1
+        - /DensityGrid1/Status1
       Splitter Ratio: 0.5
     Tree Height: 584
   - Class: rviz_common/Selection
@@ -117,8 +116,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 11.42422103881836
-        Min Value: -0.02648654580116272
+        Max Value: 16.201120376586914
+        Min Value: -0.025880329310894012
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -185,7 +184,7 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/MarkerArray
       Enabled: true
-      Name: MarkerArray
+      Name: Frontiers
       Namespaces:
         {}
       Topic:
@@ -197,7 +196,7 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/Marker
       Enabled: true
-      Name: Marker
+      Name: FrontierGoal
       Namespaces:
         {}
       Topic:
@@ -301,6 +300,60 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /mavros/setpoint_position/local
       Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: TrailLine
+      Namespaces:
+        "": true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /trail_line
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 3
+      Head Radius: 1
+      Name: ExplorableGoal
+      Shaft Length: 3
+      Shaft Radius: 1
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /explorable_goal
+      Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: DensityGrid
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /occ_density_grid
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /occ_density_grid_updates
+      Use Timestamp: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -347,7 +400,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 15.788661003112793
+      Distance: 61.512229919433594
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -362,10 +415,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3653985857963562
+      Pitch: 1.2753984928131104
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.335397720336914
+      Yaw: 4.320395469665527
     Saved: ~
 Window Geometry:
   Displays:
