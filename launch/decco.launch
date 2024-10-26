@@ -310,7 +310,7 @@
 
         <param name="search/map_frame" value="$(var mavros_map_frame)"/>
         <param name="search/pose_topic" value="$(var path_pose_topic)"/>
-        <param name="search/cloud" value="$(var cloud_stabilized)"/>
+        <param name="search/cloud" value="/cloud_to_use"/>
         <param name="search/min_alt" value="$(var min_alt)"/>
         <param name="search/max_alt" value="$(var max_alt)"/>
         <param name="search/obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
