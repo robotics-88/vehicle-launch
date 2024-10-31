@@ -42,9 +42,14 @@
     <arg name="lidar_z_rotated" default="0.0" unless="$(var tilted_lidar)"/>
     <arg name="lidar_pitch_rotated" default="0.0" unless="$(var tilted_lidar)"/>
 
-    <arg name="lidar_x_rotated" default="0.0138761" if="$(var tilted_lidar)"/>
+    <!-- Top angled -->
+    <!-- <arg name="lidar_x_rotated" default="0.0138761" if="$(var tilted_lidar)"/>
     <arg name="lidar_z_rotated" default="-0.132799" if="$(var tilted_lidar)"/>
-    <arg name="lidar_pitch_rotated" default="-0.3926991" if="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch_rotated" default="-0.3926991" if="$(var tilted_lidar)"/> -->
+    <!-- Downward mount angled -->
+    <arg name="lidar_x_rotated" default="0.11999999999" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z_rotated" default="0.175" if="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch_rotated" default="-1.57079632679" if="$(var tilted_lidar)"/>
 
     <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
         args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 livox_frame base_link"/>
