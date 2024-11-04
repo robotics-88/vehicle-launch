@@ -109,7 +109,7 @@
     <arg name="imu_topic" default="$(var imu_topic_hw)" unless="$(var simulate)"/>
     <arg name="imu_topic" default="$(var imu_topic_sim)" if="$(var simulate)"/>
 
-    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(var simulate)"/>
+    <arg name="image_topic" default="/mapir_rgn/image_raw" unless="$(var simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(var simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene/camera_info" if="$(var simulate)"/>
