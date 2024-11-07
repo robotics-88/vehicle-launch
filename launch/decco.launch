@@ -37,6 +37,12 @@
     <arg name="lidar_type" default="4" unless="$(var simulate)"/>
     <arg name="tilted_lidar" default="false"/>
 
+    <!-- Which slam
+        0: slam-ros2
+        1: fast-lio-lc
+    -->
+    <arg name="slam_type" default="0"/>
+
     <!-- Lidar positioning relative to base_link -->
     <arg name="lidar_x_rotated" default="0.0" unless="$(var tilted_lidar)"/>
     <arg name="lidar_z_rotated" default="0.0" unless="$(var tilted_lidar)"/>
@@ -94,6 +100,7 @@
 
     <arg name="cloud_registered_topic" default="/cloud_registered"/>
     <arg name="cloud_stabilized" default="/cloud_registered_map"/>
+    <arg name="cloud_aggregated" default="/cloud_aggregated"/>
 
     <arg name="imu_topic_hw" default="/livox/imu" if="$(eval '\'$(var lidar_type)\' == \'4\'')"/>
     <arg name="imu_topic_hw" default="/mavros/imu/data" if="$(eval '\'$(var lidar_type)\' == \'2\'')"/>
@@ -102,7 +109,7 @@
     <arg name="imu_topic" default="$(var imu_topic_hw)" unless="$(var simulate)"/>
     <arg name="imu_topic" default="$(var imu_topic_sim)" if="$(var simulate)"/>
 
-    <arg name="image_topic" default="/mapir_rgn/image_rect_color" unless="$(var simulate)"/>
+    <arg name="image_topic" default="/mapir_rgn/image_raw" unless="$(var simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(var simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene/camera_info" if="$(var simulate)"/>
@@ -122,6 +129,7 @@
     <arg name="default_alt" default="3.0"/> <!-- Must be between min/max or path planning fails -->
     <arg name="min_alt" default="1.0"/>
     <arg name="max_alt" default="5.0"/>
+    <arg name="planning_horizon" default="6.0"/> <!-- Radius in m of the regional pointcloud for path mgr/planner -->
     <arg name="acceptance_radius" default="2.0"/>
     <arg name="obstacle_dist_threshold" default="2.0"/>
     <arg name="flightleg_area_acres" default="15.0"/> <!-- 1 acre = 4046 m2-->
@@ -199,28 +207,31 @@
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
-        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
-            <arg name="config_file" value="velodyne16_sim.yaml"/>
-        </include>
-        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
-            <arg name="config_file" value="mid360.yaml"/>
-        </include>
+        <group if="$(eval '\'$(var slam_type)\' == \'0\'')">
+            <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var simulate)">
+                <arg name="config_file" value="velodyne16_sim.yaml"/>
+            </include>
+            <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var simulate)">
+                <arg name="config_file" value="mid360.yaml"/>
+            </include>
+        </group>
 
-        <!-- TODO decide which SLAM to use, make optional or delete -->
-        <!-- <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
-            <arg name="rviz" value="false"/>
-            <arg name="base_frame" value="$(var slam_base_frame)"/>
-            <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
-            <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
-            <arg name="imu_topic" value="$(var imu_topic)"/>
-        </include>
-        <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_mid360.launch" unless="$(var simulate)">
-            <arg name="rviz" value="$(var rviz)"/>
-            <arg name="base_frame" value="$(var slam_base_frame)"/>
-            <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
-            <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
-            <arg name="imu_topic" value="$(var imu_topic)"/>
-        </include> -->
+        <group if="$(eval '\'$(var slam_type)\' == \'1\'')">
+            <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_velodyne.launch" if="$(var simulate)">
+                <arg name="rviz" value="false"/>
+                <arg name="base_frame" value="$(var slam_base_frame)"/>
+                <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
+                <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+                <arg name="imu_topic" value="$(var imu_topic)"/>
+            </include>
+            <include file="$(find-pkg-share fast_lio_lc)/launch/mapping_mid360.launch" unless="$(var simulate)">
+                <arg name="rviz" value="$(var rviz)"/>
+                <arg name="base_frame" value="$(var slam_base_frame)"/>
+                <arg name="slam_map_frame" value="$(var slam_map_frame)"/>
+                <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+                <arg name="imu_topic" value="$(var imu_topic)"/>
+            </include>
+        </group>
     </group>
 
     <!-- Exploration & Frontier Search -->
@@ -239,7 +250,9 @@
     <!-- PCL Analysis -->
     <include file="$(find-pkg-share pcl_analysis)/launch/pcl_analysis.launch" if="$(var do_pcl_analysis)">
         <arg name="point_cloud_topic" value="$(var cloud_stabilized)"/>
+        <arg name="point_cloud_aggregated" value="$(var cloud_aggregated)"/>
         <arg name="do_trail" value="$(var do_trail)"/>
+        <arg name="planning_horizon" value="$(var planning_horizon)"/>
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
@@ -265,7 +278,7 @@
         <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
         <arg name="goal_topic" value="$(var goal_topic)"/>
         <arg name="do_slam" value="$(var do_slam)"/>
-        <arg name="costmap_topic" value="/costmap_node/costmap/costmap_updates"/>
+        <arg name="costmap_topic" value="/occ_density_grid"/>
         <arg name="lidar_topic" value="$(var cloud_topic)"/>
         <arg name="mapir_topic" value="$(var image_topic)"/>
         <arg name="do_record" value="$(var do_record)"/>
@@ -310,7 +323,7 @@
 
         <param name="search/map_frame" value="$(var mavros_map_frame)"/>
         <param name="search/pose_topic" value="$(var path_pose_topic)"/>
-        <param name="search/cloud" value="$(var cloud_stabilized)"/>
+        <param name="search/cloud" value="$(var cloud_aggregated)"/>
         <param name="search/min_alt" value="$(var min_alt)"/>
         <param name="search/max_alt" value="$(var max_alt)"/>
         <param name="search/obstacle_dist_threshold" value="$(var obstacle_dist_threshold)"/>
@@ -325,6 +338,7 @@
         <arg name="goal_topic" value="$(var goal_topic)"/>
         <arg name="adjust_altitude_volume" value="true"/>
         <arg name="default_alt" value="$(var default_alt)"/>
+        <arg name="planning_horizon" value="$(var planning_horizon)"/>
     </include>
 
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/airsim.rviz" output="log" if="$(var simulate)"/>
