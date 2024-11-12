@@ -330,7 +330,7 @@
         <remap from="/mavros/odometry/out" to="$(var odom_topic)"/>
     </node> 
 
-    <include file="$(find-pkg-share path_manager)/launch/path_manager.launch" if="$(var do_slam)">
+    <include file="$(find-pkg-share path_manager)/launch/path_manager.launch">
         <arg name="mavros_map_frame" value="$(var mavros_map_frame)"/>
         <arg name="acceptance_radius" value="$(var acceptance_radius)"/>
         <arg name="cloud_topic" value="$(var cloud_topic)"/>
