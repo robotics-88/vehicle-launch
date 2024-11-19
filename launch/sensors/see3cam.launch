@@ -5,7 +5,7 @@
     <group>
         <push-ros-namespace namespace="$(var camera_name)"/>
 
-        <node pkg="usb_cam" exec="usb_cam_node_exe" output="log">
+        <node pkg="usb_cam" exec="usb_cam_node_exe" output="log" respawn="true">
             <param from="$(var camera_param_yaml)"/>
         </node>
     </group>
