@@ -120,7 +120,7 @@
     <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
      <!-- Recording args -->
-    <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/trails.config"/>
+    <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
     <arg name="user" default="$(env USER)"/>
     <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
     <arg name="healthbeat_rate" default="1.0"/>
