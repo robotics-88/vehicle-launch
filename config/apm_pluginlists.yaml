@@ -17,6 +17,7 @@
       - open_drone_id
       - param
       - setpoint_position
+      - setpoint_raw
       - setpoint_velocity
       - sys_status
       - sys_time
