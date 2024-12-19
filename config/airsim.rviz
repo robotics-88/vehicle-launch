@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /DensityGrid1/Status1
       Splitter Ratio: 0.5
     Tree Height: 584
   - Class: rviz_common/Selection
@@ -80,8 +79,6 @@ Visualization Manager:
           Value: true
         slam_map:
           Value: true
-        utm:
-          Value: true
         velodyne:
           Value: true
       Marker Scale: 1
@@ -93,24 +90,6 @@ Visualization Manager:
         map:
           map_ned:
             {}
-          slam_map:
-            base_link:
-              base_link/Lidar2:
-                velodyne:
-                  {}
-              base_link_frd:
-                {}
-              front_center_custom_body:
-                front_center_custom_optical:
-                  {}
-              front_left_custom_body:
-                front_left_custom_optical:
-                  {}
-              front_right_custom_body:
-                front_right_custom_optical:
-                  {}
-        utm:
-          {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -300,11 +279,31 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /mavros/setpoint_position/local
       Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Mavros Setpoint Raw Viz
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /setpoint_viz
+      Value: true
     - Class: rviz_default_plugins/Marker
       Enabled: true
       Name: TrailLine
       Namespaces:
-        "": true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -400,7 +399,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 61.512229919433594
+      Distance: 31.994516372680664
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -415,10 +414,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.2753984928131104
+      Pitch: 0.5903990864753723
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.320395469665527
+      Yaw: 4.280392169952393
     Saved: ~
 Window Geometry:
   Displays:
