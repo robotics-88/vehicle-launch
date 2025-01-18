@@ -1,12 +1,21 @@
 <launch>
-    <arg name="camera_name" default="see3cam"/>
-    <arg name="camera_param_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_params.yaml"/>
+    <arg name="camera_frame_id" default="see3cam"/>
+    <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_frame_id)_info.yaml"/>
+    <arg name="fps" default="30"/>
+    <arg name="device" default="/dev/see3cam"/>
+    <arg name="width" default="3120"/>
+    <arg name="height" default="1080"/>
 
     <group>
-        <push-ros-namespace namespace="$(var camera_name)"/>
+        <push-ros-namespace namespace="$(var camera_frame_id)"/>
 
-        <node pkg="usb_cam" exec="usb_cam_node_exe" output="log" respawn="true">
-            <param from="$(var camera_param_yaml)"/>
+        <node pkg="opencv_cam" exec="opencv_cam_main" output="screen" respawn="true">
+            <param name="camera_info_path"  value="$(var camera_info_yaml)"/>
+            <param name="fps"  value="$(var fps)"/>
+            <param name="device"  value="$(var device)"/>
+            <param name="width"  value="$(var width)"/>
+            <param name="height"  value="$(var height)"/>
+            <param name="camera_frame_id"  value="$(var camera_frame_id)"/>
         </node>
     </group>
 
