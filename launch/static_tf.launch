@@ -10,13 +10,19 @@
     <arg name="lidar_x" default="0.0"/>
     <arg name="lidar_z" default="0.11"/>
 
-    <!-- <group if="$(eval do_mapir + do_mapir_rgb)"> -->
-        <arg name="mapir_name" default="mapir_rgn_cam" if="$(var do_mapir)"/>
-        <arg name="mapir_name" default="mapir_rgb_cam" if="$(var do_mapir_rgb)"/>
+    <group if="$(var do_mapir)">
+        <arg name="mapir_name" default="mapir_rgn_cam"/>
 
         <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link $(var mapir_name)"/>
         <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 $(var mapir_name) mapir_optical"/>
-    <!-- </group> -->
+    </group>
+
+    <group if="$(var do_mapir_rgb)">
+        <arg name="mapir_name" default="mapir_rgb_cam"/>
+
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link $(var mapir_name)"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 $(var mapir_name) mapir_optical"/>
+    </group>
 
     <group if="$(var do_attollo)">
         <node name="attollo_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.110 -0.040 .057 0 0 0 base_link attollo_cam"/>
