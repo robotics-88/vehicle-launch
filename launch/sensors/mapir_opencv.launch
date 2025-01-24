@@ -1,12 +1,11 @@
 <launch>
-    <arg name="camera_name" default="see3cam"/>
+    <arg name="camera_name" default="mapir_rgn"/>
     <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
     <arg name="fps" default="30"/>
-    <arg name="device" default="/dev/see3cam"/>
-    <arg name="width" default="3120"/>
-    <arg name="height" default="1080"/>
+    <arg name="device" default="/dev/mapir"/>
+    <arg name="width" default="1280"/>
+    <arg name="height" default="720"/>
     <arg name="record_topic" default="/$(var camera_name)/image_raw"/>
-    <arg name="record_topic_ir" default="/$(var camera_name)/image_ir_raw"/>
 
     <group>
         <push-ros-namespace namespace="$(var camera_name)"/>
@@ -20,19 +19,11 @@
             <param name="camera_frame_id"  value="$(var camera_name)"/>
         </node>
 
-        <node pkg="video_recorder" name="video_recorder" exec="video_recorder_node" output="screen">
+        <node pkg="video_recorder" exec="video_recorder_node" output="screen">
             <param name="camera_name" value="$(var camera_name)"/>
             <param name="image_topic" value="$(var record_topic)"/>
             <param name="fps" value="$(var fps)"/>
-            <param name="width" value="1920"/>
-            <param name="height" value="$(var height)"/>
-        </node>
-
-        <node pkg="video_recorder" name="video_ir_recorder" exec="video_recorder_node" output="screen">
-            <param name="camera_name" value="$(var camera_name)"/>
-            <param name="image_topic" value="$(var record_topic_ir)"/>
-            <param name="fps" value="$(var fps)"/>
-            <param name="width" value="1920"/>
+            <param name="width" value="$(var width)"/>
             <param name="height" value="$(var height)"/>
         </node>
     </group>
