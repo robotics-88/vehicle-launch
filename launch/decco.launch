@@ -171,7 +171,7 @@
         <group unless="$(var offline)">
             <!--                                 Hardware                            -->
             <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mid360.launch" if="$(var do_mid360)"/>
-            <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(var do_mapir)"/>
+            <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_opencv.launch" if="$(var do_mapir)"/>
             <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
             <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
 
