@@ -1,13 +1,14 @@
 <launch>
-    <arg name="camera_frame_id" default="mapir_rgn"/>
-    <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_frame_id)_info.yaml"/>
+    <arg name="camera_name" default="mapir_rgn"/>
+    <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
     <arg name="fps" default="30"/>
     <arg name="device" default="/dev/mapir"/>
     <arg name="width" default="1280"/>
     <arg name="height" default="720"/>
+    <arg name="record_topic" default="/$(var camera_name)/image_raw"/>
 
     <group>
-        <push-ros-namespace namespace="$(var camera_frame_id)"/>
+        <push-ros-namespace namespace="$(var camera_name)"/>
 
         <node pkg="opencv_cam" exec="opencv_cam_main" output="screen" respawn="true">
             <param name="camera_info_path"  value="$(var camera_info_yaml)"/>
@@ -15,7 +16,15 @@
             <param name="device"  value="$(var device)"/>
             <param name="width"  value="$(var width)"/>
             <param name="height"  value="$(var height)"/>
-            <param name="camera_frame_id"  value="$(var camera_frame_id)"/>
+            <param name="camera_frame_id"  value="$(var camera_name)"/>
+        </node>
+
+        <node pkg="video_recorder" exec="video_recorder_node" output="screen">
+            <param name="camera_name" value="$(var camera_name)"/>
+            <param name="image_topic" value="$(var record_topic)"/>
+            <param name="fps" value="$(var fps)"/>
+            <param name="width" value="$(var width)"/>
+            <param name="height" value="$(var height)"/>
         </node>
     </group>
 
