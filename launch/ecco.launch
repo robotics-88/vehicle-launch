@@ -1,23 +1,25 @@
 <launch>
 
                             <!-- Arguments/configuration -->
+    <arg name="mavros_map_frame" default="map"/>
 
     <!-- Safe guards -->
     <arg name="enable_autonomy" default="false"/>
     <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
 
     <!-- Which nodes -->
-    <arg name="do_mavros" default="false"/>
-    <arg name="do_task_manager" default="false"/>
+    <arg name="do_mavros" default="true"/>
+    <arg name="do_task_manager" default="true"/>
     <arg name="do_rtsp" default="true"/>
     <arg name="do_record" default="true"/>
     
     <!-- Which hardware -->
-    <arg name="do_mid360" default="false"/>
-    <arg name="do_mapir" default="true"/>
-    <arg name="do_mapir_rgb" default="false"/>
-    <arg name="do_attollo" default="false" />
-    <arg name="do_thermal_cam" default="false"/>
+    <arg name="do_see3cam_down" default="true"/>
+    <arg name="do_see3cam_fwd" default="false"/>
+    <arg name="do_thermal_cam" default="true"/>
+
+    <arg name="thermal_topic" default="/seek_thermal/image"/>
+    <arg name="thermal_info_topic" default="/seek_thermal/camera_info"/>
 
      <!-- Recording args -->
     <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
@@ -42,10 +44,14 @@
     <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
 
     <!--                                 Hardware                            -->
-    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mid360.launch" if="$(var do_mid360)"/>
-    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_opencv.launch" if="$(var do_mapir)"/>
-    <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
-    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
+    <group>
+        <push-ros-namespace namespace="downward_rgb"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)"/>
+    </group>
+    <group>
+        <push-ros-namespace namespace="forward_rgb"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)"/>
+    </group>
 
     <!--                        RTSP Streams for each camera                 -->
     <group if="$(var do_rtsp)">
@@ -54,7 +60,7 @@
             <param name="width" value="640"/>
             <param name="height" value="480"/>
             <param name="fourcc" value="YV12"/>
-            <remap from="image" to="/mapir_rgn/image_raw"/>
+            <remap from="image" to="/see3cam_downward/see3cam/image_raw"/>
         </node>
 
         <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
@@ -67,9 +73,6 @@
     </group>
 
     <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch">
-        <arg name="do_mapir" value="$(var do_mapir)"/>
-        <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
-        <arg name="do_attollo" value="$(var do_attollo)" />
         <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
     </include>
 
