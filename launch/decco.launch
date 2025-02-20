@@ -180,7 +180,7 @@
             <arg name="rviz" value="false"/>
             <arg name="config_file" value="velodyne16_sim.yaml"/>
         </include>
-        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" unless="$(var do_mid360)">
+        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var do_mid360)">
             <arg name="rviz" value="false"/>
             <arg name="config_file" value="mid360.yaml"/>
         </include>
