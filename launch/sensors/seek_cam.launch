@@ -1,6 +1,23 @@
 <launch>
+    <arg name="width" default="320"/>
+    <arg name="height" default="240"/>
+    <arg name="fps" default="30"/>
+    <arg name="record_topic" default="/seek_thermal/image"/>
+
     <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
         <arg name="use_rviz" value="false"/>
     </include>
+
+    <group>
+        <push-ros-namespace namespace="seek_thermal"/>
+
+        <node pkg="video_recorder" exec="video_recorder_node" output="screen">
+            <param name="camera_name" value="seek_thermal"/>
+            <param name="image_topic" value="$(var record_topic)"/>
+            <param name="fps" value="$(var fps)"/>
+            <param name="width" value="$(var width)"/>
+            <param name="height" value="$(var height)"/>
+        </node>
+    </group>
     
 </launch>
