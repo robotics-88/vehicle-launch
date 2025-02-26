@@ -18,14 +18,6 @@
             <param name="height"  value="$(var height)"/>
             <param name="camera_frame_id"  value="$(var camera_name)"/>
         </node>
-
-        <node pkg="video_recorder" exec="video_recorder_node" output="screen">
-            <param name="camera_name" value="$(var camera_name)"/>
-            <param name="image_topic" value="$(var record_topic)"/>
-            <param name="fps" value="$(var fps)"/>
-            <param name="width" value="$(var width)"/>
-            <param name="height" value="$(var height)"/>
-        </node>
     </group>
 
     
