@@ -1,0 +1,13 @@
+# cube
+SUBSYSTEM=="tty", ATTRS{bInterfaceNumber}!="00", GOTO="cube"
+ACTION=="add", ATTRS{idVendor}=="2dae", ATTRS{idProduct}=="1058", SYMLINK+="cubeorange"
+LABEL="cube"
+
+# microhard
+SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="0424", ATTRS{idProduct}=="7500", NAME="eth_microhard"
+
+# cameras
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="04b4", ATTRS{idProduct}=="f9f9", ATTR{index}=="0", SYMLINK+="attollo"
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0603", ATTRS{idProduct}=="8612", ATTR{index}=="0", SYMLINK+="mapir"
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="5830", ATTR{index}=="0", SYMLINK+="thermal_cam"
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2560", ATTRS{idProduct}=="c188", ATTR{index}=="0", SYMLINK+="see3cam"
