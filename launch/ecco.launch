@@ -3,10 +3,6 @@
                             <!-- Arguments/configuration -->
     <arg name="mavros_map_frame" default="map"/>
 
-    <!-- Safe guards -->
-    <arg name="enable_autonomy" default="false"/>
-    <arg name="use_failsafes" default="false"/> <!-- Set to TRUE once failsafes are working better-->
-
     <!-- Which nodes -->
     <arg name="do_mavros" default="true"/>
     <arg name="do_task_manager" default="true"/>
@@ -95,6 +91,7 @@
 
     <!-- Task Manager (Main Control Loop) -->
     <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="$(var do_task_manager)">
+        <arg name="enable_autonomy" value="false"/>
         <arg name="do_slam" value="false"/>
         <arg name="do_record" value="$(var do_record)"/>
         <arg name="record_config_file" value="$(var record_config_file)"/>
