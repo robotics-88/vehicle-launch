@@ -94,13 +94,14 @@
         <arg name="do_record" value="$(var do_record)"/>
         <arg name="record_config_file" value="$(var record_config_file)"/>
         <arg name="data_directory" value="$(var data_directory)"/>
-        <arg name="do_downward_rgb" value="$(var do_see3cam_down)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
         <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         <arg name="px4" value="$(var px4)"/>
 
         <arg name="estimated_current" value="20.0"/> 
-        <arg name="battery_size" value="5.21"/> 
+        <arg name="battery_size" value="25.0"/> 
         <arg name="all_stream_rate" value="5.0"/>
         <arg name="imu_rate" value="50.0"/>
         <arg name="local_pos_rate" value="30.0"/>

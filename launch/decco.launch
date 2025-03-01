@@ -245,6 +245,8 @@
         <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
         <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         <arg name="do_trail" value="$(var do_trail)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch_rotated)"/>
         <arg name="lidar_x" value="$(var lidar_x_rotated)"/>
