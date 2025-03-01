@@ -1,0 +1,28 @@
+<launch>
+
+    <arg name="do_mapir_rgn" default="true"/>
+    <arg name="do_mapir_rgb" default="false"/>
+    <arg name="do_attollo" default="false"/>
+    <arg name="do_seek_thermal" default="false"/>
+
+    <group if="$(var do_mapir_rgn)">
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link mapir_rgn"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_rgn mapir_optical"/>
+    </group>
+
+    <group if="$(var do_mapir_rgb)">
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link mapir_rgb"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_rgb mapir_optical"/>
+    </group>
+
+    <group if="$(var do_attollo)">
+        <node name="attollo_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.110 -0.040 .057 0 0 0 base_link attollo"/>
+        <node name="attollo_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo attollo_optical"/>
+    </group>
+
+    <group if="$(var do_seek_thermal)">
+        <node name="thermal_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link seek_thermal"/>
+        <node name="thermal_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 seek_thermal seek_optical"/>
+    </group>
+
+</launch>
