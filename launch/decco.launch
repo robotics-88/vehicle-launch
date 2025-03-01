@@ -48,12 +48,6 @@
 
     <arg name="do_record" default="false" if="$(var simulate)"/>
     <arg name="do_record" default="true" unless="$(var simulate)"/>
-        
-    <!-- Which thermal
-        0: Infiray
-        1: Seek
-    -->
-    <arg name="thermal_type" default="1"/>
 
     <!-- Which hardware -->
     <arg name="do_mid360" default="false" if="$(var simulate)"/>
@@ -64,6 +58,8 @@
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="false" />
     <arg name="do_seek_thermal" default="false"/>
+    <arg name="do_see3cam_down" default="false"/>
+    <arg name="do_see3cam_fwd" default="false"/>
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
@@ -135,6 +131,14 @@
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(var do_mapir_rgn)"/>
         <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
+
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
+            <arg name="camera_name" value="see3cam_down"/>
+        </include>
+
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
+            <arg name="camera_name" value="see3cam_fwd"/>
+        </include>
 
         <!--                        RTSP Streams for each camera                 -->
         <group if="$(var do_rtsp)">
