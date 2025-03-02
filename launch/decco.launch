@@ -159,11 +159,13 @@
             </node>
         </group>
 
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/static_tf_decco.launch" unless="$(var simulate)">
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/static_tf_decco.launch"> <!-- unless="$(var simulate)"> -->
             <arg name="do_mapir_rgn" value="$(var do_mapir_rgn)"/>
             <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
             <arg name="do_attollo" value="$(var do_attollo)" />
             <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+            <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+            <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         </include>
 
     </group>
