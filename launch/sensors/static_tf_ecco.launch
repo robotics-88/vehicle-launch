@@ -29,7 +29,7 @@
 
     <!-- TODO determine the actual TFs here -->
     <group if="$(var do_see3cam_down)">
-        <node name="see3cam_down_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link see3cam_down"/>
+        <node name="see3cam_down_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.12 0 -0.03 0 1.57079633 0 base_link see3cam_down"/>
         <node name="see3cam_down_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 see3cam_down see3cam_down_optical"/>
     </group>
 
