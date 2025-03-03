@@ -129,13 +129,12 @@
         <!--                                 Hardware                            -->
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mid360.launch" if="$(var do_mid360)"/>
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(var do_mapir_rgn)"/>
-        <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/>
 
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
             <arg name="camera_name" value="see3cam_down"/>
         </include>
-
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
             <arg name="camera_name" value="see3cam_fwd"/>
         </include>
