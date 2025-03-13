@@ -84,7 +84,7 @@
             <arg name="use_rviz" value="false"/>
         </include>
         
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_thermal.launch"/>
     </group>
 
     <!-- Task Manager (Main Control Loop) -->
