@@ -77,7 +77,7 @@
 
     <!-- Thermal Camera & Processing Pipeline -->
     <group if="$(var do_seek_thermal)">
-        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_seek_thermal)">
+        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch">
             <arg name="image_topic" value="/seek_thermal/image_rect"/>
             <arg name="camera_info_topic" value="/seek_thermal/camera_info"/>
             <arg name="map_frame" value="$(var mavros_map_frame)"/>
