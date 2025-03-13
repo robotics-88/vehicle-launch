@@ -3,5 +3,15 @@
     <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
         <arg name="use_rviz" value="$(var rviz)"/>
     </include>
+
+    <arg name="param_file" default="$(find-pkg-share vehicle_launch)/params/seek_thermal_info.yaml"/>
+    <group>
+        <push-ros-namespace namespace="mp4"/>
+        <node name="image_rect" pkg="image_proc" exec="image_proc" output="screen">
+            <param from="$(var param_file)" />
+            <remap from="image" to="/mp4/video_frames"/>
+            <remap from="camera_info" to="/mp4/camera_info"/>
+        </node>
+    </group>
     
 </launch>
