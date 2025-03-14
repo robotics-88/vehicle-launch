@@ -4,15 +4,7 @@
         <arg name="use_rviz" value="$(var rviz)"/>
     </include>
 
-    
-    <group>
-        <push-ros-namespace namespace="seek_thermal_image_proc"/>
-        <arg name="param_file" default="$(find-pkg-share vehicle_launch)/params/seek_thermal_info.yaml"/>
-        <node pkg="image_proc" exec="image_proc" output="screen">
-            <param from="$(var param_file)" />
-            <remap from="image" to="/seek_thermal_image_proc/video_frames"/>
-            <remap from="camera_info" to="/seek_thermal_image_proc/camera_info"/>
-        </node>
-    </group>
-    
+    <include file="$(find-pkg-share image_proc)/launch/image_proc.launch.py">
+        <arg name="namespace" value="seek_thermal"/>
+    </include>
 </launch>
