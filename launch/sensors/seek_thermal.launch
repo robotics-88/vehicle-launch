@@ -4,13 +4,14 @@
         <arg name="use_rviz" value="$(var rviz)"/>
     </include>
 
-    <arg name="param_file" default="$(find-pkg-share vehicle_launch)/params/seek_thermal_info.yaml"/>
+    
     <group>
-        <push-ros-namespace namespace="mp4"/>
+        <push-ros-namespace namespace="seek_thermal_image_proc"/>
+        <arg name="param_file" default="$(find-pkg-share vehicle_launch)/params/seek_thermal_info.yaml"/>
         <node pkg="image_proc" exec="image_proc" output="screen">
             <param from="$(var param_file)" />
-            <remap from="image" to="/mp4/video_frames"/>
-            <remap from="camera_info" to="/mp4/camera_info"/>
+            <remap from="image" to="/seek_thermal_image_proc/video_frames"/>
+            <remap from="camera_info" to="/seek_thermal_image_proc/camera_info"/>
         </node>
     </group>
     
