@@ -1,0 +1,10 @@
+<launch>
+    <arg name="rviz" default="false"/>
+    <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
+        <arg name="use_rviz" value="$(var rviz)"/>
+    </include>
+
+    <include file="$(find-pkg-share image_proc)/launch/image_proc.launch.py">
+        <arg name="namespace" value="seek_thermal"/>
+    </include>
+</launch>

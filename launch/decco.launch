@@ -48,22 +48,18 @@
 
     <arg name="do_record" default="false" if="$(var simulate)"/>
     <arg name="do_record" default="true" unless="$(var simulate)"/>
-        
-    <!-- Which thermal
-        0: Infiray
-        1: Seek
-    -->
-    <arg name="thermal_type" default="1"/>
 
     <!-- Which hardware -->
     <arg name="do_mid360" default="false" if="$(var simulate)"/>
     <arg name="do_mid360" default="true" unless="$(var simulate)"/>
     <arg name="do_velodyne" default="$(var simulate)"/>
-    <arg name="do_mapir" default="false" if="$(var simulate)"/>
-    <arg name="do_mapir" default="true" unless="$(var simulate)"/>
+    <arg name="do_mapir_rgn" default="false" if="$(var simulate)"/>
+    <arg name="do_mapir_rgn" default="true" unless="$(var simulate)"/>
     <arg name="do_mapir_rgb" default="false"/>
     <arg name="do_attollo" default="false" />
-    <arg name="do_thermal_cam" default="false"/>
+    <arg name="do_seek_thermal" default="false"/>
+    <arg name="do_see3cam_down" default="false"/>
+    <arg name="do_see3cam_fwd" default="false"/>
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
@@ -80,11 +76,6 @@
     <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
     <arg name="camera_info_topic" default="/mapir_rgn/camera_info" unless="$(var simulate)"/>
     <arg name="camera_info_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene/camera_info" if="$(var simulate)"/>
-
-    <arg name="thermal_topic" default="/thermal_cam/image_rect_color" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
-    <arg name="thermal_info_topic" default="/thermal_cam/camera_info" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
-    <arg name="thermal_topic" default="/seek_thermal/image_rect_color" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
-    <arg name="thermal_info_topic" default="/seek_thermal/camera_info" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
 
      <!-- Recording args -->
     <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
@@ -137,9 +128,16 @@
     <group unless="$(var offline)">
         <!--                                 Hardware                            -->
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mid360.launch" if="$(var do_mid360)"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_opencv.launch" if="$(var do_mapir)"/>
-        <!-- <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/> -->
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgn.launch" if="$(var do_mapir_rgn)"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/mapir_rgb.launch" if="$(var do_mapir_rgb)"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/attollo_swir.launch" if="$(var do_attollo)"/>
+
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
+            <arg name="camera_name" value="see3cam_down"/>
+        </include>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
+            <arg name="camera_name" value="see3cam_fwd"/>
+        </include>
 
         <!--                        RTSP Streams for each camera                 -->
         <group if="$(var do_rtsp)">
@@ -148,24 +146,25 @@
                 <param name="width" value="640"/>
                 <param name="height" value="480"/>
                 <param name="fourcc" value="YV12"/>
-                <remap from="image" to="/mapir_rgn/image_rect_color"/>
+                <remap from="image" to="/mapir_rgn/image_aw"/>
             </node>
 
-            <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
+            <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_seek_thermal)">
                 <param name="device" value="/dev/video22"/>
                 <param name="width" value="320"/>
                 <param name="height" value="240"/>
                 <param name="fourcc" value="YV12"/>
-                <remap from="image" to="$(var thermal_topic)"/>
+                <remap from="image" to="/seek_thermal/image_rect"/>
             </node>
         </group>
 
-        <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch" unless="$(var simulate)">
-            <arg name="do_mapir" value="$(var do_mapir)"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/static_tf_decco.launch" unless="$(var simulate)">
+            <arg name="do_mapir_rgn" value="$(var do_mapir_rgn)"/>
             <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
             <arg name="do_attollo" value="$(var do_attollo)" />
-            <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
-            <arg name="thermal_type" value="$(var thermal_type)"/>
+            <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+            <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+            <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         </include>
 
     </group>
@@ -208,16 +207,15 @@
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
-    <group if="$(var do_thermal_cam)">
-        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
-            <arg name="image_topic" value="$(var thermal_topic)"/>
-            <arg name="camera_info_topic" value="$(var thermal_info_topic)"/>
+    <group if="$(var do_seek_thermal)">
+        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_seek_thermal)">
+            <arg name="image_topic" value="/seek_thermal/image_rect"/>
+            <arg name="camera_info_topic" value="/seek_thermal/camera_info"/>
             <arg name="map_frame" value="$(var mavros_map_frame)"/>
             <arg name="use_rviz" value="$(var offline)"/>
         </include>
         
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/thermal_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'0\'')"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch" if="$(eval '\'$(var thermal_type)\' == \'1\'')"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_thermal.launch"/>
     </group>
 
     <!-- Task Manager (Main Control Loop) -->
@@ -244,12 +242,13 @@
         <arg name="simulate" value="$(var simulate)"/>
         <arg name="offline" value="$(var offline)"/>
         <arg name="save_pcd" value="$(var save_pcd)"/>
-        <arg name="do_mapir" value="$(var do_mapir)"/>
+        <arg name="do_mapir_rgn" value="$(var do_mapir_rgn)"/>
         <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
-        <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+        <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         <arg name="do_trail" value="$(var do_trail)"/>
-        <arg name="thermal_type" value="$(var thermal_type)"/>
         <arg name="lidar_pitch" value="$(var lidar_pitch_rotated)"/>
         <arg name="lidar_x" value="$(var lidar_x_rotated)"/>
         <arg name="lidar_z" value="$(var lidar_z_rotated)"/>

@@ -1,7 +1,0 @@
-<launch>
-    <arg name="rviz" value="false"/>
-    <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
-        <arg name="use_rviz" value="$(var rviz)"/>
-    </include>
-    
-</launch>

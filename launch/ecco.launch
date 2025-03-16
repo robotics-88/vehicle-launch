@@ -12,10 +12,7 @@
     <!-- Which hardware -->
     <arg name="do_see3cam_down" default="true"/>
     <arg name="do_see3cam_fwd" default="false"/>
-    <arg name="do_thermal_cam" default="true"/>
-
-    <arg name="thermal_topic" default="/seek_thermal/image"/>
-    <arg name="thermal_info_topic" default="/seek_thermal/camera_info"/>
+    <arg name="do_seek_thermal" default="true"/>
 
      <!-- Recording args -->
     <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
@@ -44,15 +41,14 @@
 
     <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
 
-    <!--                                 Hardware                            -->
-    <group>
-        <push-ros-namespace namespace="downward_rgb"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)"/>
-    </group>
-    <group>
-        <push-ros-namespace namespace="forward_rgb"/>
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)"/>
-    </group>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
+        <arg name="camera_name" value="see3cam_down"/>
+    </include>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
+        <arg name="camera_name" value="see3cam_fwd"/>
+    </include>
 
     <!--                        RTSP Streams for each camera                 -->
     <group if="$(var do_rtsp)">
@@ -61,32 +57,36 @@
             <param name="width" value="640"/>
             <param name="height" value="480"/>
             <param name="fourcc" value="YV12"/>
-            <remap from="image" to="/downward_rgb/see3cam/image_raw"/>
+            <remap from="image" to="/see3cam_down/image_raw"/>
         </node>
 
-        <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_thermal_cam)">
+        <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_seek_thermal)">
             <param name="device" value="/dev/video22"/>
             <param name="width" value="320"/>
             <param name="height" value="240"/>
             <param name="fourcc" value="YV12"/>
-            <remap from="image" to="$(var thermal_topic)"/>
+            <remap from="image" to="/seek_thermal/image_rect"/>
         </node>
     </group>
 
-    <include file="$(find-pkg-share vehicle_launch)/launch/static_tf.launch">
-        <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/static_tf_ecco.launch">
+        <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
-    <group if="$(var do_thermal_cam)">
-        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch" if="$(var do_thermal_cam)">
-            <arg name="image_topic" value="$(var thermal_topic)"/>
-            <arg name="camera_info_topic" value="$(var thermal_info_topic)"/>
+    <group if="$(var do_seek_thermal)">
+        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch">
+            <arg name="image_topic" value="/seek_thermal/image_rect"/>
+            <arg name="camera_info_topic" value="/seek_thermal/camera_info"/>
             <arg name="map_frame" value="$(var mavros_map_frame)"/>
             <arg name="use_rviz" value="false"/>
         </include>
         
-        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_cam.launch"/>
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_thermal.launch">
+            <arg name="camera_name" value="seek_thermal"/>
+        </include>
     </group>
 
     <!-- Task Manager (Main Control Loop) -->
@@ -96,13 +96,13 @@
         <arg name="do_record" value="$(var do_record)"/>
         <arg name="record_config_file" value="$(var record_config_file)"/>
         <arg name="data_directory" value="$(var data_directory)"/>
-        <arg name="do_downward_rgb" value="$(var do_see3cam_down)"/>
-        <arg name="do_attollo" value="$(var do_attollo)"/>
-        <arg name="do_thermal_cam" value="$(var do_thermal_cam)"/>
+        <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
         <arg name="px4" value="$(var px4)"/>
 
         <arg name="estimated_current" value="20.0"/> 
-        <arg name="battery_size" value="5.21"/> 
+        <arg name="battery_size" value="25.0"/> 
         <arg name="all_stream_rate" value="5.0"/>
         <arg name="imu_rate" value="50.0"/>
         <arg name="local_pos_rate" value="30.0"/>

@@ -1,0 +1,41 @@
+<launch>
+
+    <arg name="do_mapir_rgn" default="false"/>
+    <arg name="do_mapir_rgb" default="false"/>
+    <arg name="do_attollo" default="false"/>
+    <arg name="do_seek_thermal" default="false"/>
+    <arg name="do_see3cam_down" default="false"/>
+    <arg name="do_see3cam_fwd" default="false"/>
+
+    <group if="$(var do_mapir_rgn)">
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link mapir_rgn"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_rgn mapir_optical"/>
+    </group>
+
+    <group if="$(var do_mapir_rgb)">
+        <node name="mapir_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.094 0.021 .057 0 0 0 base_link mapir_rgb"/>
+        <node name="mapir_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 mapir_rgb mapir_optical"/>
+    </group>
+
+    <group if="$(var do_attollo)">
+        <node name="attollo_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.110 -0.040 .057 0 0 0 base_link attollo"/>
+        <node name="attollo_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 attollo attollo_optical"/>
+    </group>
+
+    <group if="$(var do_seek_thermal)">
+        <node name="seek_thermal_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link seek_thermal"/>
+        <node name="seek_thermal_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 seek_thermal seek_optical"/>
+    </group>
+
+    <!-- TODO determine the actual TFs here -->
+    <group if="$(var do_see3cam_down)">
+        <node name="see3cam_down_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.12 0 -0.03 0 1.57079633 0 base_link see3cam_down"/>
+        <node name="see3cam_down_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 see3cam_down see3cam_down_optical"/>
+    </group>
+
+    <group if="$(var do_see3cam_fwd)">
+        <node name="see3cam_fwd_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.165 -0.019 0.110 0 0 0 base_link see3cam_fwd"/>
+        <node name="see3cam_fwd_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 see3cam_fwd see3cam_fwd_optical"/>
+    </group>
+
+</launch>
