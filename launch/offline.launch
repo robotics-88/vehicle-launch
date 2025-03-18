@@ -1,9 +1,9 @@
 <launch>
     <arg name="save_pcd" default="false"/>
     <arg name="bag_dir" default="/home/$(env USER)/src/bags"/>
-    <arg name="flight_dir" default="$(var bag_dir)/oregon/day3/2025-03-06_20-14-19/flight_2025-03-06_15-17-13"/>
+    <arg name="flight_dir" default="$(var bag_dir)/flight"/>
 
-    <arg name="video_name" default="birdstart1.mp4"/>
+    <arg name="video_name" default="video.mp4"/>
     <arg name="frame_id" default="gopro"/>
     <arg name="camera_name" default="gopro"/>
 
