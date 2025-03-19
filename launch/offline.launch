@@ -1,6 +1,6 @@
 <launch>
     <arg name="save_pcd" default="false"/>
-    <arg name="bag_dir" default="/home/$(env USER)/src/bags"/>
+    <arg name="bag_dir" default="/home/$(env USER)/r88_public/records"/>
     <arg name="flight_dir" default="$(var bag_dir)/flight"/>
 
     <arg name="video_name" default="video.mp4"/>
