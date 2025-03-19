@@ -1,0 +1,32 @@
+<launch>
+    <arg name="save_pcd" default="false"/>
+    <arg name="bag_dir" default="/home/$(env USER)/r88_public/records"/>
+    <arg name="flight_dir" default="$(var bag_dir)/flight"/>
+
+    <arg name="video_name" default="video.mp4"/>
+    <arg name="frame_id" default="gopro"/>
+    <arg name="camera_name" default="gopro"/>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/decco.launch">
+        <arg name="offline" value="true"/>
+        <arg name="tilted_lidar" value="true"/>
+        <arg name="save_pcd" value="$(var save_pcd)"/>
+    </include>
+    
+    <include file="$(find-pkg-share mp4_to_ros2)/launch/mp4.launch">
+        <arg name="frame_id" value="$(var frame_id)"/>
+        <arg name="camera_name" value="$(var camera_name)"/>
+        <arg name="camera_info_file" value="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
+        <arg name="video_file" value="$(var flight_dir)/$(var video_name)"/>
+    </include>
+
+    <node name="gopro_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.13 0.021 .085 0 0 0 base_link gopro"/>
+    <node name="gopro_optical_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0 0 0 -1.57079633 0 -1.57079633 gopro gopro_optical"/>
+
+    <include file="$(find-pkg-share image_proc)/launch/image_proc.launch.py">
+        <arg name="namespace" value="$(var camera_name)"/>
+    </include>
+
+    <executable cmd="ros2 bag play $(var flight_dir)/bag/bag_0.mcap --topics /livox/imu /livox/lidar /mavros/imu/data /mavros/global_position/global" output="screen" />
+
+</launch>
