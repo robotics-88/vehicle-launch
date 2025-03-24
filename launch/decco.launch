@@ -41,6 +41,7 @@
     <arg name="do_slam" default="true"/>
     <arg name="do_pcl_analysis" default="true"/>
     <arg name="do_trail" default="false"/>
+    <arg name="do_powerline" default="false"/>
     <arg name="do_exploration" default="$(var do_slam)"/>
 
     <arg name="do_rtsp" default="false" if="$(var simulate)"/>
@@ -203,6 +204,7 @@
         <arg name="point_cloud_topic" value="$(var cloud_stabilized)"/>
         <arg name="point_cloud_aggregated" value="$(var cloud_aggregated)"/>
         <arg name="do_trail" value="$(var do_trail)"/>
+        <arg name="do_powerline" value="$(var do_powerline)"/>
         <arg name="planning_horizon" value="$(var planning_horizon)"/>
     </include>
 
