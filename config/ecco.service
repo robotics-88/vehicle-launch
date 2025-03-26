@@ -1,0 +1,11 @@
+[Unit]
+Description=Ecco service
+#After=network.target time-sync.target
+
+[Service]
+User=jetson
+Group=jetson
+ExecStart=/bin/bash -c "/home/jetson/src/distal/run_ecco.sh"
+
+[Install]
+WantedBy=multi-user.target
