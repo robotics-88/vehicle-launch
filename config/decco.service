@@ -1,0 +1,12 @@
+[Unit]
+Description=Decco Distal Service
+After=network.target dev-cubeorange.device time-sync.target
+Requires=dev-cubeorange.device
+
+[Service]
+User=decco
+Group=decco
+ExecStart=/bin/bash -c "/home/decco/src/distal/run_decco.sh"
+
+[Install]
+WantedBy=multi-user.target

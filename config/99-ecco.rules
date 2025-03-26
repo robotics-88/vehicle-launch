@@ -1,8 +1,3 @@
-# cube
-SUBSYSTEM=="tty", ATTRS{bInterfaceNumber}!="00", GOTO="cube"
-ACTION=="add", ATTRS{idVendor}=="2dae", ATTRS{idProduct}=="1058", SYMLINK+="cubeorange"
-LABEL="cube"
-
 # microhard
 SUBSYSTEM=="net", ACTION=="add", ATTRS{idVendor}=="0424", ATTRS{idProduct}=="7500", NAME="eth_microhard"
 
