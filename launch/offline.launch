@@ -6,6 +6,7 @@
     <arg name="video_name" default="video.mp4"/>
     <arg name="frame_id" default="gopro"/>
     <arg name="camera_name" default="gopro"/>
+    <arg name="save_splat_images" default="false"/>
 
     <include file="$(find-pkg-share vehicle_launch)/launch/decco.launch">
         <arg name="offline" value="true"/>
@@ -18,6 +19,7 @@
         <arg name="camera_name" value="$(var camera_name)"/>
         <arg name="camera_info_file" value="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
         <arg name="video_file" value="$(var flight_dir)/$(var video_name)"/>
+        <arg name="save_splat_images" value="$(var save_splat_images)"/>
     </include>
 
     <node name="gopro_static_tf" pkg="tf2_ros" exec="static_transform_publisher" args="0.13 0.021 .085 0 0 0 base_link gopro"/>
