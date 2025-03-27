@@ -27,6 +27,7 @@
         <arg name="namespace" value="$(var camera_name)"/>
     </include>
 
-    <executable cmd="ros2 bag play $(var flight_dir)/bag/bag_0.mcap --topics /livox/imu /livox/lidar /mavros/imu/data /mavros/global_position/global" output="screen" />
+    <executable cmd="ros2 bag play $(var flight_dir)/bag/bag_0.mcap --topics 
+                     /livox/imu /livox/lidar /mavros/imu/data /mavros/global_position/global /mavros/local_position/pose /mavros/state" output="screen" />
 
 </launch>
