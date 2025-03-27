@@ -204,6 +204,8 @@
         <arg name="point_cloud_aggregated" value="$(var cloud_aggregated)"/>
         <arg name="do_trail" value="$(var do_trail)"/>
         <arg name="planning_horizon" value="$(var planning_horizon)"/>
+        <arg name="save_pcl" value="$(var save_pcd)"/>
+        <arg name="data_dir" value="$(var data_directory)"/>
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
