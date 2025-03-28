@@ -206,6 +206,8 @@
         <arg name="do_trail" value="$(var do_trail)"/>
         <arg name="do_powerline" value="$(var do_powerline)"/>
         <arg name="planning_horizon" value="$(var planning_horizon)"/>
+        <arg name="save_pcl" value="$(var save_pcd)"/>
+        <arg name="data_dir" value="$(var data_directory)"/>
     </include>
 
     <!-- Thermal Camera & Processing Pipeline -->
@@ -243,7 +245,6 @@
         <arg name="max_dist_to_polygon" value="$(var max_dist_to_polygon)"/>
         <arg name="simulate" value="$(var simulate)"/>
         <arg name="offline" value="$(var offline)"/>
-        <arg name="save_pcd" value="$(var save_pcd)"/>
         <arg name="do_mapir_rgn" value="$(var do_mapir_rgn)"/>
         <arg name="do_mapir_rgb" value="$(var do_mapir_rgb)"/>
         <arg name="do_attollo" value="$(var do_attollo)"/>
