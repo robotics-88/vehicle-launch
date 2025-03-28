@@ -99,7 +99,7 @@
 
     <!-- Exploration args -->
     <arg name="criteria" default="DIST,INFO,SAFETY"/> <!-- options="[DIST, INFO, EFFICIENCY, SAFETY, ASH]" -->
-    <arg name="weights" default="0.7,0.05,0.25"/> <!-- should add to 1, vector of weights for criteria-->
+    <arg name="weights" default="0.2,0.1,0.7"/> <!-- should add to 1, vector of weights for criteria-->
     <arg name="dem_name" default="ballard.tif"/>
 
     <!-- Generic args -->
