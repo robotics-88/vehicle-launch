@@ -147,7 +147,7 @@
                 <param name="width" value="640"/>
                 <param name="height" value="480"/>
                 <param name="fourcc" value="YV12"/>
-                <remap from="image" to="/mapir_rgn/image_aw"/>
+                <remap from="image" to="/mapir_rgn/image_raw"/>
             </node>
 
             <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_seek_thermal)">
