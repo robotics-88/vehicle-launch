@@ -10,7 +10,9 @@
     <arg name="do_record" default="true"/>
     
     <!-- Which hardware -->
-    <arg name="do_see3cam_down" default="true"/>
+    <arg name="do_immervision_down" default="true"/>
+    <arg name="do_immervision_front" default="true"/>
+    <arg name="do_see3cam_down" default="false"/>
     <arg name="do_see3cam_fwd" default="false"/>
     <arg name="do_seek_thermal" default="true"/>
 
@@ -48,6 +50,15 @@
 
     <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
         <arg name="camera_name" value="see3cam_fwd"/>
+    </include>
+
+    <!-- Immervision -->
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/immervision.launch" if="$(var do_immervision_down)">
+        <arg name="camera_name" value="immervision_down"/>
+    </include>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/immervision.launch" if="$(var do_immervision_front)">
+        <arg name="camera_name" value="immervision_front"/>
     </include>
 
     <!--                        RTSP Streams for each camera                 -->

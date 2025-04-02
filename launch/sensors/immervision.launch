@@ -6,7 +6,7 @@
 
         <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/$(var camera_name)_info.yaml"/>
         <arg name="fps" default="30"/>
-        <arg name="device" default="/dev/immervision"/>
+        <arg name="device" default="/dev/$(var camera_name)"/>
         <arg name="width" default="1920"/>
         <arg name="height" default="1080"/>
 
