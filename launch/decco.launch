@@ -67,6 +67,7 @@
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
     <arg name="cloud_topic" default="/lidar2/points" if="$(var do_gazebo)"/>
+    <arg name="cloud_topic" default="/velodyne_points" if="$(var do_airsim)"/>
 
     <arg name="cloud_registered_topic" default="/cloud_registered"/>
     <arg name="cloud_stabilized" default="/cloud_registered_map"/>
