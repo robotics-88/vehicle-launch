@@ -11,6 +11,8 @@
 
     <!-- Options -->
     <arg name="simulate" default="false"/>
+    <arg name="do_airsim" default="false"/>
+    <arg name="do_gazebo" default="$(var simulate)"/>
     <arg name="rviz" default="$(var simulate)"/>
     <arg name="offline" default="false"/>
     <arg name="save_pcd" default="false"/>
@@ -27,15 +29,16 @@
     <arg name="tilted_lidar" default="false"/>
 
     <arg name="lidar_x_rotated" default="0.0" unless="$(var tilted_lidar)"/>
-    <arg name="lidar_z_rotated" default="0.0" unless="$(var tilted_lidar)"/>
+    <arg name="lidar_z_rotated" default="0.2" unless="$(var tilted_lidar)"/>
     <arg name="lidar_pitch_rotated" default="0.0" unless="$(var tilted_lidar)"/>
 
     <arg name="lidar_x_rotated" default="0.0138761" if="$(var tilted_lidar)"/>
-    <arg name="lidar_z_rotated" default="-0.132799" if="$(var tilted_lidar)"/>
-    <arg name="lidar_pitch_rotated" default="-0.3926991" if="$(var tilted_lidar)"/>
+    <arg name="lidar_z_rotated" default="0.132799" if="$(var tilted_lidar)"/>
+    <arg name="lidar_pitch_rotated" default="0.3926991" if="$(var tilted_lidar)"/>
 
+    <!-- Negative signs bc variables are lidar relative to base_link, but this transform is the reverse direction -->
     <node name="lidar_static_tf" pkg="tf2_ros" exec="static_transform_publisher"
-        args="$(var lidar_x_rotated) 0 $(var lidar_z_rotated) 0 $(var lidar_pitch_rotated) 0 livox_frame base_link"/>
+        args="-$(var lidar_x_rotated) 0 -$(var lidar_z_rotated) 0 -$(var lidar_pitch_rotated) 0 livox_frame base_link"/>
 
     <!-- Which nodes -->
     <arg name="do_slam" default="true"/>
@@ -53,7 +56,6 @@
     <!-- Which hardware -->
     <arg name="do_mid360" default="false" if="$(var simulate)"/>
     <arg name="do_mid360" default="true" unless="$(var simulate)"/>
-    <arg name="do_velodyne" default="$(var simulate)"/>
     <arg name="do_mapir_rgn" default="false" if="$(var simulate)"/>
     <arg name="do_mapir_rgn" default="true" unless="$(var simulate)"/>
     <arg name="do_mapir_rgb" default="false"/>
@@ -64,14 +66,12 @@
     
     <!-- Pointcloud and IMU topics based on whether we are simulating -->
     <arg name="cloud_topic" default="/livox/lidar" unless="$(var simulate)"/>
-    <arg name="cloud_topic" default="/velodyne_points" if="$(var simulate)"/>
+    <arg name="cloud_topic" default="/lidar2/points" if="$(var do_gazebo)"/>
+    <arg name="cloud_topic" default="/velodyne_points" if="$(var do_airsim)"/>
 
     <arg name="cloud_registered_topic" default="/cloud_registered"/>
     <arg name="cloud_stabilized" default="/cloud_registered_map"/>
     <arg name="cloud_aggregated" default="/cloud_aggregated"/>
-
-    <arg name="imu_topic" default="/livox/imu" unless="$(var simulate)"/>
-    <arg name="imu_topic" default="/mavros/imu/data" if="$(var simulate)"/>
 
     <arg name="image_topic" default="/mapir_rgn/image_raw" unless="$(var simulate)"/>
     <arg name="image_topic" default="/airsim_ros_node/$(var vehicle_name)/front_left_custom/Scene" if="$(var simulate)"/>
@@ -80,8 +80,7 @@
 
      <!-- Recording args -->
     <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
-    <arg name="user" default="$(env USER)"/>
-    <arg name="data_directory" default="/home/$(var user)/r88_public/records/"/>
+    <arg name="data_directory" default="/home/$(env USER)/r88_public/records/"/>
     <arg name="healthbeat_rate" default="1.0"/>
 
     <!-- Control args -->
@@ -106,6 +105,12 @@
     <arg name="map_resolution" default="0.1"/> <!-- meter -->
     <arg name="goal_topic" default="/goal_raw"/> <!-- meter -->
 
+    <!-- World to map transform based on base_link height off ground -->
+    <arg name="base_link_height" default="0.21" if="$(var simulate)"/>
+    <arg name="base_link_height" default="0.23" unless="$(var simulate)"/>
+    <node name="map_world_tf" pkg="tf2_ros" exec="static_transform_publisher"
+        args="0 0 -$(var base_link_height) 0 0 0 $(var mavros_map_frame) world"/> 
+
                                 <!-- ROS nodes -->
 
     <!-- MAVROS -->
@@ -117,12 +122,17 @@
     </include>
 
     <!-- Simulation -->
-    <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var simulate)">
-        <arg name="do_slam" value="$(var do_slam)"/>
-        <arg name="enable_cameras" value="$(var enable_cameras)"/>
-        <arg name="vehicle_name" value="$(var vehicle_name)"/>
-    </include>
+    <group if="$(var simulate)">
+        <include file="$(find-pkg-share airsim_launch)/launch/airsim.xml" if="$(var do_airsim)">
+            <arg name="do_slam" value="$(var do_slam)"/>
+            <arg name="enable_cameras" value="$(var enable_cameras)"/>
+            <arg name="vehicle_name" value="$(var vehicle_name)"/>
+        </include>
+    
+        <include file="$(find-pkg-share vehicle_launch)/launch/ros_gz_bridge.launch" if="$(var do_gazebo)"/>
+    </group>
 
+    <!-- Bag Recorder -->
     <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
 
     <!-- Sensors -->
@@ -176,13 +186,17 @@
 
     <!-- SLAM -->
     <group if="$(var do_slam)">
-        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var do_velodyne)">
+        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var do_airsim)">
             <arg name="rviz" value="false"/>
             <arg name="config_file" value="velodyne16_sim.yaml"/>
         </include>
         <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var do_mid360)">
             <arg name="rviz" value="false"/>
             <arg name="config_file" value="mid360.yaml"/>
+        </include>
+        <include file="$(find-pkg-share fast_lio)/launch/mapping.launch.py" if="$(var do_gazebo)">
+            <arg name="rviz" value="false"/>
+            <arg name="config_file" value="gz_lidar.yaml"/>
         </include>
     </group>
 

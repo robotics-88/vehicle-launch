@@ -1,0 +1,13 @@
+<launch>
+    <node pkg="ros_gz_bridge" exec="parameter_bridge" name="gz_bridge"
+          args="
+            /lidar2/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked
+            /world/r88/model/decco/model/decco_base/link/imu_link/sensor/imu_sensor/imu@sensor_msgs/msg/Imu[gz.msgs.IMU
+            /world/r88/model/decco/model/decco_base/link/lidar_link/sensor/imu_sensor/imu@sensor_msgs/msg/Imu[gz.msgs.IMU
+          " output="screen"/>
+
+    <!-- 
+    See following link for formatting: https://gazebosim.org/docs/harmonic/ros2_integration/
+    Run `gz topic -l` to list gz topics, and `gz topic -i -t` to list gz topic types
+    -->
+</launch>
