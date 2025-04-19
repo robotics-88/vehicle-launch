@@ -43,6 +43,7 @@
 
     <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
 
+    <node pkg="i2c_temperature" exec="temperature_node"/>
 
     <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
         <arg name="camera_name" value="see3cam_down"/>
