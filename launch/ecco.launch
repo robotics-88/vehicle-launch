@@ -98,6 +98,7 @@
         
         <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_thermal.launch">
             <arg name="camera_name" value="seek_thermal"/>
+            <arg name="rotate" value="true"/>
         </include>
     </group>
 
