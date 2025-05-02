@@ -1,0 +1,26 @@
+image_width: 1920
+image_height: 1080
+camera_name: immervision
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [511.0, 0.0, 960.0,
+         0.0, 383.0, 540.0,
+         0.0, 0.0, 1.0]
+distortion_model: fisheye
+distortion_coefficients:
+  rows: 1
+  cols: 4
+  data: [0.03708279015756, -0.1110251347834, 0.03644971263362, -0.004670522872175]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.000000, 0.000000, 0.000000,
+         0.000000, 1.000000, 0.000000,
+         0.000000, 0.000000, 1.000000]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [511.0, 0.0, 960.0, 0.0,
+         0.0, 383.0, 540.0, 0.0,
+         0.0, 0.0, 1.0, 0.0]

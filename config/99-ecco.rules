@@ -6,3 +6,10 @@ ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="04b4", ATTRS{idProduc
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0603", ATTRS{idProduct}=="8612", ATTR{index}=="0", SYMLINK+="mapir"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="5830", ATTR{index}=="0", SYMLINK+="seek_thermal"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2560", ATTRS{idProduct}=="c188", ATTR{index}=="0", SYMLINK+="see3cam"
+
+# immervision
+# Camera on USB path 2.1 (index 0) → /dev/immervision_front
+SUBSYSTEM=="video4linux", KERNELS=="1-2.1", ATTRS{idVendor}=="1bcf", ATTRS{idProduct}=="1b26", ATTR{index}=="0", SYMLINK+="immervision_down"
+
+# Camera on USB path 1-2.2 -> /dev/immervision_down
+SUBSYSTEM=="video4linux", KERNELS=="1-2.2", ATTR{index}=="0", ATTRS{idVendor}=="1bcf", ATTRS{idProduct}=="1b26", SYMLINK+="immervision_front"
