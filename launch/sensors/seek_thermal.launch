@@ -1,7 +1,7 @@
 <launch>
     <arg name="rviz" default="false"/>
     <arg name="rotate" default="false"/>
-    <include file="$(find-pkg-share seek_thermal_88)/launch/seek.launch">
+    <include file="$(find-pkg-share seek_thermal)/launch/seek.launch">
         <arg name="use_rviz" value="$(var rviz)"/>
         <arg name="rotate" value="$(var rotate)"/>
     </include>
