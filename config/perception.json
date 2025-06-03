@@ -1,0 +1,15 @@
+{
+    "lidar_slam": {
+      "launch_arg": "do_slam",
+      "hardware_required": ["lidar"]
+    },
+    "trail_detection": {
+      "launch_arg": "do_trail",
+      "hardware_required": ["lidar"]
+    },
+    "thermal_fire": {
+      "launch_arg": "do_seek_thermal",
+      "hardware_required": ["thermal_camera"]
+    }
+  }
+  

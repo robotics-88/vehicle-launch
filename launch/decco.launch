@@ -10,6 +10,7 @@
     <arg name="slam_pose_topic" default="/decco/pose"/>   
 
     <!-- Options -->
+    <arg name="perception_file" default="$(find-pkg-share vehicle_launch)/config/perception.json"/>
     <arg name="simulate" default="false"/>
     <arg name="do_airsim" default="false"/>
     <arg name="do_gazebo" default="$(var simulate)"/>
@@ -251,6 +252,7 @@
         <arg name="mapir_topic" value="$(var image_topic)"/>
         <arg name="do_record" value="$(var do_record)"/>
         <arg name="record_config_file" value="$(var record_config_file)"/>
+        <arg name="perception_file" value="$(var perception_file)"/>
         <arg name="data_directory" value="$(var data_directory)"/>
         <arg name="default_alt" value="$(var default_alt)"/>
         <arg name="min_alt" value="$(var min_alt)"/>
