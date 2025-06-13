@@ -201,19 +201,6 @@
         </include>
     </group>
 
-    <!-- Exploration & Frontier Search -->
-    <include file="$(find-pkg-share explore_uav)/launch/explore.launch" if="$(var do_exploration)">
-        <arg name="map_frame" value="$(var mavros_map_frame)"/>
-        <arg name="robot_base_frame" value="$(var mavros_base_frame)"/>
-        <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
-        <arg name="goal_topic" value="$(var goal_topic)"/>
-        <arg name="default_alt" value="$(var default_alt)"/>
-        <arg name="map_resolution" value="$(var map_resolution)"/>
-        <arg name="criteria" value="$(var criteria)"/>
-        <arg name="weights" value="$(var weights)"/>
-        <arg name="dem_name" value="$(var dem_name)"/>
-    </include>
-
     <!-- PCL Analysis -->
     <include file="$(find-pkg-share pcl_analysis)/launch/pcl_analysis.launch" if="$(var do_pcl_analysis)">
         <arg name="point_cloud_topic" value="$(var cloud_stabilized)"/>
@@ -311,6 +298,16 @@
         <arg name="default_alt" value="$(var default_alt)"/>
         <arg name="planning_horizon" value="$(var planning_horizon)"/>
         <arg name="velocity_setpoint_speed" value="$(var velocity_setpoint_speed)"/>
+
+        <!-- explorer manager -->
+        <arg name="map_frame" value="$(var mavros_map_frame)"/>
+        <arg name="robot_base_frame" value="$(var mavros_base_frame)"/>
+        <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
+        <arg name="goal_topic" value="$(var goal_topic)"/>
+        <arg name="default_alt" value="$(var default_alt)"/>
+        <arg name="map_resolution" value="$(var map_resolution)"/>
+        <arg name="criteria" value="$(var criteria)"/>
+        <arg name="weights" value="$(var weights)"/>
     </include>
 
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share vehicle_launch)/config/airsim.rviz" output="log" if="$(var simulate)"/>
