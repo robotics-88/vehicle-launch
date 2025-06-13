@@ -14,7 +14,6 @@
     <arg name="simulate" default="false"/>
     <arg name="do_airsim" default="false"/>
     <arg name="do_gazebo" default="$(var simulate)"/>
-    <arg name="rviz" default="$(var simulate)"/>
     <arg name="offline" default="false"/>
     <arg name="save_pcd" default="false"/>
     <arg name="vehicle_name" default="MyVehicle"/> <!-- The vehicle name from ardupilot_settings.json -->
@@ -301,8 +300,6 @@
 
         <!-- explorer manager -->
         <arg name="map_frame" value="$(var mavros_map_frame)"/>
-        <arg name="robot_base_frame" value="$(var mavros_base_frame)"/>
-        <arg name="slam_pose_topic" value="$(var slam_pose_topic)"/>
         <arg name="goal_topic" value="$(var goal_topic)"/>
         <arg name="default_alt" value="$(var default_alt)"/>
         <arg name="map_resolution" value="$(var map_resolution)"/>
