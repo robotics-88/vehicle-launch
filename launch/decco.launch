@@ -181,7 +181,7 @@
     </group>
 
     <group if="$(var offline)">
-        <include file="$(find-pkg-share vehicle_launch)/launch/viz_host_machine.launch"/>
+        <include file="$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml"/>
     </group>
 
     <!-- SLAM -->
