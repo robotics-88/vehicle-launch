@@ -2,7 +2,7 @@
     <!-- <arg name="device_id" default="1"/> -->
     <arg name="device_path" default="/dev/attollo"/>
     <arg name="camera_name" default="attollo_cam"/>
-    <arg name="camera_info_yaml" default="$(find vehicle_launch)/params/attollo_cam_info.yaml"/>
+    <arg name="camera_info_yaml" default="$(find vehicle_launch)/config/cameras/attollo_cam_info.yaml"/>
     <arg name="image_width" default="320"/>
     <arg name="image_height" default="256"/>
     <arg name="fps" default="15"/>
