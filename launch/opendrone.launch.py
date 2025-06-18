@@ -66,6 +66,7 @@ def launch_from_config(context, *args, **kwargs):
     rviz = False
     has_lidar = False
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
+    offline = LaunchConfiguration('offline').perform(context).lower() == 'true'
     
     do_record_raw = LaunchConfiguration('do_record').perform(context)
     if do_record_raw != '__auto__':
@@ -210,6 +211,14 @@ def launch_from_config(context, *args, **kwargs):
         )
         nodes.append(rviz_node)
 
+    # Foxglove (prefer for offline)
+    if offline:
+        foxglove_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('foxglove_bridge'), 'launch/foxglove_bridge_launch.xml'))
+        )
+        nodes.append(foxglove_launch)
+
+
     # Static transform publisher for map to world frame
     static_tf_node = Node(
         package='tf2_ros',
@@ -228,33 +237,46 @@ def launch_from_config(context, *args, **kwargs):
         package='tf2_ros',
         executable='static_transform_publisher',
         arguments=[
-            '0', '0', '-' + str(base_link_height),  # Translation (x, y, z)
-            '0', '0', '0',  # Rotation (roll, pitch, yaw)
+            '-' + str(lidar_x), '0', '-' + str(lidar_z),  # Translation (x, y, z)
+            '0', '-' + str(lidar_pitch), '0',  # Rotation (roll, pitch, yaw)
             LaunchConfiguration('slam_base_frame'), LaunchConfiguration('mavros_base_frame')  # Parent frame and child frame
         ],
         name='lidar_static_tf'
     )
     nodes.append(static_tf_node)
 
-    # MAVROS
-    if fcu_type == 'ardupilot':
-        apm_launch = IncludeLaunchDescription(
-            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/apm.launch')),
-            launch_arguments={
-                'do_slam': str(has_lidar).lower(),
-                'fcu_url': fcu_url,
-            }.items()
-        )
-        nodes.append(apm_launch)
-    elif fcu_type == 'px4':
-        px4_launch = IncludeLaunchDescription(
-            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/px4.launch')),
-            launch_arguments={
-                'do_slam': str(has_lidar).lower(),
-                'fcu_url': fcu_url,
-            }.items()
-        )
-        nodes.append(px4_launch)
+    # MAVROS + sensor nodes
+    if not offline:
+        if fcu_type == 'ardupilot':
+            apm_launch = IncludeLaunchDescription(
+                XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/apm.launch')),
+                launch_arguments={
+                    'do_slam': str(has_lidar).lower(),
+                    'fcu_url': fcu_url,
+                }.items()
+            )
+            nodes.append(apm_launch)
+        elif fcu_type == 'px4':
+            px4_launch = IncludeLaunchDescription(
+                XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/px4.launch')),
+                launch_arguments={
+                    'do_slam': str(has_lidar).lower(),
+                    'fcu_url': fcu_url,
+                }.items()
+            )
+            nodes.append(px4_launch)
+
+        for name, sensor in sensors.items():
+            pos = sensor.get('position', [0, 0, 0])
+            rpy = sensor.get('orientation_rpy', [0, 0, 0])
+
+            sensor_launch_file = os.path.join(
+                get_package_share_directory('vehicle_launch'), 'launch/sensors', f"{sensor['type']}.launch"
+            )
+            if os.path.exists(sensor_launch_file):
+                nodes.append(IncludeLaunchDescription(
+                    XMLLaunchDescriptionSource(sensor_launch_file)
+                ))
 
     # Static TFs and sensor nodes
     for name, sensor in sensors.items():
@@ -271,14 +293,6 @@ def launch_from_config(context, *args, **kwargs):
             name=f"{name}_tf"
         )
         nodes.append(tf_node)
-
-        sensor_launch_file = os.path.join(
-            get_package_share_directory('vehicle_launch'), 'launch/sensors', f"{sensor['type']}.launch"
-        )
-        if os.path.exists(sensor_launch_file):
-            nodes.append(IncludeLaunchDescription(
-                XMLLaunchDescriptionSource(sensor_launch_file)
-            ))
 
     # Bag recorder
     bag_recorder_launch = IncludeLaunchDescription(
