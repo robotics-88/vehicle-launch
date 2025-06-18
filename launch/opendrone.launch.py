@@ -140,6 +140,19 @@ def launch_from_config(context, *args, **kwargs):
     )
     nodes.append(static_tf_node)
 
+    # Static transform publisher for lidar to base link frame
+    static_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=[
+            '0', '0', '-' + str(base_link_height),  # Translation (x, y, z)
+            '0', '0', '0',  # Rotation (roll, pitch, yaw)
+            LaunchConfiguration('slam_base_frame'), LaunchConfiguration('mavros_base_frame')  # Parent frame and child frame
+        ],
+        name='lidar_static_tf'
+    )
+    nodes.append(static_tf_node)
+
     # MAVROS
     if fcu_type == 'ardupilot':
         apm_launch = IncludeLaunchDescription(
