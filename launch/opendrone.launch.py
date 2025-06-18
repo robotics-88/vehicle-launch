@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, IncludeLaunchDescription, GroupAction
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, EnvironmentVariable, PathJoinSubstitution
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from launch_ros.actions import Node
@@ -9,6 +9,14 @@ import yaml, os
 
 def generate_launch_description():
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'data_directory',
+            default_value=PathJoinSubstitution([
+                EnvironmentVariable('HOME'),
+                'r88_public',
+                'records'
+            ])
+        ),
         DeclareLaunchArgument('config_file', default_value='decco.yaml'),
         DeclareLaunchArgument('mavros_map_frame', default_value='map'),
         DeclareLaunchArgument('mavros_base_frame', default_value='base_link'),
@@ -18,13 +26,12 @@ def generate_launch_description():
         DeclareLaunchArgument('perception_file', default_value=os.path.join(get_package_share_directory('vehicle_launch'), 'config/perception.json')),
         DeclareLaunchArgument('do_airsim', default_value='false'),
         DeclareLaunchArgument('offline', default_value='false'),
-        DeclareLaunchArgument('save_pcd', default_value='false'),
+        DeclareLaunchArgument('save_pcl', default_value='false'),
         DeclareLaunchArgument('do_record', default_value='true'),
         DeclareLaunchArgument('cloud_registered_topic', default_value='/cloud_registered'),
         DeclareLaunchArgument('cloud_stabilized', default_value='/cloud_registered_map'),
         DeclareLaunchArgument('cloud_aggregated', default_value='/cloud_aggregated'),
         DeclareLaunchArgument('record_config_file', default_value=os.path.join(get_package_share_directory('vehicle_launch'), 'config/r88_default.config')),
-        DeclareLaunchArgument('data_directory', default_value='/home/$(env USER)/r88_public/records/'),
         DeclareLaunchArgument('default_alt', default_value='3.0'),
         DeclareLaunchArgument('min_alt', default_value='1.0'),
         DeclareLaunchArgument('max_alt', default_value='5.0'),
@@ -67,9 +74,11 @@ def launch_from_config(context, *args, **kwargs):
     # LiDAR params for transform/slam handling
     lidar_cfg = sensors.get('lidar_top')
     slam_config_file = 'mid360.yaml'
+    cloud_topic = '/livox/lidar'
     if lidar_cfg:
         do_slam = True
         slam_config_file = lidar_cfg.get('type', 'mid360') + '.yaml'
+        cloud_topic = lidar_cfg.get('topic', '/livox/lidar')
         lidar_pos = lidar_cfg.get('position', [0.0, 0.0, 0.0])
         lidar_rpy = lidar_cfg.get('orientation_rpy', [0.0, 0.0, 0.0])
         lidar_x = str(lidar_pos[0])
@@ -91,7 +100,7 @@ def launch_from_config(context, *args, **kwargs):
                 XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('airsim_launch'), 'launch/airsim.xml')),
                 launch_arguments={
                     'do_slam': str(do_slam).lower(),
-                    'enable_cameras': 'true',
+                    'enable_cameras': 'false',
                     'vehicle_name': drone_id,
                     'vehicle_frame': frame_id,
                 }.items()
@@ -103,8 +112,9 @@ def launch_from_config(context, *args, **kwargs):
             )
             nodes.append(gazebo_launch)
 
-    # SLAM
+    # SLAM and all the nodes using its outputs
     if do_slam:
+        # slam node
         slam_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('fast_lio'), 'launch/mapping.launch.py')),
             launch_arguments={
@@ -113,6 +123,70 @@ def launch_from_config(context, *args, **kwargs):
             }.items()
         )
         nodes.append(slam_launch)
+
+        # pcl analysis node
+        pcl_analysis_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('pcl_analysis'), 'launch/pcl_analysis.launch')),
+            launch_arguments={
+                'point_cloud_topic': LaunchConfiguration('cloud_stabilized'),
+                'point_cloud_aggregated': LaunchConfiguration('cloud_aggregated'),
+                'planning_horizon': LaunchConfiguration('planning_horizon'),
+                'save_pcl': LaunchConfiguration('save_pcl'),
+                'data_dir': LaunchConfiguration('data_directory')
+            }.items()
+        )
+        nodes.append(pcl_analysis_launch)
+
+        # path manager node
+        path_manager_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('path_manager'), 'launch/path_manager.launch')),
+            launch_arguments={
+                'mavros_map_frame': LaunchConfiguration('mavros_map_frame'),
+                'setpoint_acceptance_radius': LaunchConfiguration('setpoint_acceptance_radius'),
+                'goal_acceptance_radius': LaunchConfiguration('goal_acceptance_radius'),
+                'cloud_topic': str(cloud_topic),
+                'obstacle_dist_threshold': LaunchConfiguration('obstacle_dist_threshold'),
+                'goal_topic': LaunchConfiguration('goal_topic'),
+                'adjust_altitude_volume': LaunchConfiguration('adjust_altitude_volume'),
+                'default_alt': LaunchConfiguration('default_alt'),
+                'planning_horizon': LaunchConfiguration('planning_horizon'),
+                'velocity_setpoint_speed': LaunchConfiguration('velocity_setpoint_speed'),
+                'map_frame': LaunchConfiguration('mavros_map_frame'), #fix dup
+                'map_resolution': LaunchConfiguration('map_resolution'),
+                'criteria': LaunchConfiguration('criteria'),
+                'weights': LaunchConfiguration('weights')
+            }.items()
+        )
+        nodes.append(path_manager_launch)
+
+        # path planner node
+        path_planner_node = Node(
+            package='path_planning',
+            executable='path_planning_node',
+            name='path_planning_node',
+            output='screen',
+            parameters=[{
+                'search/max_tau': 0.6,
+                'search/init_max_tau': 0.8,
+                'search/max_vel': 2.0,
+                'search/max_acc': 2.0,
+                'search/w_time': 10.0,
+                'search/horizon': 20.0,
+                'search/lambda_heu': 5.0,
+                'search/resolution_astar': 0.1,
+                'search/time_resolution': 0.8,
+                'search/margin': 0.2,
+                'search/allocate_num': 100000,
+                'search/check_num': 1,
+                'search/map_frame': LaunchConfiguration('mavros_map_frame'),
+                'search/pose_topic': '/mavros/vision_pose/pose',
+                'search/cloud': LaunchConfiguration('cloud_aggregated'),
+                'search/min_alt': LaunchConfiguration('min_alt'),
+                'search/max_alt': LaunchConfiguration('max_alt'),
+                'search/obstacle_dist_threshold': LaunchConfiguration('obstacle_dist_threshold'),
+            }]
+        )
+        nodes.append(path_planner_node)
 
     # Rviz
     if rviz:
