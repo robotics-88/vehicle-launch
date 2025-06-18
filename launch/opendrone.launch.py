@@ -30,7 +30,7 @@ def generate_launch_description():
         DeclareLaunchArgument('do_airsim', default_value='false'),
         DeclareLaunchArgument('offline', default_value='false'),
         DeclareLaunchArgument('save_pcl', default_value='false'),
-        DeclareLaunchArgument('do_record', default_value='true'),
+        DeclareLaunchArgument('do_record', default_value='__auto__'),
         DeclareLaunchArgument('cloud_registered_topic', default_value='/cloud_registered'),
         DeclareLaunchArgument('cloud_stabilized', default_value='/cloud_registered_map'),
         DeclareLaunchArgument('cloud_aggregated', default_value='/cloud_aggregated'),
@@ -66,6 +66,12 @@ def launch_from_config(context, *args, **kwargs):
     rviz = False
     has_lidar = False
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
+    
+    do_record_raw = LaunchConfiguration('do_record').perform(context)
+    if do_record_raw != '__auto__':
+        do_record = do_record_raw.lower() == 'true'
+    else:
+        do_record = not simulated
 
     base_link_height = 0.23
 
@@ -294,7 +300,7 @@ def launch_from_config(context, *args, **kwargs):
             'do_slam': str(has_lidar).lower(),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),
-            'do_record': LaunchConfiguration('do_record'),
+            'do_record': str(do_record),
             'record_config_file': LaunchConfiguration('record_config_file'),
             'perception_file': LaunchConfiguration('perception_file'),
             'data_directory': LaunchConfiguration('data_directory'),
