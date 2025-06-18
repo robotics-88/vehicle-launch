@@ -1,0 +1,23 @@
+drone_id: decco_001
+frame_id: base_link
+simulated: false
+
+flight_controller:
+  type: ardupilot
+  fcu_url: /dev/cubeorange:57600
+
+sensors:
+  camera_front:
+    type: mapir_rgn
+    topic: /mapir_rgn/image_raw
+    frame: mapir_rgn
+    stream: camera1
+    position: [0.094, 0.021, .057]
+    orientation_rpy: [0.0, 0.0, 0.0]
+  
+  lidar_top:
+    type: mid360
+    topic: /livox/lidar
+    frame: livox_frame
+    position: [-0.0138761, 0.0, -0.132799]
+    orientation_rpy: [0.0, -0.3926991, 0.0]
