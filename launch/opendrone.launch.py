@@ -6,8 +6,11 @@ from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 import yaml, os
+from launch.actions import SetEnvironmentVariable
 
 def generate_launch_description():
+    SetEnvironmentVariable('RMW_FASTRTPS_USE_SHM', '0')
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'data_directory',
@@ -61,7 +64,7 @@ def launch_from_config(context, *args, **kwargs):
     flight_controller = cfg.get('flight_controller', 'ardupilot')
     sensors = cfg.get('sensors', {})
     rviz = False
-    do_slam = False
+    has_lidar = False
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
 
     base_link_height = 0.23
@@ -76,7 +79,7 @@ def launch_from_config(context, *args, **kwargs):
     slam_config_file = 'mid360.yaml'
     cloud_topic = '/livox/lidar'
     if lidar_cfg:
-        do_slam = True
+        has_lidar = True
         slam_config_file = lidar_cfg.get('type', 'mid360') + '.yaml'
         cloud_topic = lidar_cfg.get('topic', '/livox/lidar')
         lidar_pos = lidar_cfg.get('position', [0.0, 0.0, 0.0])
@@ -99,7 +102,7 @@ def launch_from_config(context, *args, **kwargs):
             airsim_launch = IncludeLaunchDescription(
                 XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('airsim_launch'), 'launch/airsim.xml')),
                 launch_arguments={
-                    'do_slam': str(do_slam).lower(),
+                    'do_slam': str(has_lidar).lower(),
                     'enable_cameras': 'false',
                     'vehicle_name': drone_id,
                     'vehicle_frame': frame_id,
@@ -113,7 +116,7 @@ def launch_from_config(context, *args, **kwargs):
             nodes.append(gazebo_launch)
 
     # SLAM and all the nodes using its outputs
-    if do_slam:
+    if has_lidar:
         # slam node
         slam_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('fast_lio'), 'launch/mapping.launch.py')),
@@ -232,7 +235,7 @@ def launch_from_config(context, *args, **kwargs):
         apm_launch = IncludeLaunchDescription(
             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/apm.launch')),
             launch_arguments={
-                'do_slam': str(do_slam).lower(),
+                'do_slam': str(has_lidar).lower(),
                 'fcu_url': fcu_url,
             }.items()
         )
@@ -241,7 +244,7 @@ def launch_from_config(context, *args, **kwargs):
         px4_launch = IncludeLaunchDescription(
             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/px4.launch')),
             launch_arguments={
-                'do_slam': str(do_slam).lower(),
+                'do_slam': str(has_lidar).lower(),
                 'fcu_url': fcu_url,
             }.items()
         )
@@ -271,6 +274,12 @@ def launch_from_config(context, *args, **kwargs):
                 XMLLaunchDescriptionSource(sensor_launch_file)
             ))
 
+    # Bag recorder
+    bag_recorder_launch = IncludeLaunchDescription(
+        XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('bag_recorder_2'), 'launch/bag_recorder.launch'))
+    )
+    nodes.append(bag_recorder_launch)
+
     # Task Manager
     task_manager_launch = IncludeLaunchDescription(
         XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('task_manager'), 'launch/task_manager.launch')),
@@ -282,7 +291,7 @@ def launch_from_config(context, *args, **kwargs):
             'use_failsafes': 'false',
             'slam_pose_topic': LaunchConfiguration('slam_pose_topic'),
             'goal_topic': LaunchConfiguration('goal_topic'),
-            'do_slam': str(do_slam).lower(),
+            'do_slam': str(has_lidar).lower(),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),
             'do_record': LaunchConfiguration('do_record'),
