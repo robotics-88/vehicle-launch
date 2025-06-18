@@ -267,16 +267,21 @@ def launch_from_config(context, *args, **kwargs):
             nodes.append(px4_launch)
 
         for name, sensor in sensors.items():
-            pos = sensor.get('position', [0, 0, 0])
-            rpy = sensor.get('orientation_rpy', [0, 0, 0])
-
             sensor_launch_file = os.path.join(
                 get_package_share_directory('vehicle_launch'), 'launch/sensors', f"{sensor['type']}.launch"
             )
             if os.path.exists(sensor_launch_file):
-                nodes.append(IncludeLaunchDescription(
-                    XMLLaunchDescriptionSource(sensor_launch_file)
-                ))
+                if name.startswith("camera"):
+                    nodes.append(IncludeLaunchDescription(
+                        XMLLaunchDescriptionSource(sensor_launch_file),
+                                launch_arguments={
+                                'camera_name': sensor['frame']
+                    }.items()
+                    ))
+                else:
+                    nodes.append(IncludeLaunchDescription(
+                        XMLLaunchDescriptionSource(sensor_launch_file)
+                    ))
 
     # Static TFs and sensor nodes
     for name, sensor in sensors.items():
