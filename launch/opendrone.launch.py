@@ -278,6 +278,23 @@ def launch_from_config(context, *args, **kwargs):
                                 'camera_name': sensor['frame']
                     }.items()
                     ))
+
+                    if sensor.get('stream'):
+                        # Start video stream
+                        stream_node = Node(
+                            package='image_to_v4l2loopback',
+                            executable='stream',
+                            name=f"{name}_stream",
+                            output='log',
+                            parameters=[{
+                                'device': '/dev/' + sensor['stream'],
+                                'topic': sensor['topic'],
+                                'width': sensor.get('stream_width', 640),
+                                'height': sensor.get('stream_height', 480),
+                                'fourcc': 'YV12'
+                            }]
+                        )
+                        nodes.append(stream_node)
                 else:
                     nodes.append(IncludeLaunchDescription(
                         XMLLaunchDescriptionSource(sensor_launch_file)

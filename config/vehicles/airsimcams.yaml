@@ -11,6 +11,7 @@ sensors:
     type: airsim_rgb
     topic: /MyVehicle/front_left_custom/Scene
     frame: front_left_custom_optical
+    stream: camera1
     position: [0.05, -0.06, 0.2]
     orientation_rpy: [0.0, 0.0, 0.0]
 

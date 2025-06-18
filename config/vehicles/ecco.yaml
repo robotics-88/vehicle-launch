@@ -20,6 +20,8 @@ sensors:
     topic: /seek_thermal/image_raw
     frame: seek_thermal
     stream: camera2
+    stream_width: 320
+    stream_height: 240
     position: [0.094, 0.021, .057]
     orientation_rpy: [0.0, 0.0, 0.0]
 
@@ -27,7 +29,6 @@ sensors:
     type: immervision
     topic: /immervision_down/image_raw
     frame: immervision_down
-    stream: camera3
     position: [0.094, 0.021, .057]
     orientation_rpy: [0.0, 0.0, 0.0]
 
