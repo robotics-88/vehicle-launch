@@ -66,6 +66,7 @@ def launch_from_config(context, *args, **kwargs):
     has_lidar = False
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
     offline = LaunchConfiguration('offline').perform(context).lower() == 'true'
+    num_cameras = 0
     
     do_record_raw = LaunchConfiguration('do_record').perform(context)
     if do_record_raw != '__auto__':
@@ -277,6 +278,7 @@ def launch_from_config(context, *args, **kwargs):
                                 'camera_name': sensor['frame']
                     }.items()
                     ))
+                    num_cameras += 1
 
                     if sensor.get('stream'):
                         # Start video stream
@@ -356,6 +358,7 @@ def launch_from_config(context, *args, **kwargs):
             'slam_map_frame': LaunchConfiguration('slam_map_frame'),
             'enable_autonomy': 'true',
             'use_failsafes': 'false',
+            'num_cameras': str(num_cameras),
             'slam_pose_topic': LaunchConfiguration('slam_pose_topic'),
             'goal_topic': LaunchConfiguration('goal_topic'),
             'do_slam': str(has_lidar).lower(),
