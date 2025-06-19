@@ -1,8 +1,8 @@
 <launch>
     <arg name="save_pcl" default="false"/>
     <arg name="config_file" default="decco.yaml"/>
-    <arg name="bag_dir" default="/home/$(env USER)/r88_public/records"/>
-    <arg name="flight_dir" default="$(var bag_dir)/flight"/>
+    <arg name="bag_dir" default="/home/$(env USER)/r88_public/records/erinquicktest"/>
+    <arg name="flight_dir" default="$(var bag_dir)/erinquicktest"/>
 
     <arg name="video_name" default="video.mp4"/>
     <arg name="frame_id" default="gopro"/>
