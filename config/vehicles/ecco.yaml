@@ -15,7 +15,7 @@ sensors:
     position: [0.094, 0.021, .057]
     orientation_rpy: [0.0, 0.0, 0.0]
 
-  thermal_down:
+  camera_thermal:
     type: seek_thermal
     topic: /seek_thermal/image_raw
     frame: seek_thermal

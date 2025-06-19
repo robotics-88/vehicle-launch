@@ -295,6 +295,17 @@ def launch_from_config(context, *args, **kwargs):
                             }]
                         )
                         nodes.append(stream_node)
+
+                    if "thermal" in name:
+                        nodes.append(IncludeLaunchDescription(
+                            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('thermal_88'), 'launch/thermal_pipeline.launch')),
+                                    launch_arguments={
+                                    'image_topic': sensor['frame'] + '/image_rect',
+                                    'camera_info_topic': sensor['frame'] + '/camera_info',
+                                    'map_frame': LaunchConfiguration('mavros_map_frame'),
+                                    'use_rviz': str(rviz).lower()
+                        }.items()
+                        ))
                 else:
                     nodes.append(IncludeLaunchDescription(
                         XMLLaunchDescriptionSource(sensor_launch_file)
