@@ -1,0 +1,124 @@
+<launch>
+
+                            <!-- Arguments/configuration -->
+    <arg name="mavros_map_frame" default="map"/>
+
+    <!-- Which nodes -->
+    <arg name="do_mavros" default="true"/>
+    <arg name="do_task_manager" default="true"/>
+    <arg name="do_rtsp" default="true"/>
+    <arg name="do_record" default="true"/>
+    
+    <!-- Which hardware -->
+    <arg name="do_immervision_down" default="true"/>
+    <arg name="do_immervision_front" default="true"/>
+    <arg name="do_see3cam_down" default="false"/>
+    <arg name="do_see3cam_fwd" default="false"/>
+    <arg name="do_seek_thermal" default="true"/>
+
+     <!-- Recording args -->
+    <arg name="record_config_file" default="$(find-pkg-share vehicle_launch)/config/r88_default.config"/>
+    <arg name="user" default="$(env USER)"/>
+    <arg name="data_directory" default="/home/$(var user)/src/bags/"/>
+
+    <!-- Control args -->
+    <arg name="px4" default="true"/>
+
+    <!-- Generic args -->
+    <arg name="map_resolution" default="0.1"/> <!-- meter -->
+    <arg name="goal_topic" default="/goal_raw"/> <!-- meter -->
+
+                                <!-- ROS nodes -->
+
+    <!-- MAVROS -->
+    <group if="$(var do_mavros)">
+        <include file="$(find-pkg-share vehicle_launch)/launch/px4.launch" if="$(var px4)">
+            <arg name="fcu_url" value="udp://127.0.0.1:14575@"/>
+        </include>
+        <include file="$(find-pkg-share vehicle_launch)/launch/apm.launch" unless="$(var px4)">
+            <arg name="do_slam" value="false"/>
+            <arg name="fcu_url" value="udp://127.0.0.1:14575@"/>
+        </include>
+    </group>
+
+    <include file="$(find-pkg-share bag_recorder_2)/launch/bag_recorder.launch" if="$(var do_record)"/>
+
+    <node pkg="i2c_temperature" exec="temperature_node"/>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_down)">
+        <arg name="camera_name" value="see3cam_down"/>
+    </include>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/see3cam.launch" if="$(var do_see3cam_fwd)">
+        <arg name="camera_name" value="see3cam_fwd"/>
+    </include>
+
+    <!-- Immervision -->
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/immervision.launch" if="$(var do_immervision_down)">
+        <arg name="camera_name" value="immervision_down"/>
+    </include>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/immervision.launch" if="$(var do_immervision_front)">
+        <arg name="camera_name" value="immervision_front"/>
+    </include>
+
+    <!--                        RTSP Streams for each camera                 -->
+    <group if="$(var do_rtsp)">
+        <node name="rtsp_stream_mapir" pkg="image_to_v4l2loopback" exec="stream">
+            <param name="device" value="/dev/video21"/>
+            <param name="width" value="640"/>
+            <param name="height" value="480"/>
+            <param name="fourcc" value="YV12"/>
+            <remap from="image" to="/immervision_front/image_rect"/>
+        </node>
+
+        <node name="rtsp_stream_thermal" pkg="image_to_v4l2loopback" exec="stream" if="$(var do_seek_thermal)">
+            <param name="device" value="/dev/video22"/>
+            <param name="width" value="320"/>
+            <param name="height" value="240"/>
+            <param name="fourcc" value="YV12"/>
+            <remap from="image" to="/seek_thermal/image_raw"/>
+        </node>
+    </group>
+
+    <include file="$(find-pkg-share vehicle_launch)/launch/sensors/static_tf_ecco.launch">
+        <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
+    </include>
+
+    <!-- Thermal Camera & Processing Pipeline -->
+    <group if="$(var do_seek_thermal)">
+        <include file="$(find-pkg-share thermal_88)/launch/thermal_pipeline.launch">
+            <arg name="image_topic" value="/seek_thermal/image_rect"/>
+            <arg name="camera_info_topic" value="/seek_thermal/camera_info"/>
+            <arg name="map_frame" value="$(var mavros_map_frame)"/>
+            <arg name="use_rviz" value="false"/>
+        </include>
+        
+        <include file="$(find-pkg-share vehicle_launch)/launch/sensors/seek_thermal.launch">
+            <arg name="camera_name" value="seek_thermal"/>
+            <arg name="rotate" value="true"/>
+        </include>
+    </group>
+
+    <!-- Task Manager (Main Control Loop) -->
+    <include file="$(find-pkg-share task_manager)/launch/task_manager.launch" if="$(var do_task_manager)">
+        <arg name="enable_autonomy" value="false"/>
+        <arg name="do_slam" value="false"/>
+        <arg name="do_record" value="$(var do_record)"/>
+        <arg name="record_config_file" value="$(var record_config_file)"/>
+        <arg name="data_directory" value="$(var data_directory)"/>
+        <arg name="do_seek_thermal" value="$(var do_seek_thermal)"/>
+        <arg name="do_see3cam_down" value="$(var do_see3cam_down)"/>
+        <arg name="do_see3cam_fwd" value="$(var do_see3cam_fwd)"/>
+        <arg name="px4" value="$(var px4)"/>
+
+        <arg name="estimated_current" value="20.0"/> 
+        <arg name="battery_size" value="25.0"/> 
+        <arg name="all_stream_rate" value="5.0"/>
+        <arg name="imu_rate" value="50.0"/>
+        <arg name="local_pos_rate" value="30.0"/>
+    </include>
+
+</launch>
