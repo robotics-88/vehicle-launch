@@ -22,7 +22,6 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument('config_file', default_value='decco.yaml'),
         DeclareLaunchArgument('mavros_map_frame', default_value='map'),
-        DeclareLaunchArgument('mavros_base_frame', default_value='base_link'),
         DeclareLaunchArgument('slam_base_frame', default_value='livox_frame'),
         DeclareLaunchArgument('slam_map_frame', default_value='slam_map'),
         DeclareLaunchArgument('slam_pose_topic', default_value='/decco/pose'),
@@ -239,7 +238,7 @@ def launch_from_config(context, *args, **kwargs):
         arguments=[
             '-' + str(lidar_x), '0', '-' + str(lidar_z),  # Translation (x, y, z)
             '0', '-' + str(lidar_pitch), '0',  # Rotation (roll, pitch, yaw)
-            LaunchConfiguration('slam_base_frame'), LaunchConfiguration('mavros_base_frame')  # Parent frame and child frame
+            LaunchConfiguration('slam_base_frame'), frame_id  # Parent frame and child frame
         ],
         name='lidar_static_tf'
     )
@@ -313,6 +312,8 @@ def launch_from_config(context, *args, **kwargs):
 
     # Static TFs and sensor nodes
     for name, sensor in sensors.items():
+        if name == 'lidar_top':
+            continue # Skip lidar as it's handled separately as parent node for base_link
         pos = sensor.get('position', [0, 0, 0])
         rpy = sensor.get('orientation_rpy', [0, 0, 0])
         tf_node = Node(
@@ -321,11 +322,24 @@ def launch_from_config(context, *args, **kwargs):
             arguments=[
                 str(pos[0]), str(pos[1]), str(pos[2]),
                 str(rpy[0]), str(rpy[1]), str(rpy[2]),
-                sensor['frame'], frame_id
+                frame_id, sensor['frame']
             ],
             name=f"{name}_tf"
         )
         nodes.append(tf_node)
+
+        if name.startswith("camera"):
+            static_tf_node = Node(
+                package='tf2_ros',
+                executable='static_transform_publisher',
+                arguments=[
+                    '0', '0', '0',  # Translation (x, y, z)
+                    '-1.57079633', '0', '-1.57079633',  # Rotation (roll, pitch, yaw)
+                    sensor['frame'], sensor['frame'] + '_optical'  # Parent frame and child frame
+                ],
+                name=f"{name}_optical_tf"
+            )
+            nodes.append(static_tf_node)
 
     # Bag recorder
     bag_recorder_launch = IncludeLaunchDescription(
@@ -338,7 +352,7 @@ def launch_from_config(context, *args, **kwargs):
         XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('task_manager'), 'launch/task_manager.launch')),
         launch_arguments={
             'mavros_map_frame': LaunchConfiguration('mavros_map_frame'),
-            'base_frame': LaunchConfiguration('mavros_base_frame'),
+            'base_frame': str(frame_id),
             'slam_map_frame': LaunchConfiguration('slam_map_frame'),
             'enable_autonomy': 'true',
             'use_failsafes': 'false',
