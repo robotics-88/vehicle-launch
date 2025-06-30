@@ -4,9 +4,9 @@
   "SimMode": "Multirotor",
   "ViewMode": "SpringArmChase",
   "OriginGeopoint": {
-    "Latitude": 41.496349,
-    "Longitude": -71.308243,
-    "Altitude": 10
+    "Latitude": 37.6557596,
+    "Longitude": -89.2752828,
+    "Altitude": 142.92847098732705
   },
   "Vehicles": {
     "MyVehicle": {
