@@ -1,15 +1,14 @@
 {
-    "lidar_slam": {
-      "launch_arg": "do_slam",
-      "hardware_required": ["lidar"]
-    },
-    "trail_detection": {
-      "launch_arg": "do_trail",
-      "hardware_required": ["lidar"]
-    },
-    "thermal_fire": {
-      "launch_arg": "do_seek_thermal",
-      "hardware_required": ["thermal_camera"]
-    }
+  "lidar_slam": {
+    "node": "laser_mapping",
+    "hardware_required": ["lidar"]
+  },
+  "trail_follower": {
+    "node": "trail_follower",
+    "hardware_required": ["lidar"]
+  },
+  "thermal_fire": {
+    "node": "thermal_pipeline",
+    "hardware_required": ["thermal"]
   }
-  
+}
