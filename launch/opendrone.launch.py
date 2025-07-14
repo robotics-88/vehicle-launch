@@ -147,6 +147,15 @@ def launch_from_config(context, *args, **kwargs):
         )
         nodes.append(pcl_analysis_launch)
 
+        # trail follower node
+        trail_follower_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('trail_follower'), 'launch/trail.launch')),
+            launch_arguments={\
+                'point_cloud_aggregated': LaunchConfiguration('cloud_aggregated')
+            }.items()
+        )
+        nodes.append(trail_follower_launch)
+
         # path manager node
         path_manager_launch = IncludeLaunchDescription(
             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('path_manager'), 'launch/path_manager.launch')),
