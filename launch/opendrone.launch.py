@@ -156,6 +156,15 @@ def launch_from_config(context, *args, **kwargs):
         )
         nodes.append(trail_follower_launch)
 
+        # powerline node
+        powerline_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('powerline_mapper'), 'launch/powerline.launch')),
+            launch_arguments={\
+                'point_cloud_aggregated': LaunchConfiguration('cloud_aggregated')
+            }.items()
+        )
+        nodes.append(powerline_launch)
+
         # path manager node
         path_manager_launch = IncludeLaunchDescription(
             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('path_manager'), 'launch/path_manager.launch')),

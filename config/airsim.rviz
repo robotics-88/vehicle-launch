@@ -49,8 +49,6 @@ Visualization Manager:
         All Enabled: false
         base_link:
           Value: true
-        base_link/Lidar2:
-          Value: true
         base_link_frd:
           Value: false
         livox_frame:
@@ -66,8 +64,6 @@ Visualization Manager:
         slam_map:
           Value: true
         utm:
-          Value: true
-        velodyne:
           Value: true
         world:
           Value: true
@@ -94,8 +90,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 19.623779296875
-        Min Value: -0.4161837100982666
+        Max Value: 9.3933687210083
+        Min Value: -0.02977307140827179
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -366,6 +362,40 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: ""
+      Decay Time: 1000
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: Powerline
+      Position Transformer: ""
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.10000000149011612
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /power_line_cloud
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -412,7 +442,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 21.19196128845215
+      Distance: 24.723541259765625
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -427,10 +457,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6053991317749023
+      Pitch: 0.5053983330726624
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.207189559936523
+      Yaw: 4.582192420959473
     Saved: ~
 Window Geometry:
   Displays:
