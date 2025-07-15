@@ -1,8 +1,4 @@
 {
-  "lidar_slam": {
-    "node": "laser_mapping",
-    "hardware_required": ["lidar"]
-  },
   "obstacle_avoidance": {
     "node": "path_planning_node",
     "hardware_required": ["lidar"]
