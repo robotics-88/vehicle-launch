@@ -65,6 +65,7 @@ def launch_from_config(context, *args, **kwargs):
     sensors = cfg.get('sensors', {})
     rviz = False
     has_lidar = False
+    has_thermal = False
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
     offline = LaunchConfiguration('offline').perform(context).lower() == 'true'
     num_cameras = 0
@@ -318,6 +319,7 @@ def launch_from_config(context, *args, **kwargs):
                         nodes.append(stream_node)
 
                     if "thermal" in name:
+                        has_thermal = True
                         nodes.append(IncludeLaunchDescription(
                             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('thermal_88'), 'launch/thermal_pipeline.launch')),
                                     launch_arguments={
@@ -382,6 +384,9 @@ def launch_from_config(context, *args, **kwargs):
             'slam_pose_topic': LaunchConfiguration('slam_pose_topic'),
             'goal_topic': LaunchConfiguration('goal_topic'),
             'do_slam': str(has_lidar).lower(),
+            'has_lidar': str(has_lidar).lower(),
+            'has_thermal': str(has_thermal).lower(),
+            'has_camera': str(num_cameras > 1).lower(),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),
             'do_record': str(do_record),
