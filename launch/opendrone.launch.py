@@ -29,7 +29,7 @@ def generate_launch_description():
         DeclareLaunchArgument('do_airsim', default_value='false'),
         DeclareLaunchArgument('enable_cameras', default_value='false'),
         DeclareLaunchArgument('offline', default_value='false'),
-        DeclareLaunchArgument('save_pcl', default_value='false'),
+        DeclareLaunchArgument('save_pcl', default_value='true'),
         DeclareLaunchArgument('do_record', default_value='__auto__'),
         DeclareLaunchArgument('cloud_registered_topic', default_value='/cloud_registered'),
         DeclareLaunchArgument('cloud_stabilized', default_value='/cloud_registered_map'),
