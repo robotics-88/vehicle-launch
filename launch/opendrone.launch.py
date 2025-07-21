@@ -29,7 +29,7 @@ def generate_launch_description():
         DeclareLaunchArgument('do_airsim', default_value='false'),
         DeclareLaunchArgument('enable_cameras', default_value='false'),
         DeclareLaunchArgument('offline', default_value='false'),
-        DeclareLaunchArgument('save_pcl', default_value='true'),
+        DeclareLaunchArgument('save_laz', default_value='false'),
         DeclareLaunchArgument('do_record', default_value='__auto__'),
         DeclareLaunchArgument('cloud_registered_topic', default_value='/cloud_registered'),
         DeclareLaunchArgument('cloud_stabilized', default_value='/cloud_registered_map'),
@@ -143,7 +143,7 @@ def launch_from_config(context, *args, **kwargs):
                 'point_cloud_topic': LaunchConfiguration('cloud_stabilized'),
                 'point_cloud_aggregated': LaunchConfiguration('cloud_aggregated'),
                 'planning_horizon': LaunchConfiguration('planning_horizon'),
-                'save_pcl': LaunchConfiguration('save_pcl'),
+                'save_laz': LaunchConfiguration('save_laz'),
                 'data_dir': LaunchConfiguration('data_directory')
             }.items()
         )
@@ -387,6 +387,7 @@ def launch_from_config(context, *args, **kwargs):
             'has_lidar': str(has_lidar).lower(),
             'has_thermal': str(has_thermal).lower(),
             'has_camera': str(num_cameras > 1).lower(),
+            'save_laz': LaunchConfiguration('save_laz'),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),
             'do_record': str(do_record),
