@@ -78,9 +78,9 @@ def launch_from_config(context, *args, **kwargs):
     base_link_height = 0.23
 
     # flight controller params
-    flight_controller = cfg.get('flight_controller', {})
-    fcu_type = flight_controller.get('type', 'ardupilot')
-    fcu_url = flight_controller.get('fcu_url', '/dev/cubeorange:57600')
+    fc_config = cfg.get('flight_controller', {})
+    fcu_type = fc_config.get('type', 'ardupilot')
+    fcu_url = fc_config.get('fcu_url', '/dev/cubeorange:57600')
 
     # LiDAR params for transform/slam handling
     lidar_cfg = sensors.get('lidar_top')
