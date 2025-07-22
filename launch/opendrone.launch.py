@@ -9,9 +9,8 @@ import yaml, os
 from launch.actions import SetEnvironmentVariable
 
 def generate_launch_description():
-    SetEnvironmentVariable('RMW_FASTRTPS_USE_SHM', '0')
-
     return LaunchDescription([
+        SetEnvironmentVariable('RMW_FASTRTPS_USE_SHM', '0'),
         DeclareLaunchArgument(
             'data_directory',
             default_value=PathJoinSubstitution([
