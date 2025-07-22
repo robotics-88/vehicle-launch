@@ -1,5 +1,5 @@
 <launch>
-    <arg name="save_pcl" default="false"/>
+    <arg name="save_laz" default="false"/>
     <arg name="config_file" default="decco.yaml"/>
     <arg name="bag_dir" default="/home/$(env USER)/r88_public/records/erinquicktest"/>
     <arg name="flight_dir" default="$(var bag_dir)/erinquicktest"/>
@@ -12,7 +12,7 @@
     <include file="$(find-pkg-share vehicle_launch)/launch/opendrone.launch.py">
         <arg name="offline" value="true"/>
         <arg name="config_file" value="$(var config_file)"/>
-        <arg name="save_pcl" value="$(var save_pcl)"/>
+        <arg name="save_laz" value="$(var save_laz)"/>
     </include>
     
     <include file="$(find-pkg-share mp4_to_ros2)/launch/mp4.launch">
