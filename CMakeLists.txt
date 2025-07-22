@@ -10,16 +10,15 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(mavros REQUIRED)
+find_package(mavros_msgs REQUIRED)
+find_package(mavros_extras REQUIRED)
 
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 
 install(DIRECTORY config
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(DIRECTORY params
   DESTINATION share/${PROJECT_NAME}
 )
 

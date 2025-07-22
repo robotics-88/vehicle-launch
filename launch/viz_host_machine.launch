@@ -1,5 +1,0 @@
-<launch>
-    <!-- TODO update with foxglove config files -->
-    <include file="$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml"/>
-
-</launch>

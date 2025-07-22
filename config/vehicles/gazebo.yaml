@@ -1,0 +1,15 @@
+drone_id: MyVehicle
+frame_id: base_link
+simulated: true
+
+flight_controller:
+  type: ardupilot
+  fcu_url: udp://127.0.0.1:14551@
+
+sensors:
+  lidar_top:
+    type: gz_lidar
+    topic: /velodyne_points
+    frame: livox_frame
+    position: [0.0, 0.0, 0.2]
+    orientation_rpy: [0.0, 0.0, 0.0]

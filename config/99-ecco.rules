@@ -13,3 +13,6 @@ SUBSYSTEM=="video4linux", KERNELS=="1-2.1", ATTRS{idVendor}=="1bcf", ATTRS{idPro
 
 # Camera on USB path 1-2.2 -> /dev/immervision_down
 SUBSYSTEM=="video4linux", KERNELS=="1-2.2", ATTR{index}=="0", ATTRS{idVendor}=="1bcf", ATTRS{idProduct}=="1b26", SYMLINK+="immervision_front"
+
+KERNEL=="video21", SYMLINK+="camera1"
+KERNEL=="video22", SYMLINK+="camera2"

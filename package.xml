@@ -13,16 +13,15 @@
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>commercial</license>
+  <license>GPLv3</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>foxglove_bridge</depend>
   <depend>rclcpp</depend>
-  <depend>nav2_map_server</depend>
-  <depend>nav2_planner</depend>
-  <depend>nav2_lifecycle_manager</depend>
-  <depend>nav2_navfn_planner</depend>
+  <depend>mavros</depend>
+  <depend>mavros_msgs</depend>
+  <depend>mavros_extras</depend>
 
   <exec_depend>ros2launch</exec_depend>
 

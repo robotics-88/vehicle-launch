@@ -1,0 +1,34 @@
+drone_id: ecco_001
+frame_id: base_link
+simulated: false
+
+flight_controller:
+  type: px4
+  fcu_url: udp://127.0.0.1:14575@
+
+sensors:
+  camera_front:
+    type: immervision
+    topic: /immervision_front/image_raw
+    frame: immervision_front
+    stream: camera1
+    position: [0.165, -0.019, 0.110]
+    orientation_rpy: [0.0, 0.0, 0.0]
+
+  camera_thermal:
+    type: seek_thermal
+    topic: /seek_thermal/image_raw
+    frame: seek_thermal
+    stream: camera2
+    stream_width: 320
+    stream_height: 240
+    position: [0.12, 0.1, -0.03]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+
+  camera_down:
+    type: immervision
+    topic: /immervision_down/image_raw
+    frame: immervision_down
+    position: [0.12, 0.0, -0.03]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+

@@ -6,3 +6,6 @@ ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="04b4", ATTRS{idProduc
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0603", ATTRS{idProduct}=="8612", ATTR{index}=="0", SYMLINK+="mapir"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="5830", ATTR{index}=="0", SYMLINK+="seek_thermal"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2560", ATTRS{idProduct}=="c188", ATTR{index}=="0", SYMLINK+="see3cam"
+
+KERNEL=="video21", SYMLINK+="camera1"
+KERNEL=="video22", SYMLINK+="camera2"

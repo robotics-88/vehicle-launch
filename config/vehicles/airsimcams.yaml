@@ -1,0 +1,30 @@
+drone_id: MyVehicle
+frame_id: base_link
+simulated: true
+
+flight_controller:
+  type: ardupilot
+  fcu_url: udp://127.0.0.1:14551@
+
+sensors:
+  camera_front:
+    type: airsim_rgb
+    topic: /MyVehicle/front_left_custom/Scene
+    frame: front_left_custom_optical
+    stream: camera1
+    position: [0.05, -0.06, 0.2]
+    orientation_rpy: [0.0, 0.0, 0.0]
+
+  camera_depth_front:
+    type: airsim_depth
+    topic: /MyVehicle/front_left_custom/DepthPlanar
+    frame: front_left_custom_optical
+    position: [0.05, -0.06, 0.2]
+    orientation_rpy: [0.0, 0.0, 0.0]
+  
+  lidar_top:
+    type: velodyne16_sim
+    topic: /velodyne_points
+    frame: livox_frame
+    position: [0.0, 0.0, 0.2]
+    orientation_rpy: [0.0, 0.0, 0.0]

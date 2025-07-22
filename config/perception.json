@@ -1,0 +1,18 @@
+{
+  "obstacle_avoidance": {
+    "node": "path_planning_node",
+    "hardware_required": ["lidar"]
+  },
+  "powerline_mapper": {
+    "node": "powerline_mapper",
+    "hardware_required": ["lidar"]
+  },
+  "thermal_fire": {
+    "node": "thermal_pipeline",
+    "hardware_required": ["thermal"]
+  },
+  "trail_follower": {
+    "node": "trail_follower",
+    "hardware_required": ["lidar"]
+  }
+}
