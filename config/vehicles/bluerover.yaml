@@ -1,0 +1,22 @@
+drone_id: MyVehicle
+frame_id: base_link
+simulated: true
+
+flight_controller:
+  type: ardupilot
+  fcu_url: tcp://localhost
+
+sensors:
+  camera_left:
+    type: rgb
+    topic: /stereo_left
+    frame: left_camera_link
+    position: [-0.18, 0.18, -0.0675]
+    orientation_rpy: [0, 1.57079632679, 0]
+
+  camera_right:
+    type: rgb
+    topic: /stereo_right
+    frame: right_camera_link
+    position: [-0.18, -0.18, -0.0675]
+    orientation_rpy: [0, 1.57079632679, 0]
