@@ -14,5 +14,9 @@
   "trail_follower": {
     "node": "trail_follower",
     "hardware_required": ["lidar"]
+  },
+  "chumbo_dance": {
+    "node": "chumbo_dance_node",
+    "hardware_required": ["camera"]
   }
 }

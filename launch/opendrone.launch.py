@@ -68,6 +68,8 @@ def launch_from_config(context, *args, **kwargs):
     do_airsim = LaunchConfiguration('do_airsim').perform(context).lower() == 'true'
     offline = LaunchConfiguration('offline').perform(context).lower() == 'true'
     num_cameras = 0
+    camera_topic = '/camera/image_raw'
+    camera_info_topic = '/camera/camera_info'
     
     do_record_raw = LaunchConfiguration('do_record').perform(context)
     if do_record_raw != '__auto__':
@@ -298,6 +300,10 @@ def launch_from_config(context, *args, **kwargs):
                                     'camera_name': sensor['frame']
                         }.items()
                         ))
+                    if (num_cameras == 0):
+                        # Use the first camera topic as main camera topic
+                        camera_topic = sensor['topic']
+                        camera_info_topic = sensor['topic'].replace('image_raw', 'camera_info')
                     num_cameras += 1
 
                     if sensor.get('stream'):
@@ -332,6 +338,17 @@ def launch_from_config(context, *args, **kwargs):
                     nodes.append(IncludeLaunchDescription(
                         XMLLaunchDescriptionSource(sensor_launch_file)
                     ))
+
+    if (num_cameras > 0):
+        # chumbo dance node
+        chumbo_dance_launch = IncludeLaunchDescription(
+            XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('chumbo_dance'), 'launch/chumbo_dance.launch')),
+            launch_arguments={\
+                'image_topic': camera_topic,
+                'camera_info_topic': camera_info_topic
+            }.items()
+        )
+        nodes.append(chumbo_dance_launch)
 
     # Static TFs and sensor nodes
     for name, sensor in sensors.items():
@@ -385,7 +402,7 @@ def launch_from_config(context, *args, **kwargs):
             'do_slam': str(has_lidar).lower(),
             'has_lidar': str(has_lidar).lower(),
             'has_thermal': str(has_thermal).lower(),
-            'has_camera': str(num_cameras > 1).lower(),
+            'has_camera': str(num_cameras >= 1).lower(),
             'save_laz': LaunchConfiguration('save_laz'),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),
