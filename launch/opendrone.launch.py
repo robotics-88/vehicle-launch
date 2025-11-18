@@ -82,6 +82,7 @@ def launch_from_config(context, *args, **kwargs):
     # flight controller params
     fc_config = cfg.get('flight_controller', {})
     fcu_type = fc_config.get('type', 'ardupilot')
+    is_px4 = fcu_type == 'px4'
     fcu_url = fc_config.get('fcu_url', '/dev/cubeorange:57600')
 
     # LiDAR params for transform/slam handling
@@ -268,7 +269,7 @@ def launch_from_config(context, *args, **kwargs):
 
     # MAVROS + sensor nodes
     if not offline:
-        if fcu_type == 'ardupilot':
+        if not is_px4:
             apm_launch = IncludeLaunchDescription(
                 XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/apm.launch')),
                 launch_arguments={
@@ -277,7 +278,7 @@ def launch_from_config(context, *args, **kwargs):
                 }.items()
             )
             nodes.append(apm_launch)
-        elif fcu_type == 'px4':
+        elif is_px4:
             px4_launch = IncludeLaunchDescription(
                 XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('vehicle_launch'), 'launch/px4.launch')),
                 launch_arguments={
@@ -394,6 +395,7 @@ def launch_from_config(context, *args, **kwargs):
             'mavros_map_frame': LaunchConfiguration('mavros_map_frame'),
             'base_frame': str(frame_id),
             'slam_map_frame': LaunchConfiguration('slam_map_frame'),
+            'px4': str(is_px4).lower(),
             'enable_autonomy': 'true',
             'use_failsafes': 'false',
             'num_cameras': str(num_cameras),
