@@ -3,6 +3,7 @@ ACTION=="add", ATTRS{idVendor}=="2dae", ATTRS{idProduct}=="1058", SYMLINK+="cube
 LABEL="cube"
 
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="04b4", ATTRS{idProduct}=="f9f9", ATTR{index}=="0", SYMLINK+="attollo"
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="04b4", ATTRS{idProduct}=="f8f8", ATTR{index}=="0", SYMLINK+="attollo"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0603", ATTRS{idProduct}=="8612", ATTR{index}=="0", SYMLINK+="mapir"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="5830", ATTR{index}=="0", SYMLINK+="seek_thermal"
 ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2560", ATTRS{idProduct}=="c188", ATTR{index}=="0", SYMLINK+="see3cam"

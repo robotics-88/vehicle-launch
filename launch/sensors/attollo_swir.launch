@@ -2,20 +2,19 @@
     <!-- <arg name="device_id" default="1"/> -->
     <arg name="device_path" default="/dev/attollo"/>
     <arg name="camera_name" default="attollo_cam"/>
-    <arg name="camera_info_yaml" default="$(find vehicle_launch)/config/cameras/attollo_cam_info.yaml"/>
+    <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/cameras/attollo_cam_info.yaml"/>
     <arg name="image_width" default="320"/>
     <arg name="image_height" default="256"/>
-    <arg name="fps" default="15"/>
+    <arg name="fps" default="366"/>
 
-    <node pkg="cv_camera" type="cv_camera_node" name="$(arg camera_name)">
-        <param name="rate" value="$(arg fps)"/>
-        <!-- <param name="device_id" value="$(arg device_id)"/> -->
-        <param name="device_path" value="$(arg device_path)"/>
-        <param name="frame_id" value="$(arg camera_name)"/>
-        <param name="camera_info_url" value="file://$(arg camera_info_yaml)"/>
-        <param name="pixel_format" value="yuyv"/>
-        <param name="image_width" value="$(arg image_width)"/>
-        <param name="image_height" value="$(arg image_height)"/>
+    <node pkg="opencv_cam" exec="opencv_cam_main" output="screen" respawn="true">
+        <param name="fps" value="$(var fps)"/>
+        <param name="device" value="$(var device_path)"/>
+        <param name="camera_frame_id" value="$(var camera_name)"/>
+        <param name="camera_info_path"  value="$(var camera_info_yaml)"/>
+        <!-- <param name="pixel_format" value="yuyv"/> -->
+        <param name="width" value="$(var image_width)"/>
+        <param name="height" value="$(var image_height)"/>
     </node>
 
     <!-- <group ns="$(arg camera_name)">
