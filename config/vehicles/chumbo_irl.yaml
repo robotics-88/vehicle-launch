@@ -1,0 +1,15 @@
+drone_id: MyVehicle
+frame_id: base_link
+simulated: true
+
+flight_controller:
+  type: px4
+  fcu_url: udp://0.0.0.0:14571@
+
+sensors:
+  camera_front:
+    type: udpcam
+    topic: /camera_front/image_raw
+    frame: camera_front
+    position: [0.0508, 0.0, 0.018]
+    orientation_rpy: [0.0, 0.0, 0.0]
