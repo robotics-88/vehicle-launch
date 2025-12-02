@@ -70,6 +70,10 @@ def launch_from_config(context, *args, **kwargs):
     num_cameras = 0
     camera_topic = '/camera/image_raw'
     camera_info_topic = '/camera/camera_info'
+    specifies_gps = 'gps' in sensors
+    has_gps = True
+    if specifies_gps:
+        has_gps = sensors.get('gps', True)
     
     do_record_raw = LaunchConfiguration('do_record').perform(context)
     if do_record_raw != '__auto__':
@@ -405,6 +409,7 @@ def launch_from_config(context, *args, **kwargs):
             'has_lidar': str(has_lidar).lower(),
             'has_thermal': str(has_thermal).lower(),
             'has_camera': str(num_cameras >= 1).lower(),
+            'has_gps': str(has_gps).lower(),
             'save_laz': LaunchConfiguration('save_laz'),
             'lidar_topic': sensors.get('lidar_top', {}).get('topic', '/lidar'),
             'mapir_topic': sensors.get('camera_front', {}).get('topic', '/image_raw'),

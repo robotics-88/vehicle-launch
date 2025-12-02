@@ -7,6 +7,8 @@ flight_controller:
   fcu_url: udp://0.0.0.0:14571@
 
 sensors:
+  gps: false
+  
   camera_front:
     type: udpcam
     topic: /camera_front/image_raw
