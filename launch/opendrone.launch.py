@@ -60,6 +60,7 @@ def launch_from_config(context, *args, **kwargs):
     drone_id = cfg.get('drone_id', 'drone')
     frame_id = cfg.get('frame_id', 'base_link')
     simulated = cfg.get('simulated', False)
+    dance = cfg.get('dance', False)
     flight_controller = cfg.get('flight_controller', 'ardupilot')
     sensors = cfg.get('sensors', {})
     rviz = False
@@ -344,7 +345,7 @@ def launch_from_config(context, *args, **kwargs):
                         XMLLaunchDescriptionSource(sensor_launch_file)
                     ))
 
-    if (num_cameras > 0):
+    if (num_cameras > 0 and dance):
         # chumbo dance node
         chumbo_dance_launch = IncludeLaunchDescription(
             XMLLaunchDescriptionSource(os.path.join(get_package_share_directory('chumbo_dance'), 'launch/chumbo_dance.launch')),

@@ -1,6 +1,7 @@
 drone_id: MyVehicle
 frame_id: base_link
 simulated: true
+dance: true
 
 flight_controller:
   type: ardupilot
