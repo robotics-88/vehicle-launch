@@ -1,12 +1,12 @@
 <launch>
-    <arg name="rviz" default="false"/>
-    <arg name="rotate" default="true"/> <!-- TODO: change this to use a transform properly -->
+    <arg name="rviz" default="true"/>
+    <arg name="rotate" default="false"/> <!-- TODO: change this to use a transform properly -->
     <include file="$(find-pkg-share seek_thermal)/launch/seek.launch">
         <arg name="use_rviz" value="$(var rviz)"/>
         <arg name="rotate" value="$(var rotate)"/>
     </include>
 
-    <include file="$(find-pkg-share image_proc)/launch/image_proc.launch.py">
+    <!-- <include file="$(find-pkg-share image_proc)/launch/image_proc.launch.py">
         <arg name="namespace" value="seek_thermal"/>
-    </include>
+    </include> -->
 </launch>
