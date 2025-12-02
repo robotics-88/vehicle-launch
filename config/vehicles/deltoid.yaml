@@ -1,0 +1,35 @@
+drone_id: deltoid_001
+frame_id: base_link
+simulated: false
+
+flight_controller:
+  type: px4
+  fcu_url: /dev/cubeorange:57600
+  fcu_url: udp://127.0.0.1:14575@
+
+sensors:
+  camera_nir:
+    type: mapir_rgn
+    topic: /mapir_rgn/image_raw
+    frame: mapir_rgn
+    stream: camera1
+    position: [0.094, 0.021, .057]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+
+  camera_thermal:
+    type: seek_thermal
+    topic: /seek_thermal/image_raw
+    frame: seek_thermal
+    stream: camera2
+    stream_width: 320
+    stream_height: 240
+    position: [0.12, 0.1, -0.03]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+
+  camera_swir:
+    type: attollo_swir
+    topic: /attollo_swir/image_raw
+    frame: attollo_swir
+    position: [0.12, 0.0, -0.03]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+
