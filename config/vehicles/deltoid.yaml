@@ -5,7 +5,6 @@ simulated: false
 flight_controller:
   type: px4
   fcu_url: /dev/cubeorange:57600
-  fcu_url: udp://127.0.0.1:14575@
 
 sensors:
   camera_nir:
