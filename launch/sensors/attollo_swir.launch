@@ -5,7 +5,7 @@
     <arg name="camera_info_yaml" default="$(find-pkg-share vehicle_launch)/config/cameras/attollo_cam_info.yaml"/>
     <arg name="image_width" default="320"/>
     <arg name="image_height" default="256"/>
-    <arg name="fps" default="366"/>
+    <arg name="fps" default="30"/>
 
     <node pkg="opencv_cam" exec="opencv_cam_main" output="screen" respawn="true">
         <param name="fps" value="$(var fps)"/>
