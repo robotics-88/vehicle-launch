@@ -11,3 +11,4 @@ ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2560", ATTRS{idProduc
 
 KERNEL=="video21", SYMLINK+="camera1"
 KERNEL=="video22", SYMLINK+="camera2"
+KERNEL=="video23", SYMLINK+="camera3"
