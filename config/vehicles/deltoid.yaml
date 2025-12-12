@@ -25,6 +25,14 @@ sensors:
     position: [0.12, 0.1, -0.03]
     orientation_rpy: [0.0, 1.57079633, 0.0]
 
+  camera_active_nir:
+    type: arducam
+    topic: /arducam/image_raw
+    frame: arducam
+    stream: camera3
+    position: [0.094, 0.021, .057]
+    orientation_rpy: [0.0, 1.57079633, 0.0]
+
   camera_swir:
     type: attollo_swir
     topic: /attollo_swir/image_raw
